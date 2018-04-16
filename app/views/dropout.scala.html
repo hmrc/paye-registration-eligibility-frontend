@@ -1,0 +1,51 @@
+@*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+
+@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = messages("dropout.title"),
+    appConfig = appConfig,
+    bodyClasses = None) {
+
+    @components.back_link()
+
+    @components.heading("dropout.heading")
+
+    <p>@messages("dropout.p1")</p>
+
+    <p>
+        @Html(messages("dropout.p2", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/employer-enquiries-support-for-new-employers"))
+    </p>
+
+    <p>@messages("dropout.p3")</p>
+
+    <div class="spaced-below">
+        <ul class="list list-bullet">
+            <li>@messages("dropout.l1")</li>
+            <li>@messages("dropout.l2")</li>
+            <li>@messages("dropout.l3")</li>
+            <li>@messages("dropout.l4")</li>
+            <li>@messages("dropout.l5")</li>
+            <li>@messages("dropout.l6")</li>
+        </ul>
+    </div>
+
+    <p>@Html(messages("dropout.p4", "https://www.gov.uk/"))</p>
+
+}

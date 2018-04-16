@@ -8,6 +8,20 @@ GET        /language/:lang                              controllers.LanguageSwit
 
 GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
 
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onPageLoad()
+POST       /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onSubmit()
+
+GET        /offshore-employer                           controllers.OffshoreEmployerController.onPageLoad()
+POST       /offshore-employer                           controllers.OffshoreEmployerController.onSubmit()
+
+GET        /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onPageLoad()
+POST       /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onSubmit()
+
+GET        /company-cant-register-online                controllers.IneligibleController.onPageLoad()
+
+GET        /register-online                             controllers.RegisterForPayeController.onPageLoad()
+POST       /register-online                             controllers.RegisterForPayeController.onSubmit()
+
+GET        /feedback                                    controllers.FeedbackController.onPageLoad()

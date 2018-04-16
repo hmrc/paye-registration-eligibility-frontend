@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package utils
+package models.requests
 
-import controllers.routes
-import models.CheckMode
-import viewmodels.{AnswerRow, RepeaterAnswerRow, RepeaterAnswerSection}
+import play.api.mvc.{Request, WrappedRequest}
 
-class CheckYourAnswersHelper(userAnswers: UserAnswers) {
-}
+case class CacheIdentifierRequest[A] (request: Request[A], cacheId: String) extends WrappedRequest[A](request)

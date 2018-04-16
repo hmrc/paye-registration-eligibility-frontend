@@ -18,7 +18,12 @@ package controllers
 
 import uk.gov.hmrc.http.cache.client.CacheMap
 import base.SpecBase
+import connectors.FakeDataCacheConnector
 import controllers.actions.FakeDataRetrievalAction
+import models.requests.DataRequest
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import utils.UserAnswers
 
 trait ControllerSpecBase extends SpecBase {
 
@@ -29,4 +34,6 @@ trait ControllerSpecBase extends SpecBase {
   def getEmptyCacheMap = new FakeDataRetrievalAction(Some(emptyCacheMap))
 
   def dontGetAnyData = new FakeDataRetrievalAction(None)
+
+  def fakeDataRequest = fakeRequest
 }

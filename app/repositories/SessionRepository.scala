@@ -45,7 +45,7 @@ object DatedCacheMap {
 }
 
 class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
-  extends ReactiveRepository[DatedCacheMap, BSONObjectID](config.getString("appName").get, mongo, DatedCacheMap.formats) {
+  extends ReactiveRepository[DatedCacheMap, BSONObjectID](config.getString("mongodb.collectionName").get, mongo, DatedCacheMap.formats) {
 
   val fieldName = "lastUpdated"
   val createdIndexName = "userAnswersExpiry"
@@ -81,7 +81,6 @@ class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
     collection.find(Json.obj("id" -> id)).one[CacheMap]
 }
 
-@Singleton
 class SessionRepository @Inject()(config: Configuration) {
 
   class DbConnection extends MongoDbConnection

@@ -16,28 +16,38 @@
 
 package utils
 
-import javax.inject.{Inject, Singleton}
+
 
 import play.api.mvc.Call
 import controllers.routes
 import identifiers._
-import models.{CheckMode, Mode, NormalMode}
 
-@Singleton
-class Navigator @Inject()() {
+object Navigator {
+
+  private[utils] val pageIdToLoad: (Identifier => Call) = {
+    case AtLeastOneDirectorHasNinoId => controllers.routes.AtLeastOneDirectorHasNinoController.onPageLoad()
+    case OffshoreEmployerId          => controllers.routes.OffshoreEmployerController.onPageLoad()
+    case TaxedAwardSchemeId          => controllers.routes.TaxedAwardSchemeController.onPageLoad()
+    case RegisterForPayeId           => controllers.routes.RegisterForPayeController.onPageLoad()
+    case IneligibleId                => controllers.routes.IneligibleController.onPageLoad()
+  }
+
+  private[utils] def nextOn(condition: Boolean, fromPage: Identifier, toPage: Identifier): (Identifier, UserAnswers => Call) = {
+    fromPage -> {
+      _.getAnswer(fromPage) match {
+        case Some(`condition`) => pageIdToLoad(toPage)
+        case _ => pageIdToLoad(IneligibleId)
+      }
+    }
+  }
 
   private val routeMap: Map[Identifier, UserAnswers => Call] = Map(
-
+    nextOn(true, AtLeastOneDirectorHasNinoId, OffshoreEmployerId),
+    nextOn(false, OffshoreEmployerId, TaxedAwardSchemeId),
+    nextOn(false, TaxedAwardSchemeId, RegisterForPayeId)
   )
 
-  private val editRouteMap: Map[Identifier, UserAnswers => Call] = Map(
+  def nextPage(id: Identifier): UserAnswers => Call =
+    routeMap.getOrElse(id, _ => routes.IndexController.onPageLoad())
 
-  )
-
-  def nextPage(id: Identifier, mode: Mode): UserAnswers => Call = mode match {
-    case NormalMode =>
-      routeMap.getOrElse(id, _ => routes.IndexController.onPageLoad())
-    case CheckMode =>
-      editRouteMap.getOrElse(id, _ => routes.CheckYourAnswersController.onPageLoad())
-  }
 }

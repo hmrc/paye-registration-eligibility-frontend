@@ -15,25 +15,32 @@
  *@
 
 @import config.FrontendAppConfig
-@import viewmodels.{Section, AnswerSection, RepeaterAnswerSection}
+@import uk.gov.hmrc.play.views.html._
+@import controllers.routes._
+@import models.Mode
+@import utils.FormHelpers
 
-@(appConfig: FrontendAppConfig, answerSections: Seq[Section])(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("checkYourAnswers.title"),
+    title = messages("offshoreEmployer.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
-    <h1 class="heading-xlarge">@messages("checkYourAnswers.heading")</h1>
+    @components.back_link()
 
-    <p>@messages("checkYourAnswers.guidance")</p>
+    @helpers.form(action = OffshoreEmployerController.onSubmit(), 'autoComplete -> "off") {
 
-    @for(section <- answerSections){
-        @{
-            section match {
-                case a: AnswerSection => components.answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
-        }
+        @components.error_summary(form.errors)
+
+        @components.heading("offshoreEmployer.heading")
+
+        @components.input_yes_no(
+            field = form("value"),
+            label = messages("offshoreEmployer.heading"),
+            labelClass = Some("visually-hidden")
+        )
+
+        @components.submit_button()
     }
 }

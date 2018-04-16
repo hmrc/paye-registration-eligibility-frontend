@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package models.requests
+package identifiers
 
-import play.api.mvc.{Request, WrappedRequest}
-
-case class AuthenticatedRequest[A] (request: Request[A], externalId: String) extends WrappedRequest[A](request)
+case object OffshoreEmployerId extends Identifier {
+  override def toString: String = "offshoreEmployer"
+}

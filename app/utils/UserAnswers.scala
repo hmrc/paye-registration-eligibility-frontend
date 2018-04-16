@@ -21,4 +21,12 @@ import identifiers._
 import models._
 
 class UserAnswers(val cacheMap: CacheMap) extends Enumerable.Implicits {
+  def getAnswer(id: Identifier): Option[Boolean] = cacheMap.getEntry[Boolean](id.toString)
+
+  def taxedAwardScheme: Option[Boolean] = cacheMap.getEntry[Boolean](TaxedAwardSchemeId.toString)
+
+  def offshoreEmployer: Option[Boolean] = cacheMap.getEntry[Boolean](OffshoreEmployerId.toString)
+
+  def atLeastOneDirectorHasNino: Option[Boolean] = cacheMap.getEntry[Boolean](AtLeastOneDirectorHasNinoId.toString)
+
 }
