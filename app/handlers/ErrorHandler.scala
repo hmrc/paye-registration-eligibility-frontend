@@ -24,7 +24,6 @@ import play.twirl.api.Html
 import config.FrontendAppConfig
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 
-@Singleton
 class ErrorHandler @Inject()(
                               appConfig: FrontendAppConfig,
                               val messagesApi: MessagesApi

@@ -16,11 +16,11 @@
 
 package connectors
 
-import play.api.libs.json.Format
+import identifiers.AtLeastOneDirectorHasNinoId
+import play.api.libs.json.{Format, JsBoolean}
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object FakeDataCacheConnector extends DataCacheConnector {
@@ -28,7 +28,7 @@ object FakeDataCacheConnector extends DataCacheConnector {
 
   override def remove(cacheId: String, key: String): Future[Boolean] = ???
 
-  override def fetch(cacheId: String): Future[Option[CacheMap]] = Future(Some(CacheMap(cacheId, Map())))
+  override def fetch(cacheId: String): Future[Option[CacheMap]] = Future(Some(CacheMap(cacheId, Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true)))))
 
   override def getEntry[A](cacheId: String, key: String)(implicit fmt: Format[A]): Future[Option[A]] = ???
 

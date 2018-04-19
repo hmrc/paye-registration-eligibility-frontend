@@ -85,7 +85,7 @@ class DataCacheConnectorImpl @Inject()(val sessionRepository: SessionRepository,
   }
 }
 
-@ImplementedBy(classOf[DataCacheConnectorImpl])
+
 trait DataCacheConnector {
   def save[A](cacheId: String, key: String, value: A)(implicit fmt: Format[A]): Future[CacheMap]
 

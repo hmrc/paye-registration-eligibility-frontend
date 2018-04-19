@@ -1,0 +1,1 @@
+GET        /feature-flag/:featureName/:featureStatus                    controllers.tests.FeatureSwitchController.switcher(featureName: String, featureStatus: String)
