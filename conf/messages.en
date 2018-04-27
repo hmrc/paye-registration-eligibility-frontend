@@ -88,3 +88,5 @@ registerForPaye.p2                                  = You''ll need the National 
 registerForPaye.subHeading                          = Starting PAYE in the new tax year (6 April)
 registerForPaye.p3                                  = If the company won''t start doing any of these things until the new tax year, you can continue but we won''t process the application until after 6 April.
 registerForPaye.p4                                  = If you''re not signed in, do it on the next screen, using the company''s online account details. If you don''t have an online account for the company, you''ll need to set one up.
+registerForPaye.subHeading1                         = Signing in to the service
+registerForPaye.p5                                  = You must sign in on the next screen. Use the government account for the business you want to register. If the business doesn''t have one, you will be able to set one up by clicking ''Don''t have a Government Gateway account''.
