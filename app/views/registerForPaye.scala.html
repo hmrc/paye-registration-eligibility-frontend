@@ -49,10 +49,9 @@
 
     }
 
-        <h2 class="heading-medium">@messages("registerForPaye.subHeading1")</h2>
-        <p>
-            @messages("registerForPaye.p5")
-        </p>
+    <h2 class="heading-medium">@messages("registerForPaye.subHeading1")</h2>
+    <p>@messages("registerForPaye.p5")</p>
+    <p>@messages("registerForPaye.p6")</p>
 
     @helpers.form(action = RegisterForPayeController.onSubmit(), 'autoComplete -> "off") {
         @components.submit_button()
