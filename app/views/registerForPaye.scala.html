@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
 
-@(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean, notLoggedIn: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("registerForPaye.title"),
@@ -49,10 +49,11 @@
 
     }
 
-    <h2 class="heading-medium">@messages("registerForPaye.subHeading1")</h2>
-    <p>@messages("registerForPaye.p5")</p>
-    <p>@messages("registerForPaye.p6")</p>
-
+    @if(notLoggedIn){
+        <h2 class="heading-medium" id="signing-in">@messages("registerForPaye.subHeading1")</h2>
+        <p>@messages("registerForPaye.p5")</p>
+        <p>@messages("registerForPaye.p6")</p>
+    }
     @helpers.form(action = RegisterForPayeController.onSubmit(), 'autoComplete -> "off") {
         @components.submit_button()
     }

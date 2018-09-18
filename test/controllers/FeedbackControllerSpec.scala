@@ -25,8 +25,6 @@ class FeedbackControllerSpec extends ControllerSpecBase {
   def controller =
     new FeedbackControllerImpl(frontendAppConfig, messagesApi)
 
-  def viewAsString() = registerForPaye(frontendAppConfig, false)(fakeRequest, messages).toString
-
   "Feedback Controller" must {
 
     "Redirect to Feedback page on pageLoad" in {

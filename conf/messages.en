@@ -77,7 +77,7 @@ dropout.l5                                          = company registration numbe
 dropout.l6                                          = the names and National Insurance numbers of every company director
 dropout.p4                                          = <a href="{0}">Return to GOV.UK</a>
 
-registerForPaye.title                               = registerForPaye
+registerForPaye.title                               = You must register for PAYE online
 registerForPaye.heading                             = Register for PAYE online
 registerForPaye.p1                                  = Only continue if the company does, or intends to do, one of the following:
 registerForPaye.l1                                  = pay any employees, including company directors, £116 or more a week

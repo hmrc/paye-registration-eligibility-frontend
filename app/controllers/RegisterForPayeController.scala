@@ -24,9 +24,11 @@ import play.api.mvc.Action
 import utils.DateUtil
 import views.html.registerForPaye
 
+
 class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
                                               override val messagesApi: MessagesApi) extends RegisterForPayeController {
   val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+
 }
 
 trait RegisterForPayeController extends FrontendController with I18nSupport {
@@ -35,7 +37,8 @@ trait RegisterForPayeController extends FrontendController with I18nSupport {
 
   def onPageLoad = Action {
     implicit request =>
-      Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod))
+      val notLoggedIn= hc.authorization.isEmpty
+      Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn))
   }
 
   def onSubmit = Action {

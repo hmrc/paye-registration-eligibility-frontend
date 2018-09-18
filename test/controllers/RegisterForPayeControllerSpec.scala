@@ -25,7 +25,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new RegisterForPayeControllerImpl(frontendAppConfig, messagesApi)
 
-  def viewAsString() = registerForPaye(frontendAppConfig, false)(fakeRequest, messages).toString
+  def viewAsString() = registerForPaye(frontendAppConfig, false, true)(fakeRequest, messages).toString
 
   "RegisterForPaye Controller" must {
 

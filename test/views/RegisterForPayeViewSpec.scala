@@ -16,18 +16,60 @@
 
 package views
 
+import controllers.RegisterForPayeControllerImpl
+import org.jsoup.Jsoup
+import org.scalatest.Matchers
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.I18nSupport
 import views.behaviours.ViewBehaviours
 import views.html.registerForPaye
+import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.test.UnitSpec
+import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
+import play.api.mvc.RequestHeader
+import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-class RegisterForPayeViewSpec extends ViewBehaviours {
+import scala.concurrent.Future
+
+class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport with MockitoSugar {
 
   val messageKeyPrefix = "registerForPaye"
 
-  def createNewTaxYearView = () => registerForPaye(frontendAppConfig, true)(fakeRequest, messages)
+  def createNewTaxYearView = () => registerForPaye(frontendAppConfig, true, true)(fakeRequest, messages)
 
-  def createNormalView = () => registerForPaye(frontendAppConfig, false)(fakeRequest, messages)
+  def createNormalView = () => registerForPaye(frontendAppConfig, false, true)(fakeRequest, messages)
+
+  def createLoggedInView = () => registerForPaye(frontendAppConfig, false, false)(fakeRequest, messages)
+
+  class SetupPage {
+    val controller = new RegisterForPayeControllerImpl(frontendAppConfig, messagesApi) {
+      override val payeStartUrl = "payeStartURL"
+    }
+  }
 
   "RegisterForPaye view" must {
     behave like normalPage(createNewTaxYearView, messageKeyPrefix)
+
+  }
+
+  "Register for PAYE view " must {
+    "not display the <signing in to the service> paragraph when logged in" in new SetupPage {
+
+        val result = controller.onPageLoad()(fakeRequest.withSession("authToken" -> "foo"))
+        val document = Jsoup.parse(contentAsString(result))
+
+        Option(document.getElementById("signing-in")) mustBe None
+      }
+
+    "Display the <signing in to the service> paragraph when not logged in" in new SetupPage {
+
+        val result = controller.onPageLoad()(fakeRequest)
+        val document = Jsoup.parse(contentAsString(result))
+
+        document.getElementById("signing-in").text() mustBe "Signing in to the service"
+    }
   }
 }
