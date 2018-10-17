@@ -8,6 +8,10 @@ import net.ground5hark.sbt.concat.Import._
 import com.typesafe.sbt.uglify.Import._
 import com.typesafe.sbt.digest.Import._
 import play.sbt.PlayImport.PlayKeys
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+import uk.gov.hmrc.SbtAutoBuildPlugin
+import uk.gov.hmrc.versioning.SbtGitVersioning
+import uk.gov.hmrc.SbtArtifactory
 
 trait MicroService {
 
@@ -28,7 +32,7 @@ trait MicroService {
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
   lazy val microservice = Project(appName, file("."))
-    .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins : _*)
+    .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins : _*)
     .settings(playSettings : _*)
     .settings(PlayKeys.playDefaultPort := 9877)
     .settings(RoutesKeys.routesImport ++= Seq("models._"))
@@ -43,6 +47,7 @@ trait MicroService {
     )
     .settings(scalaSettings: _*)
     .settings(publishingSettings: _*)
+    .settings(majorVersion := 0)
     .settings(defaultSettings(): _*)
     .settings(
       scalacOptions ++= Seq("-Xfatal-warnings", "-feature"),
