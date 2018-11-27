@@ -27,6 +27,7 @@ import forms.TaxedAwardSchemeFormProvider
 import identifiers.TaxedAwardSchemeId
 import utils.{Navigator, UserAnswers}
 import views.html.taxedAwardScheme
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
