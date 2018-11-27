@@ -27,6 +27,7 @@ import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
 import utils.{Navigator, UserAnswers}
 import views.html.atLeastOneDirectorHasNino
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 

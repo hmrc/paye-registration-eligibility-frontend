@@ -28,7 +28,7 @@ import identifiers.OffshoreEmployerId
 import models.{Mode, NormalMode}
 import utils.{Navigator, UserAnswers}
 import views.html.offshoreEmployer
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class OffshoreEmployerController @Inject()(appConfig: FrontendAppConfig,
