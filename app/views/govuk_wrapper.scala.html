@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,18 +72,23 @@
       includeHMRCBranding = false)
 }
 
-@mainContentHeader = {
+@serviceHeader = {
+    @components.back_link()
     @if(appConfig.languageTranslationEnabled) {
         @views.html.language_selection(
             appConfig.languageMap,
             appConfig.routeToSwitchLanguage,
-            Some("translate u-align--right"))
+            Some("translate float--right"))
     }
 
     @if(contentHeader.isDefined) {
         @uiLayouts.main_content_header(contentHeader = contentHeader.get)
     }
 }
+
+@mainContentHeader = {
+    @uiLayouts.main_content_header(contentHeader = serviceHeader)
+    }
 
 @getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 

@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.tests
 
+import controllers.LanguageSwitchController
 import javax.inject.Inject
-
-import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import config.FrontendAppConfig
-import views.html.session_expired
+import utils._
 
 import scala.concurrent.Future
 
-class SessionExpiredController @Inject()(val appConfig: FrontendAppConfig,
-                                         val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+class FeatureSwitchControllerLanguageImpl @Inject()() extends FeatureSwitchControllerLanguage
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(session_expired(appConfig))
+trait FeatureSwitchControllerLanguage extends FrontendController {
+
+  def enableLanguageFunctionality(enable: Boolean): Action[AnyContent] = Action {
+    implicit request =>
+      sys.props += (("microservice.services.features.welsh-translation", enable.toString))
+
+        Redirect(controllers.routes.LanguageSwitchController.switchToLanguage("english"))
   }
 }

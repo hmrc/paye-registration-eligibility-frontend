@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.google.inject.AbstractModule
 import connectors.{DataCacheConnector, DataCacheConnectorImpl}
 import controllers.{FeedbackController, FeedbackControllerImpl, RegisterForPayeController, RegisterForPayeControllerImpl}
 import controllers.actions._
-import controllers.tests.{FeatureSwitchController, FeatureSwitchControllerImpl}
+import controllers.tests.{FeatureSwitchController, FeatureSwitchControllerImpl, FeatureSwitchControllerLanguage, FeatureSwitchControllerLanguageImpl}
 import handlers.ErrorHandler
 import repositories.SessionRepository
 import utils._
@@ -57,6 +57,7 @@ class Module extends AbstractModule {
 
   def bindControllers() = {
     bind(classOf[FeatureSwitchController]).to(classOf[FeatureSwitchControllerImpl]).asEagerSingleton()
+    bind(classOf[FeatureSwitchControllerLanguage]).to(classOf[FeatureSwitchControllerLanguageImpl]).asEagerSingleton()
     bind(classOf[RegisterForPayeController]).to(classOf[RegisterForPayeControllerImpl]).asEagerSingleton()
     bind(classOf[FeedbackController]).to(classOf[FeedbackControllerImpl]).asEagerSingleton()
   }
