@@ -80,6 +80,7 @@ trait PREFEFeatureSwitches {
 
   def apply(name: String): Option[FeatureSwitch] = name match {
     case `setSystemDate` => Some(systemDate)
+    case `companyRegistration` => Some(companyReg)
     case _               => None
   }
 }
