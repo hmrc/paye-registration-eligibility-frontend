@@ -16,32 +16,79 @@
 
 package controllers
 
+import config.FrontendAppConfig
+import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, Result}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import config.FrontendAppConfig
-import play.api.mvc.Action
-import utils.DateUtil
+import utils.{AuthUrlBuilder, DateUtil}
 import views.html.registerForPaye
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
-                                              override val messagesApi: MessagesApi) extends RegisterForPayeController {
-  val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+                                              override val messagesApi: MessagesApi,
+                                              val authConnector: AuthConnector,
+                                              val authUrlBuilder: AuthUrlBuilder,
+                                              val businessRegistrationConnector: BusinessRegistrationConnector,
+                                              val companyRegistrationConnector: CompanyRegistrationConnector) extends RegisterForPayeController {
+  lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+  lazy  val compRegFEPostSigninUrl  = s"${appConfig.compRegFEUrl}${appConfig.compRegFEUri}${appConfig.compRegFEStartLink}"
 
+  lazy val otrsUrl                  = appConfig.otrsUrl
 }
 
-trait RegisterForPayeController extends FrontendController with I18nSupport {
+
+trait RegisterForPayeController extends FrontendController with I18nSupport with AuthorisedFunctions {
   val appConfig: FrontendAppConfig
   val payeStartUrl: String
+  val compRegFEPostSigninUrl: String
+  val otrsUrl: String
+  val authUrlBuilder: AuthUrlBuilder
+  val businessRegistrationConnector: BusinessRegistrationConnector
+  val companyRegistrationConnector: CompanyRegistrationConnector
 
   def onPageLoad = Action {
     implicit request =>
-      val notLoggedIn= hc.authorization.isEmpty
+      val notLoggedIn = hc.authorization.isEmpty
       Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn))
   }
 
-  def onSubmit = Action {
-     _ => Redirect(payeStartUrl)
+  def onSubmit = Action.async {
+    implicit request =>
+    authorised() {
+      Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS))
+  } recoverWith {
+      case  _ =>
+        Future.successful(authUrlBuilder.redirectToLogin)
+    }
+  }
+
+  private def navigateBasedOnStatusAndPaymentRef(statusAndPaymentRef: (Option[String], Option[String])): Result = {
+    statusAndPaymentRef match {
+      case (Some(_), None) => Redirect(compRegFEPostSigninUrl)
+      case (Some(_), Some(_)) => Redirect(payeStartUrl)
+      case (None,_) => Redirect(otrsUrl)
+    }
+  }
+  def continueToPayeOrOTRS = Action.async {
+    implicit request =>
+      authorised() {
+        businessRegistrationConnector.retrieveCurrentProfile.flatMap { reg =>
+          reg.fold(Future.successful(Redirect(otrsUrl)))(
+            regId =>
+              companyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(regId).map{
+                status =>
+                  navigateBasedOnStatusAndPaymentRef(status)
+              }
+          )
+        }
+      } recover {
+        case _ => Redirect(routes.IndexController.onPageLoad())
+      }
   }
 }

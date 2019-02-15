@@ -17,11 +17,10 @@
 package config
 
 import com.google.inject.AbstractModule
-import connectors.{DataCacheConnector, DataCacheConnectorImpl}
-import controllers.{FeedbackController, FeedbackControllerImpl, RegisterForPayeController, RegisterForPayeControllerImpl}
+import connectors._
 import controllers.actions._
 import controllers.tests.{FeatureSwitchController, FeatureSwitchControllerImpl, FeatureSwitchControllerLanguage, FeatureSwitchControllerLanguageImpl}
-import handlers.ErrorHandler
+import controllers.{FeedbackController, FeedbackControllerImpl, RegisterForPayeController, RegisterForPayeControllerImpl}
 import repositories.SessionRepository
 import utils._
 
@@ -30,6 +29,7 @@ class Module extends AbstractModule {
   override def configure(): Unit = {
     bindActions()
     bindOthers()
+    bindUtils()
     bindControllers()
     bindRepositories()
     bindConnectors()
@@ -62,7 +62,13 @@ class Module extends AbstractModule {
     bind(classOf[FeedbackController]).to(classOf[FeedbackControllerImpl]).asEagerSingleton()
   }
 
+  def bindUtils() = {
+    bind(classOf[AuthUrlBuilder]).to(classOf[AuthUrlBuilderImpl]).asEagerSingleton()
+  }
+
   def bindConnectors() = {
     bind(classOf[DataCacheConnector]).to(classOf[DataCacheConnectorImpl]).asEagerSingleton()
+    bind(classOf[BusinessRegistrationConnector]).to(classOf[BusinessRegistrationConnectorImpl]).asEagerSingleton()
+    bind(classOf[CompanyRegistrationConnector]).to(classOf[CompanyRegistrationConnectorImpl]).asEagerSingleton()
   }
 }

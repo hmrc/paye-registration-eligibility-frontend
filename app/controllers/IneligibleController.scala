@@ -16,15 +16,13 @@
 
 package controllers
 
+import config.FrontendAppConfig
+import controllers.actions._
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import controllers.actions._
-import config.FrontendAppConfig
 import play.api.mvc.Action
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.dropout
-
-import scala.concurrent.Future
 
 class IneligibleController @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi,

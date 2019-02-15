@@ -16,12 +16,12 @@
 
 package controllers.actions
 
-import uk.gov.hmrc.http.cache.client.CacheMap
 import models.requests.{CacheIdentifierRequest, OptionalDataRequest}
+import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.UserAnswers
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class FakeDataRetrievalAction(cacheMapToReturn: Option[CacheMap]) extends DataRetrievalAction {
   override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = cacheMapToReturn match {

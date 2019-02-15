@@ -16,11 +16,10 @@
 
 package repositories
 
-import javax.inject.{Inject, Singleton}
-
+import javax.inject.Inject
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.{Configuration, Logger}
 import play.api.libs.json.{JsValue, Json}
+import play.api.{Configuration, Logger}
 import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}

@@ -16,13 +16,12 @@
 
 package controllers.tests
 
-import play.api.test.Helpers._
 import controllers.ControllerSpecBase
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{when, reset}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar.mock
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import utils._
 
 class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfterEach {

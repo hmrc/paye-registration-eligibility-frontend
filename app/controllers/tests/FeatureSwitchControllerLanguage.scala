@@ -16,13 +16,9 @@
 
 package controllers.tests
 
-import controllers.LanguageSwitchController
 import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import utils._
-
-import scala.concurrent.Future
 
 class FeatureSwitchControllerLanguageImpl @Inject()() extends FeatureSwitchControllerLanguage
 

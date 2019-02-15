@@ -29,25 +29,25 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
     super.beforeEach()
   }
 
-  val featureSwitch        = new FeatureSwitchManager
+  val featureSwitch         = new FeatureSwitchManager
   val prefeFeatureSwitch    = new PREFEFeatureSwitch(featureSwitch)
   val valueFeatureSwitch = ValueSetFeatureSwitch("test", "2018-10-12")
 
   "getProperty" should {
     "return a value feature switch with time-clear if the system property is undefined" in {
-      featureSwitch.getProperty("test") mustBe ValueSetFeatureSwitch("test", "time-clear")
+      featureSwitch.getProperty("test","") mustBe ValueSetFeatureSwitch("test", "time-clear")
     }
 
     "return an value feature switch with a date if the system property is defined as '2018-10-12'" in {
       System.setProperty("feature.test", "2018-10-12")
 
-      featureSwitch.getProperty("test") mustBe ValueSetFeatureSwitch("test", "2018-10-12")
+      featureSwitch.getProperty("test", "") mustBe ValueSetFeatureSwitch("test", "2018-10-12")
     }
 
     "return an value feature switch with time-clear if the system property is defined as 'time-clear'" in {
       System.setProperty("feature.test", "time-clear")
 
-      featureSwitch.getProperty("test") mustBe ValueSetFeatureSwitch("test", "time-clear")
+      featureSwitch.getProperty("test", "") mustBe ValueSetFeatureSwitch("test", "time-clear")
     }
   }
 
@@ -60,11 +60,11 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
   "setProperty" should {
 
     "return a feature switch (testKey, time-clear) when supplied with (testKey, testValue)" in {
-      featureSwitch.setProperty("test", "testValue") mustBe ValueSetFeatureSwitch("test", "time-clear")
+      featureSwitch.setProperty("test", "testValue", "") mustBe ValueSetFeatureSwitch("test", "time-clear")
     }
 
     "return ValueSetFeatureSwitch when supplied system-date and 2018-01-01" in {
-      featureSwitch.setProperty("system-date", "2018-01-01") mustBe ValueSetFeatureSwitch("system-date", "2018-01-01")
+      featureSwitch.setProperty("system-date", "2018-01-01", "") mustBe ValueSetFeatureSwitch("system-date", "2018-01-01")
     }
   }
 

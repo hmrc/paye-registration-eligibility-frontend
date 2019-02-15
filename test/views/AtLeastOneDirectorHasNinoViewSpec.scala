@@ -16,11 +16,10 @@
 
 package views
 
-import play.api.data.Form
 import controllers.routes
 import forms.AtLeastOneDirectorHasNinoFormProvider
+import play.api.data.Form
 import views.behaviours.YesNoViewBehaviours
-import models.NormalMode
 import views.html.atLeastOneDirectorHasNino
 
 class AtLeastOneDirectorHasNinoViewSpec extends YesNoViewBehaviours {

@@ -17,36 +17,147 @@
 package controllers
 
 import controllers.actions._
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito._
+import play.api.mvc.Results
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.DateUtil
 import views.html.registerForPaye
+
+import scala.concurrent.Future
 
 class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new RegisterForPayeControllerImpl(frontendAppConfig, messagesApi)
+  class Setup {
+    reset(mockBusinessRegistrationConnector)
+    reset(mockCompanyRegistrationConnector)
+    reset(mockAuthUrlBuilder)
+    reset(mockAuthConnector)
 
-  def viewAsString() = registerForPaye(frontendAppConfig, false, true)(fakeRequest, messages).toString
+    def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+      new RegisterForPayeControllerImpl(
+        frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
+        override lazy val payeStartUrl = "payeURL"
+        override lazy val compRegFEPostSigninUrl = "ctURL"
+        override lazy val otrsUrl = "otrsURL"
+      }
 
-  "RegisterForPaye Controller" must {
+    def controller2(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+      new RegisterForPayeControllerImpl(
+        frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
 
-    "return OK and the correct view for a GET" in {
+      }
+
+  }
+
+  implicit val hc = HeaderCarrier()
+
+  def viewAsString() = registerForPaye(frontendAppConfig, DateUtil.isInTaxYearPeriod, true)(fakeRequest, messages).toString
+
+  "onPageLoad" must {
+
+    "return OK and the correct view for a GET" in new Setup {
       val result = controller().onPageLoad(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
+  }
+  "onSubmit" must {
 
-    "redirect to PAYE frontend on submit" in {
+    "redirect to sign in (foo) on submit if user not signed in" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.failed(new Exception("")))
+      when(mockAuthUrlBuilder.redirectToLogin).thenReturn(Results.SeeOther("foo"))
       val result = controller().onSubmit(fakeRequest)
-
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).map{
-        _.contains("/register-for-paye/start-pay-as-you-earn") mustBe true
+      redirectLocation(result).map {
+        _.contains("foo") mustBe true
+      }
+    }
+    "redirect to continueToPayeOrOTRS if user signed in" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(()))
+
+      val result = controller().onSubmit(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).map {
+        _.contains(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url) mustBe true
       }
     }
   }
+
+
+  "continueToPayeOrOTRS" must {
+    "redirect to paye reg fe if logged in and ct status / payment ref is present" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(()))
+      when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Some("regid")))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful((Some("held"), Some("payment"))))
+
+      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("payeURL")
+
+    }
+    "redirect to otrs if logged in and there is no ct status or pay ref" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(()))
+      when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Some("regid")))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful((Option.empty[String], Option.empty[String])))
+
+      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("otrsURL")
+
+    }
+    "redirect to crfe if logged in and ct status is present but no payment ref" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(()))
+      when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Some("regid")))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful((Some("held"), Option.empty[String])))
+
+      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("ctURL")
+    }
+
+    "redirect to otrs if logged in and ct status is not present, i.e they have never started a SCRS journey" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(()))
+      when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(Option.empty[String]))
+
+      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("otrsURL")
+    }
+    "redirect to index if not logged in" in new Setup {
+      when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.failed(new Exception("")))
+      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("/eligibility-for-paye")
+
+    }
+  }
+  "RegisterForPayeController" should {
+    "use the correct paye redirect URL" in new Setup {
+      controller2().payeStartUrl mustBe "http://localhost:9870/register-for-paye/start-pay-as-you-earn"
+    }
+    "use the correct ct redirect URL" in new Setup {
+      controller2().compRegFEPostSigninUrl mustBe "http://localhost:9970/register-your-company/post-sign-in"
+    }
+    "use the correct otrs redirect URL" in new Setup {
+      controller2().otrsUrl mustBe "https://www.tax.service.gov.uk/business-registration/select-taxes"
+    }
+  }
+
 }
-
-
-
-

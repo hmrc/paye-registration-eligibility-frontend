@@ -16,7 +16,7 @@
 
 package utils
 
-import org.scalatest.{EitherValues, OptionValues, MustMatchers, WordSpec}
+import org.scalatest.{EitherValues, MustMatchers, OptionValues, WordSpec}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 

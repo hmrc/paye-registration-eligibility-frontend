@@ -17,9 +17,9 @@
 package config
 
 import com.google.inject.Inject
-import play.api.{Configuration, Environment}
-import play.api.i18n.Lang
 import controllers.routes
+import play.api.i18n.Lang
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 class FrontendAppConfig @Inject() (override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
@@ -41,8 +41,12 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
 
   lazy val payeRegFEUrl       = loadConfig("microservice.services.paye-registration-frontend.url")
+  lazy val compRegFEUrl       = loadConfig("microservice.services.company-registration-frontend.url")
+  lazy val otrsUrl            = loadConfig("urls.otrsUrl")
   lazy val payeRegFEUri       = loadConfig("microservice.services.paye-registration-frontend.uri")
+  lazy val compRegFEUri       = loadConfig("microservice.services.company-registration-frontend.uri")
   lazy val payeRegFEStartLink = loadConfig("microservice.services.paye-registration-frontend.start-paye")
+  lazy val compRegFEStartLink = loadConfig("microservice.services.company-registration-frontend.start-ct")
   lazy val feedbackLink = loadConfig("microservice.services.paye-registration-frontend.feedback")
 
   def languageTranslationEnabled: Boolean = sys.props.get("microservice.services.features.welsh-translation").fold(false)(_.toBoolean)

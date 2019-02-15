@@ -1,11 +1,8 @@
 package views
 
-import play.api.data.Form
 import controllers.routes
-import forms.$className$FormProvider
-import views.behaviours.YesNoViewBehaviours
 import models.NormalMode
-import views.html.$className;format="decap"$
+import play.api.data.Form;format="decap"$
 
 class $className$ViewSpec extends YesNoViewBehaviours {
 

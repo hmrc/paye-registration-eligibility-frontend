@@ -16,14 +16,9 @@
 
 package controllers
 
-import uk.gov.hmrc.http.cache.client.CacheMap
 import base.SpecBase
-import connectors.FakeDataCacheConnector
 import controllers.actions.FakeDataRetrievalAction
-import models.requests.DataRequest
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import utils.UserAnswers
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 trait ControllerSpecBase extends SpecBase {
 

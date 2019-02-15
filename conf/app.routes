@@ -25,3 +25,5 @@ GET        /register-online                             controllers.RegisterForP
 POST       /register-online                             controllers.RegisterForPayeController.onSubmit()
 
 GET        /feedback                                    controllers.FeedbackController.onPageLoad()
+
+GET        /authorised-for-paye                         controllers.RegisterForPayeController.continueToPayeOrOTRS()

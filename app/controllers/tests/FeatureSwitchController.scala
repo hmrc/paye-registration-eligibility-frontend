@@ -34,8 +34,10 @@ trait FeatureSwitchController extends FrontendController {
   def switcher(featureName: String, featureState: String): Action[AnyContent] = Action.async {
     implicit request =>
       def feature: FeatureSwitch = featureState match {
-        case x if x.matches(DateUtil.datePatternRegex) => featureManager.setSystemDate(ValueSetFeatureSwitch(featureName, featureState))
-        case _                                         => featureManager.clearSystemDate(ValueSetFeatureSwitch(featureName, "time-clear"))
+        case x if x.matches(DateUtil.datePatternRegex)  => featureManager.setSystemDate(ValueSetFeatureSwitch(featureName, featureState))
+        case "true" | "false"                           => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, featureState.toBoolean))
+        case _ if featureName == "system-date"          => featureManager.clearSystemDate(ValueSetFeatureSwitch(featureName, "time-clear"))
+        case _                                          => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, false))
       }
 
       prefeFeatureSwitch(featureName) match {
