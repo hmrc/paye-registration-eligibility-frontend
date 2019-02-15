@@ -1,30 +1,23 @@
+import com.typesafe.sbt.digest.Import._
+import com.typesafe.sbt.uglify.Import._
+import com.typesafe.sbt.web.Import._
+import net.ground5hark.sbt.concat.Import._
+import play.sbt.PlayImport.PlayKeys
+import play.sbt.routes.RoutesKeys
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import com.typesafe.sbt.web.Import._
-import net.ground5hark.sbt.concat.Import._
-import com.typesafe.sbt.uglify.Import._
-import com.typesafe.sbt.digest.Import._
-import play.sbt.PlayImport.PlayKeys
-import play.sbt.routes.RoutesKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import uk.gov.hmrc.SbtArtifactory
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
-  import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt, SbtAutoBuildPlugin}
+  import uk.gov.hmrc.SbtAutoBuildPlugin
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
-  import play.sbt.routes.RoutesKeys.routesGenerator
-  import play.sbt.routes.RoutesKeys
-
-  import TestPhases._
 
   val appName: String
 
@@ -40,7 +33,7 @@ trait MicroService {
     .settings(
       ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*models.*;.*repositories.*;" +
         ".*BuildInfo.*;.*javascript.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;.*DataCacheConnector;" +
-        ".*ControllerConfiguration;.*LanguageSwitchController",
+        ".*ControllerConfiguration;.*LanguageSwitchController;.*views.*",
       ScoverageKeys.coverageMinimum := 90,
       ScoverageKeys.coverageFailOnMinimum := false,
       ScoverageKeys.coverageHighlighting := true,
@@ -58,6 +51,7 @@ trait MicroService {
     )
     .configs(IntegrationTest)
     .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+    .settings(integrationTestSettings())
     .settings(resolvers ++= Seq(
         Resolver.bintrayRepo("hmrc", "releases"),
         Resolver.jcenterRepo,

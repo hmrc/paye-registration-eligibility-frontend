@@ -16,9 +16,7 @@
 
 package utils
 
-import java.time.{LocalDate, LocalDateTime}
-
-import play.api.Logger
+import java.time.LocalDate
 
 import scala.language.implicitConversions
 

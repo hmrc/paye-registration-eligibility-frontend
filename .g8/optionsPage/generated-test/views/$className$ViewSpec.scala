@@ -1,11 +1,7 @@
 package views
 
-import play.api.data.Form
-import forms.$className$FormProvider
 import models.NormalMode
-import models.$className$
-import views.behaviours.ViewBehaviours
-import views.html.$className;format="decap"$
+import play.api.data.Form;format="decap"$
 
 class $className$ViewSpec extends ViewBehaviours {
 

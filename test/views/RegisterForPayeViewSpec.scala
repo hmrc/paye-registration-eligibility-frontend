@@ -18,23 +18,13 @@ package views
 
 import controllers.RegisterForPayeControllerImpl
 import org.jsoup.Jsoup
-import org.scalatest.Matchers
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 import play.api.i18n.I18nSupport
+import play.api.test.Helpers._
 import views.behaviours.ViewBehaviours
 import views.html.registerForPaye
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
-import org.mockito.Mockito._
-import org.mockito.ArgumentMatchers.any
-import play.api.mvc.RequestHeader
-import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.Future
-
-class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport with MockitoSugar {
+class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
 
   val messageKeyPrefix = "registerForPaye"
 
@@ -45,8 +35,13 @@ class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport with Mocki
   def createLoggedInView = () => registerForPaye(frontendAppConfig, false, false)(fakeRequest, messages)
 
   class SetupPage {
-    val controller = new RegisterForPayeControllerImpl(frontendAppConfig, messagesApi) {
-      override val payeStartUrl = "payeStartURL"
+    reset(mockBusinessRegistrationConnector)
+    reset(mockCompanyRegistrationConnector)
+    reset(mockAuthUrlBuilder)
+    reset(mockAuthConnector)
+    val controller = new RegisterForPayeControllerImpl(
+      frontendAppConfig, messagesApi,mockAuthConnector,mockAuthUrlBuilder,mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
+      override lazy val payeStartUrl = "payeStartURL"
     }
   }
 

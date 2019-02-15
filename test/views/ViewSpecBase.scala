@@ -16,10 +16,10 @@
 
 package views
 
+import base.SpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
-import base.SpecBase
 
 trait ViewSpecBase extends SpecBase {
 

@@ -16,9 +16,8 @@
 
 package utils
 
-import uk.gov.hmrc.http.cache.client.CacheMap
 import identifiers._
-import models._
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 class UserAnswers(val cacheMap: CacheMap) extends Enumerable.Implicits {
   def getAnswer(id: Identifier): Option[Boolean] = cacheMap.getEntry[Boolean](id.toString)

@@ -1,16 +1,9 @@
 package controllers
 
-import play.api.data.Form
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
-import utils.FakeNavigator
-import connectors.FakeDataCacheConnector
 import controllers.actions._
-import play.api.test.Helpers._
-import forms.$className$FormProvider
-import identifiers.$className$Id
-import models.{NormalMode, $className$}
-import views.html.$className;format="decap"$
+import models.NormalMode
+import play.api.data.Form
+import play.api.libs.json.Json;format="decap"$
 
 class $className$ControllerSpec extends ControllerSpecBase {
 

@@ -17,11 +17,11 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
-import play.api.mvc.Results._
 import config.FrontendAppConfig
 import controllers.routes
 import models.requests.CacheIdentifierRequest
+import play.api.mvc.Results._
+import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 

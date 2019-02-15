@@ -16,9 +16,8 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import javax.inject.Inject
 import play.api.data.Form
 
 class TaxedAwardSchemeFormProvider @Inject() extends FormErrorHelper with Mappings {

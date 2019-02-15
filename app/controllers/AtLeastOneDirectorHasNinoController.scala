@@ -16,19 +16,19 @@
 
 package controllers
 
+import config.FrontendAppConfig
+import connectors.DataCacheConnector
+import controllers.actions._
+import forms.AtLeastOneDirectorHasNinoFormProvider
+import identifiers.AtLeastOneDirectorHasNinoId
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import connectors.DataCacheConnector
-import controllers.actions._
-import config.FrontendAppConfig
-import forms.AtLeastOneDirectorHasNinoFormProvider
-import identifiers.AtLeastOneDirectorHasNinoId
 import utils.{Navigator, UserAnswers}
 import views.html.atLeastOneDirectorHasNino
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AtLeastOneDirectorHasNinoController @Inject()(appConfig: FrontendAppConfig,

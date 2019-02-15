@@ -16,11 +16,10 @@
 
 package views
 
-import play.api.data.Form
 import controllers.routes
 import forms.TaxedAwardSchemeFormProvider
+import play.api.data.Form
 import views.behaviours.YesNoViewBehaviours
-import models.NormalMode
 import views.html.taxedAwardScheme
 
 class TaxedAwardSchemeViewSpec extends YesNoViewBehaviours {

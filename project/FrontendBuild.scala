@@ -1,7 +1,4 @@
 import sbt._
-import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object FrontendBuild extends Build with MicroService {
 
@@ -11,28 +8,34 @@ object FrontendBuild extends Build with MicroService {
 }
 
 private object AppDependencies {
-  import play.sbt.PlayImport._
   import play.core.PlayVersion
+  import play.sbt.PlayImport._
 
-  private val playHealthVersion = "2.1.0"
+  private val playHealthVersion = "3.9.0-play-25"
   private val logbackJsonLoggerVersion = "3.1.0"
-  private val govukTemplateVersion = "5.20.0"
+  private val govukTemplateVersion = "5.22.0"
   private val playUiVersion = "7.27.0-play-25"
   private val hmrcTestVersion = "3.3.0"
   private val scalaTestVersion = "3.0.4"
   private val scalaTestPlusPlayVersion = "2.0.1"
   private val pegdownVersion = "1.6.0"
-  private val mockitoCoreVersion = "2.13.0"
+  private val mockitoAllVersion = "2.0.2-beta"
   private val httpCachingClientVersion = "8.0.0"
   private val playReactivemongoVersion = "6.2.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val playLanguageVersion = "3.4.0"
-  private val bootstrapVersion = "4.6.0"
+  private val bootstrapVersion = "4.8.0"
   private val scalacheckVersion = "1.13.4"
+  private val scoverageVersion = "1.3.1"
+  private val wireMockVersion = "2.6.0"
+  private val reactivemongoTestVersion = "3.1.0"
+  private val authClientVersion = "2.19.0-play-25"
+  private val mockitoCoreVersion = "2.13.0"
 
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "play-reactivemongo"             % playReactivemongoVersion,
+    "uk.gov.hmrc" %% "auth-client"                    % authClientVersion,
     "uk.gov.hmrc" %% "logback-json-logger"            % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template"                 % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health"                    % playHealthVersion,
@@ -43,25 +46,35 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-language"                  % playLanguageVersion
   )
 
-  trait TestDependencies {
-    lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = ???
+object Dep {
+  def testDeps(scope: String) = {
+    Seq(
+    "uk.gov.hmrc"             %% "hmrctest"           % hmrcTestVersion           % scope,
+    "org.scalatest"           %% "scalatest"          % scalaTestVersion          % scope,
+    "org.scalatestplus.play"  %% "scalatestplus-play" % scalaTestPlusPlayVersion  % scope,
+    "org.pegdown"             % "pegdown"             % pegdownVersion            % scope,
+    "org.jsoup"               % "jsoup"               % "1.10.3"                  % scope,
+    "com.typesafe.play"       %% "play-test"          % PlayVersion.current       % scope,
+    "org.mockito"             %  "mockito-core"       % mockitoCoreVersion        % scope,
+    "org.scalacheck"          %% "scalacheck"         % scalacheckVersion         % scope
+    )
   }
+}
+
 
   object Test {
-    def apply() = new TestDependencies {
-      override lazy val test = Seq(
-        "uk.gov.hmrc"             %% "hmrctest"           % hmrcTestVersion           % scope,
-        "org.scalatest"           %% "scalatest"          % scalaTestVersion          % scope,
-        "org.scalatestplus.play"  %% "scalatestplus-play" % scalaTestPlusPlayVersion  % scope,
-        "org.pegdown"             % "pegdown"             % pegdownVersion            % scope,
-        "org.jsoup"               % "jsoup"               % "1.10.3"                  % scope,
-        "com.typesafe.play"       %% "play-test"          % PlayVersion.current       % scope,
-        "org.mockito"             %  "mockito-core"       % mockitoCoreVersion        % scope,
-        "org.scalacheck"          %% "scalacheck"         % scalacheckVersion         % scope
-      )
-    }.test
+  def apply():Seq[ModuleID] = Dep.testDeps("test")
   }
 
-  def apply() = compile ++ Test()
+
+  object IntegrationTest {
+    def apply() = Dep.testDeps("it") ++ Seq(
+      "com.github.tomakehurst" % "wiremock" % wireMockVersion % "it",
+      "uk.gov.hmrc"           %% "reactivemongo-test" % reactivemongoTestVersion % "it",
+      "uk.gov.hmrc"           %% "hmrctest" % hmrcTestVersion % "it",
+      "org.scalatestplus.play"  %% "scalatestplus-play" % scalaTestPlusPlayVersion % "it"
+    )
+  }
+
+  def apply() = compile ++ Test() ++ IntegrationTest()
 }

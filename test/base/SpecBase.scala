@@ -17,14 +17,25 @@
 package base
 
 import config.FrontendAppConfig
+import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.{AuthUrlBuilder, PREFEFeatureSwitches}
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite {
+trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
+  val mockBusinessRegistrationConnector = mock[BusinessRegistrationConnector]
+  val mockCompanyRegistrationConnector  = mock[CompanyRegistrationConnector]
+  val mockAuthUrlBuilder                = mock[AuthUrlBuilder]
+  val mockAuthConnector                 = mock[AuthConnector]
+  val mockHttpClient                    = mock[HttpClient]
+  val mockFeatureSwitch                 = mock[PREFEFeatureSwitches]
   def injector: Injector = app.injector
 
   def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]

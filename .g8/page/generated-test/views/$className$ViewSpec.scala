@@ -1,7 +1,4 @@
-package views
-
-import views.behaviours.ViewBehaviours
-import views.html.$className;format="decap"$
+package views;format="decap"$
 
 class $className$ViewSpec extends ViewBehaviours {
 
