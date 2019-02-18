@@ -39,7 +39,6 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       new RegisterForPayeControllerImpl(
         frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
         override lazy val payeStartUrl = "payeURL"
-        override lazy val compRegFEPostSigninUrl = "ctURL"
         override lazy val otrsUrl = "otrsURL"
       }
 
@@ -48,7 +47,6 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
         frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
 
       }
-
   }
 
   implicit val hc = HeaderCarrier()
@@ -116,7 +114,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       redirectLocation(result) mustBe Some("otrsURL")
 
     }
-    "redirect to crfe if logged in and ct status is present but no payment ref" in new Setup {
+    "redirect to otrs if logged in and ct status is present but no payment ref" in new Setup {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(()))
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -126,7 +124,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
       val result = controller().continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some("ctURL")
+      redirectLocation(result) mustBe Some("otrsURL")
     }
 
     "redirect to otrs if logged in and ct status is not present, i.e they have never started a SCRS journey" in new Setup {
@@ -152,12 +150,8 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
     "use the correct paye redirect URL" in new Setup {
       controller2().payeStartUrl mustBe "http://localhost:9870/register-for-paye/start-pay-as-you-earn"
     }
-    "use the correct ct redirect URL" in new Setup {
-      controller2().compRegFEPostSigninUrl mustBe "http://localhost:9970/register-your-company/post-sign-in"
-    }
     "use the correct otrs redirect URL" in new Setup {
       controller2().otrsUrl mustBe "https://www.tax.service.gov.uk/business-registration/select-taxes"
     }
   }
-
 }
