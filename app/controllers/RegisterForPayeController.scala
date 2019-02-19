@@ -37,8 +37,6 @@ class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
                                               val businessRegistrationConnector: BusinessRegistrationConnector,
                                               val companyRegistrationConnector: CompanyRegistrationConnector) extends RegisterForPayeController {
   lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
-  lazy  val compRegFEPostSigninUrl  = s"${appConfig.compRegFEUrl}${appConfig.compRegFEUri}${appConfig.compRegFEStartLink}"
-
   lazy val otrsUrl                  = appConfig.otrsUrl
 }
 
@@ -46,7 +44,6 @@ class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
 trait RegisterForPayeController extends FrontendController with I18nSupport with AuthorisedFunctions {
   val appConfig: FrontendAppConfig
   val payeStartUrl: String
-  val compRegFEPostSigninUrl: String
   val otrsUrl: String
   val authUrlBuilder: AuthUrlBuilder
   val businessRegistrationConnector: BusinessRegistrationConnector
@@ -70,9 +67,8 @@ trait RegisterForPayeController extends FrontendController with I18nSupport with
 
   private def navigateBasedOnStatusAndPaymentRef(statusAndPaymentRef: (Option[String], Option[String])): Result = {
     statusAndPaymentRef match {
-      case (Some(_), None) => Redirect(compRegFEPostSigninUrl)
       case (Some(_), Some(_)) => Redirect(payeStartUrl)
-      case (None,_) => Redirect(otrsUrl)
+      case _ => Redirect(otrsUrl)
     }
   }
   def continueToPayeOrOTRS = Action.async {

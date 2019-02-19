@@ -137,7 +137,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
     }
 
-    "redirect to CT when user has logged in and has BR record and a CT record without a payment reference" in {
+    "redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
       featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",true))
       stubAuthorisation()
       stubAudits()
@@ -169,10 +169,10 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       val response = await(fResponse)
 
       response.status mustBe 303
-      response.header("Location") mustBe Some("http://localhost:9970/register-your-company/post-sign-in")
+      response.header("Location") mustBe Some("https://www.tax.service.gov.uk/business-registration/select-taxes")
     }
 
-    "STUB MODE - redirect to CT when user has logged in and has BR record and a CT record without a payment reference" in {
+    "STUB MODE - redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
       featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",false))
       stubAuthorisation()
       stubAudits()
@@ -204,7 +204,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       val response = await(fResponse)
 
       response.status mustBe 303
-      response.header("Location") mustBe Some("http://localhost:9970/register-your-company/post-sign-in")
+      response.header("Location") mustBe Some("https://www.tax.service.gov.uk/business-registration/select-taxes")
     }
 
 
