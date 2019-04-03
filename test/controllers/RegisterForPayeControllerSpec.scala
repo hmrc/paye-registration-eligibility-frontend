@@ -51,7 +51,9 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
   implicit val hc = HeaderCarrier()
 
-  def viewAsString() = registerForPaye(frontendAppConfig, DateUtil.isInTaxYearPeriod, true)(fakeRequest, messages).toString
+  val PAYEThresholdWeeklyAmount = DateUtil.getCurrentPayeThreshold
+
+  def viewAsString() = registerForPaye(frontendAppConfig, DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages).toString
 
   "onPageLoad" must {
 

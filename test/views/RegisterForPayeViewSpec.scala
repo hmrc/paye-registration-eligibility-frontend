@@ -27,12 +27,12 @@ import views.html.registerForPaye
 class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
 
   val messageKeyPrefix = "registerForPaye"
+  val PAYEThresholdWeeklyAmount = "100"
+  def createNewTaxYearView = () => registerForPaye(frontendAppConfig, true, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
 
-  def createNewTaxYearView = () => registerForPaye(frontendAppConfig, true, true)(fakeRequest, messages)
+  def createNormalView = () => registerForPaye(frontendAppConfig, false, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
 
-  def createNormalView = () => registerForPaye(frontendAppConfig, false, true)(fakeRequest, messages)
-
-  def createLoggedInView = () => registerForPaye(frontendAppConfig, false, false)(fakeRequest, messages)
+  def createLoggedInView = () => registerForPaye(frontendAppConfig, false, false,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
 
   class SetupPage {
     reset(mockBusinessRegistrationConnector)

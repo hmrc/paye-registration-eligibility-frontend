@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
 
-@(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean, notLoggedIn: Boolean)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("registerForPaye.title"),
@@ -30,7 +30,7 @@
     <p>@messages("registerForPaye.p1")</p>
 
     <ul class="list-bullet">
-        <li>@messages("registerForPaye.l1")</li>
+        <li>@messages("registerForPaye.l1",weeklyPAYEThreshold)</li>
         <li>@messages("registerForPaye.l2")</li>
         <li>@messages("registerForPaye.l3")</li>
         <li>@messages("registerForPaye.l4")</li>
