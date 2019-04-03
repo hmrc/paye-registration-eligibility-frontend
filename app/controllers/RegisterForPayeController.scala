@@ -52,7 +52,7 @@ trait RegisterForPayeController extends FrontendController with I18nSupport with
   def onPageLoad = Action {
     implicit request =>
       val notLoggedIn = hc.authorization.isEmpty
-      Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn))
+      Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
   }
 
   def onSubmit = Action.async {

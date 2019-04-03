@@ -80,7 +80,7 @@ dropout.p4                                          = <a href="{0}">Return to GO
 registerForPaye.title                               = You must register for PAYE online
 registerForPaye.heading                             = Register for PAYE online
 registerForPaye.p1                                  = Only continue if the company does, or intends to do, one of the following:
-registerForPaye.l1                                  = pay any employees, including company directors, £116 or more a week
+registerForPaye.l1                                  = pay any employees, including company directors, £{0} or more a week
 registerForPaye.l2                                  = employ someone, including any company director, who''s already receiving a pension or who has another job
 registerForPaye.l3                                  = provide expenses or benefits to employees, including company directors
 registerForPaye.l4                                  = hire subcontractors for work in the construction industry
