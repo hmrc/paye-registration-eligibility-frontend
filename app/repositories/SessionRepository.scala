@@ -20,10 +20,11 @@ import javax.inject.Inject
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.{JsValue, Json}
 import play.api.{Configuration, Logger}
-import play.modules.reactivemongo.MongoDbConnection
+import play.modules.reactivemongo.{MongoDbConnection, ReactiveMongoComponent}
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.play.json.ImplicitBSONHandlers
 import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.ReactiveRepository
@@ -71,20 +72,18 @@ class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
     val cmDocument = Json.toJson(DatedCacheMap(cm))
     val modifier = BSONDocument("$set" -> cmDocument)
 
-    collection.update(selector, modifier, upsert = true).map { lastError =>
+    collection.update(false).one(selector, modifier, upsert = true).map { lastError =>
       lastError.ok
     }
   }
 
   def get(id: String): Future[Option[CacheMap]] =
-    collection.find(Json.obj("id" -> id)).one[CacheMap]
+    collection.find(Json.obj("id" -> id), None)(JsObjectDocumentWriter, BSONDocumentWrites).one[CacheMap]
 }
 
-class SessionRepository @Inject()(config: Configuration) {
+class SessionRepository @Inject()(config: Configuration, mongo: ReactiveMongoComponent) {
 
-  class DbConnection extends MongoDbConnection
-
-  private lazy val sessionRepository = new ReactiveMongoRepository(config, new DbConnection().db)
+  private lazy val sessionRepository = new ReactiveMongoRepository(config, mongo.mongoConnector.db)
 
   def apply(): ReactiveMongoRepository = sessionRepository
 }
