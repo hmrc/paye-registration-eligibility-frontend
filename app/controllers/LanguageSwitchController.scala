@@ -16,38 +16,21 @@
 
 package controllers
 
-import com.google.inject.Inject
+
 import config.FrontendAppConfig
+import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call, Controller}
-import uk.gov.hmrc.play.language.LanguageUtils
+import play.api.i18n.{Lang, MessagesApi}
+import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
-// TODO, upstream this into play-language
-class LanguageSwitchController @Inject() (
-                                           configuration: Configuration,
-                                           appConfig: FrontendAppConfig,
-                                           implicit val messagesApi: MessagesApi
-                                         ) extends Controller with I18nSupport {
+@Singleton
+class LanguageSwitchController @Inject()(appConfig: FrontendAppConfig,
+                                         configuration: Configuration,
+                                         languageUtils: LanguageUtils,
+                                         val messagesApi: MessagesApi
+                                        ) extends LanguageController(configuration, languageUtils) {
 
-  private def langToCall(lang: String): (String) => Call = appConfig.routeToSwitchLanguage
+  def languageMap: Map[String, Lang] = appConfig.languageMap
 
-  private def fallbackURL: String = routes.IndexController.onPageLoad().url
-
-  private def languageMap: Map[String, Lang] = appConfig.languageMap
-
-  def switchToLanguage(language: String): Action[AnyContent] = Action {
-    implicit request =>
-      val enabled = isWelshEnabled
-      val lang = if (enabled) {
-        languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-      } else {
-        Lang("en")
-      }
-      val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-      Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  private def isWelshEnabled: Boolean =
-    configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
+  protected[controllers] def fallbackURL: String = routes.IndexController.onPageLoad().url
 }

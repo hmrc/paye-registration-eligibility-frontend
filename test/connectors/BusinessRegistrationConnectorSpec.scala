@@ -16,7 +16,7 @@
 
 package connectors
 
-import base.SpecBase
+import base.{SpecBase, LogCapturing}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.Eventually
@@ -24,7 +24,6 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.test.LogCapturing
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
