@@ -38,11 +38,11 @@ object DateUtil {
 
   def getCurrentPayeThreshold: String = {
     val now = getSystemDate
-    val taxYearStart = LocalDate.parse("2019-04-06")
+    val taxYearStart = LocalDate.parse("2020-04-06")
     if (now.isEqual(taxYearStart) || now.isAfter(taxYearStart)) {
-      "118"
+      "120"
     } else {
-      "116"
+      "118"
     }
   }
 
