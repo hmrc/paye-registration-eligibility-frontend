@@ -70,10 +70,10 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(true))
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
 
-      val result = controller().onSubmit()(postRequest)
-
       when(mockDataCacheConnector.save(any(),any(),any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
+
+      val result = controller().onSubmit()(postRequest)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad().url)
