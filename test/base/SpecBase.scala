@@ -23,10 +23,12 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
+import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import utils.{AuthUrlBuilder, PREFEFeatureSwitches}
+import utils.{AuthUrlBuilder, CascadeUpsert, PREFEFeatureSwitches}
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
@@ -36,13 +38,17 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
   val mockAuthConnector                 = mock[AuthConnector]
   val mockHttpClient                    = mock[HttpClient]
   val mockFeatureSwitch                 = mock[PREFEFeatureSwitches]
+
   def injector: Injector = app.injector
 
   def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
 
-  def fakeRequest = FakeRequest("", "")
+  def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   def messages: Messages = messagesApi.preferred(fakeRequest)
+
+  def messagesControllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
+
 }

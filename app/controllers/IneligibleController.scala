@@ -19,15 +19,15 @@ package controllers
 import config.FrontendAppConfig
 import controllers.actions._
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Action
+import play.api.i18n.I18nSupport
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.dropout
 
 class IneligibleController @Inject()(appConfig: FrontendAppConfig,
-                                     override val messagesApi: MessagesApi,
-                                     getData: DataRetrievalAction,
-                                     requireData: DataRequiredAction) extends FrontendController with I18nSupport {
+                                     requireData: DataRequiredAction,
+                                     controllerComponents: MessagesControllerComponents
+                                    ) extends FrontendController(controllerComponents) with I18nSupport {
 
   def onPageLoad = Action {
     implicit request =>

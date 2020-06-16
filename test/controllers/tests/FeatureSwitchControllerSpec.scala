@@ -20,11 +20,12 @@ import controllers.ControllerSpecBase
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils._
 
-class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfterEach {
+class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfterEach with MockitoSugar {
 
   val testFeatureSwitch = ValueSetFeatureSwitch("system-date", "2018-10-12")
   val testDisabledSwitch = ValueSetFeatureSwitch("system-date", "time-clear")
@@ -39,10 +40,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
   }
 
   class Setup {
-    val controller = new FeatureSwitchController {
-      override val prefeFeatureSwitch = mockFeatureSwitches
-      override val featureManager    = mockFeatureManager
-    }
+    val controller = new FeatureSwitchControllerImpl(mockFeatureManager, mockFeatureSwitches, messagesControllerComponents)
   }
 
   "switcher" should {

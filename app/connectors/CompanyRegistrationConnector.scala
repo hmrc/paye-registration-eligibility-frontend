@@ -31,10 +31,10 @@ import scala.concurrent.Future
 class CompanyRegistrationConnectorImpl @Inject()(val featureSwitch: PREFEFeatureSwitches,
                                                  val http: HttpClient,
                                                  val appConfig: FrontendAppConfig) extends CompanyRegistrationConnector {
-  lazy val companyRegistrationUrl: String = appConfig.baseUrl("company-registration")
-  lazy val companyRegistrationUri: String = appConfig.getConfString("company-registration.uri",throw new Exception("company-registration.uri doesn't exist"))
-  lazy val stubUrl: String = appConfig.baseUrl("incorporation-frontend-stubs")
-  lazy val stubUri: String = appConfig.getConfString("incorporation-frontend-stubs.uri",throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
+  lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
+  lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri",throw new Exception("company-registration.uri doesn't exist"))
+  lazy val stubUrl: String = appConfig.config.baseUrl("incorporation-frontend-stubs")
+  lazy val stubUri: String = appConfig.config.getConfString("incorporation-frontend-stubs.uri",throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
 }
 
 trait CompanyRegistrationConnector {

@@ -19,16 +19,13 @@ package config
 import com.google.inject.Inject
 import controllers.routes
 import play.api.i18n.Lang
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class FrontendAppConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
+class FrontendAppConfig @Inject()(val config: ServicesConfig) {
 
-  override protected def mode = environment.mode
+  private def loadConfig(key: String) = config.getString(key)
 
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
-  private lazy val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
+  private lazy val contactHost = config.getString("contact-frontend.host")
   private val contactFormServiceIdentifier = "scrs"
 
   lazy val analyticsToken = loadConfig(s"google-analytics.token")
@@ -36,7 +33,7 @@ class FrontendAppConfig @Inject()(override val runModeConfiguration: Configurati
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  lazy val authUrl = baseUrl("auth")
+  lazy val authUrl = config.baseUrl("auth")
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
 

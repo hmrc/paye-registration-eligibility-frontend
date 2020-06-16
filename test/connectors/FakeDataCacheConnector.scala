@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object FakeDataCacheConnector extends DataCacheConnector {
+class FakeDataCacheConnector extends DataCacheConnector {
   override def save[A](cacheId: String, key: String, value: A)(implicit fmt: Format[A]): Future[CacheMap] = Future(CacheMap(cacheId, Map()))
 
   override def remove(cacheId: String, key: String): Future[Boolean] = ???

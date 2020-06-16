@@ -23,7 +23,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.Application
 import play.api.http.HeaderNames
-import play.api.libs.crypto.{CryptoConfig, HMACSHA1CookieSigner}
+import play.api.libs.crypto.DefaultCookieSigner
 import play.api.libs.json.Json
 import play.api.libs.ws.WSCookie
 import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted, PlainText}
@@ -90,7 +90,7 @@ trait AuthHelper extends SessionCookieBaker {
 
 trait SessionCookieBaker {
   val app: Application
-  lazy val cryptIns = new HMACSHA1CookieSigner(app.injector.instanceOf[CryptoConfig])
+  val cookieSigner: DefaultCookieSigner
 
   val cookieKey = "gvBoGdgzqG1AarzF1LY0zQ=="
   def cookieValue(sessionData: Map[String,String]) = {
@@ -99,7 +99,7 @@ trait SessionCookieBaker {
         case (k, v) => URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8")
       }.mkString("&")
       val key = "yNhI04vHs9<_HWbC`]20u`37=NGLGYY5:0Tg5?y`W<NoJnXWqmjcgZBec@rOxb^G".getBytes
-      PlainText(cryptIns.sign(encoded, key) + "-" + encoded)
+      PlainText(cookieSigner.sign(encoded, key) + "-" + encoded)
     }
 
     val encodedCookie = encode(sessionData)
@@ -109,7 +109,7 @@ trait SessionCookieBaker {
   }
 
   def getCookieData(cookie: WSCookie): Map[String, String] = {
-    getCookieData(cookie.value.get)
+    getCookieData(cookie.value)
   }
 
   def getCookieData(cookieData: String): Map[String, String] = {

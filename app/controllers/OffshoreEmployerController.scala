@@ -23,7 +23,8 @@ import forms.OffshoreEmployerFormProvider
 import identifiers.OffshoreEmployerId
 import javax.inject.Inject
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.offshoreEmployer
@@ -32,12 +33,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class OffshoreEmployerController @Inject()(appConfig: FrontendAppConfig,
-                                           override val messagesApi: MessagesApi,
                                            dataCacheConnector: DataCacheConnector,
                                            identify: SessionAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
-                                           formProvider: OffshoreEmployerFormProvider) extends FrontendController with I18nSupport {
+                                           formProvider: OffshoreEmployerFormProvider,
+                                           controllerComponents: MessagesControllerComponents
+                                          ) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 

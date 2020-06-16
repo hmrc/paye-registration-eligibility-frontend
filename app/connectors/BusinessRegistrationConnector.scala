@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class BusinessRegistrationConnectorImpl @Inject()(val appConfig: FrontendAppConfig,
                                                   val wSHttp: HttpClient) extends BusinessRegistrationConnector {
- lazy val businessRegUrl = appConfig.baseUrl("business-registration")
+ lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
 }
 
 trait BusinessRegistrationConnector {

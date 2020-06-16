@@ -25,7 +25,7 @@ class FeatureSwitchControllerLanguageSpec extends ControllerSpecBase with Before
 
 
   class Setup {
-    val controller = new FeatureSwitchControllerLanguage{}
+    val controller = new FeatureSwitchControllerLanguage(messagesControllerComponents){}
   }
       "english/welsh toggle should show on page when feature is true" in new Setup {
         sys.props += (("microservice.services.features.welsh-translation", "false"))

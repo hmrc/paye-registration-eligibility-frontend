@@ -17,16 +17,17 @@
 package controllers.tests
 
 import javax.inject.Inject
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils._
 
 import scala.concurrent.Future
 
 class FeatureSwitchControllerImpl @Inject()(val featureManager: FeatureManager,
-                                            val prefeFeatureSwitch: PREFEFeatureSwitches) extends FeatureSwitchController
+                                            val prefeFeatureSwitch: PREFEFeatureSwitches,
+                                            controllerComponents: MessagesControllerComponents) extends FeatureSwitchController(controllerComponents)
 
-trait FeatureSwitchController extends FrontendController {
+abstract class FeatureSwitchController(controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
 
   val featureManager: FeatureManager
   val prefeFeatureSwitch: PREFEFeatureSwitches
@@ -46,3 +47,4 @@ trait FeatureSwitchController extends FrontendController {
       }
   }
 }
+

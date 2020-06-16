@@ -63,7 +63,7 @@ trait MicroService {
         "javascripts/payeregistrationeligibilityfrontend-app.js" -> group(Seq("javascripts/show-hide-content.js", "javascripts/payeregistrationeligibilityfrontend.js"))
       ),
       // prevent removal of unused code which generates warning errors due to use of third-party libs
-      UglifyKeys.compressOptions := Seq("unused=false", "dead_code=false"),
+      uglifyCompressOptions := Seq("unused=false", "dead_code=false"),
       pipelineStages := Seq(digest),
       // below line required to force asset pipeline to operate in dev rather than only prod
       pipelineStages in Assets := Seq(concat,uglify),
