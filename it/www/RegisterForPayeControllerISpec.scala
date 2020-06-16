@@ -18,13 +18,17 @@ package www
 
 import helpers._
 import play.api.http.{HeaderNames, Status}
-import play.api.test.FakeApplication
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.crypto.DefaultCookieSigner
 import utils.{BooleanFeatureSwitch, PREFEFeatureSwitches}
 
 class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
   override lazy val mockUrl = s"http://$mockHost:$mockPort"
-  override implicit lazy val app = FakeApplication(additionalConfiguration = Map(
+  override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
+  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
+
+  def additionalConfiguration: Map[String, String] = Map(
     "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "microservice.services.auth.host" -> s"$mockHost",
@@ -47,7 +51,8 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     "microservice.services.cachable.short-lived-cache.domain" -> "save4later",
     "mongodb.uri" -> s"$mongoUri",
     "feature.companyRegistration" -> "true"
-  ))
+  )
+
   override val mockHost = WiremockHelper.wiremockHost
   override val mockPort = WiremockHelper.wiremockPort
   val sessionCookie = () => getSessionCookie()
@@ -77,7 +82,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
     s"redirect to ${controllers.routes.RegisterForPayeController.continueToPayeOrOTRS.url}" in {
 
-      stubAuthorisation(200)
+      stubAuthorisation()
       stubAudits()
       val fResponse = buildClient("/register-online").
         withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").

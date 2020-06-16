@@ -22,16 +22,18 @@ import views.html.dropout
 
 class IneligibleControllerSpec extends ControllerSpecBase {
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new IneligibleController(frontendAppConfig, messagesApi,
-      dataRetrievalAction, new DataRequiredActionImpl)
+  object Controller extends IneligibleController(
+    frontendAppConfig,
+    new DataRequiredActionImpl(messagesControllerComponents),
+    messagesControllerComponents
+  )
 
   def viewAsString() = dropout(frontendAppConfig)(fakeRequest, messages).toString
 
   "Dropout Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller().onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()

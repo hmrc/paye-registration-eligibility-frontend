@@ -21,15 +21,15 @@ import config.FrontendAppConfig
 import controllers.routes
 import models.requests.CacheIdentifierRequest
 import play.api.mvc.Results._
-import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
+import play.api.mvc.{ActionBuilder, ActionFunction, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SessionAction extends ActionBuilder[CacheIdentifierRequest] with ActionFunction[Request, CacheIdentifierRequest]
+trait SessionAction extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest]
 
-class SessionActionImpl @Inject()(config: FrontendAppConfig)
+class SessionActionImpl @Inject()(config: FrontendAppConfig, controllerComponents: MessagesControllerComponents)
                                  (implicit ec: ExecutionContext) extends SessionAction {
 
   override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] = {
@@ -40,4 +40,8 @@ class SessionActionImpl @Inject()(config: FrontendAppConfig)
       case None => Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))
     }
   }
+
+  override protected val executionContext: ExecutionContext = controllerComponents.executionContext
+
+  override val parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
 }

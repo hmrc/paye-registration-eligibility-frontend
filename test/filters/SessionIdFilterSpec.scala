@@ -21,7 +21,7 @@ import java.util.UUID
 import akka.stream.Materializer
 import com.google.inject.Inject
 import org.scalatest.{MustMatchers, WordSpec}
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.{DefaultHttpFilters, HttpFilters}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -46,7 +46,7 @@ object SessionIdFilterSpec {
                                       ) extends SessionIdFilter(mat, UUID.fromString(sessionId), ec)
 }
 
-class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite {
+class SessionIdFilterSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
 
   import SessionIdFilterSpec._
 
@@ -82,6 +82,9 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite
         bind[HttpFilters].to[Filters],
         bind[SessionIdFilter].to[TestSessionIdFilter]
       )
+      .configure(
+        "play.filters.disabled" -> List("uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCryptoFilter")
+      )
       .router(router)
       .build()
   }
@@ -92,10 +95,7 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite
 
       val Some(result) = route(app, FakeRequest(GET, "/test"))
 
-      val body = contentAsJson(result)
-
-      (body \ "fromHeader").as[String] mustEqual s"session-$sessionId"
-      (body \ "fromSession").as[String] mustEqual s"session-$sessionId"
+      session(result).data must contain(SessionKeys.sessionId -> s"session-$sessionId")
     }
 
     "not override a sessionId if one doesn't already exist" in {
@@ -110,7 +110,7 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite
 
     "not override other session values from the response" in {
 
-      val Some(result) = route(app, FakeRequest(GET, "/test2"))
+      val Some(result) = route(app, FakeRequest(GET, "/test2").withSession("foo" -> "bar"))
       session(result).data must contain("foo" -> "bar")
     }
 

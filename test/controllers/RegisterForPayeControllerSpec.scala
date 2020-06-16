@@ -35,18 +35,25 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
 
-    def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-      new RegisterForPayeControllerImpl(
-        frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
-        override lazy val payeStartUrl = "payeURL"
-        override lazy val otrsUrl = "otrsURL"
-      }
+    object Controller extends RegisterForPayeControllerImpl(
+      frontendAppConfig,
+      mockAuthConnector,
+      mockAuthUrlBuilder,
+      mockBusinessRegistrationConnector,
+      mockCompanyRegistrationConnector,
+      messagesControllerComponents) {
+      override lazy val payeStartUrl = "payeURL"
+      override lazy val otrsUrl = "otrsURL"
+    }
 
-    def controller2(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-      new RegisterForPayeControllerImpl(
-        frontendAppConfig, messagesApi, mockAuthConnector, mockAuthUrlBuilder, mockBusinessRegistrationConnector, mockCompanyRegistrationConnector) {
-
-      }
+    object Controller2 extends RegisterForPayeControllerImpl(
+      frontendAppConfig,
+      mockAuthConnector,
+      mockAuthUrlBuilder,
+      mockBusinessRegistrationConnector,
+      mockCompanyRegistrationConnector,
+      messagesControllerComponents
+    )
   }
 
   implicit val hc = HeaderCarrier()
@@ -58,7 +65,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
   "onPageLoad" must {
 
     "return OK and the correct view for a GET" in new Setup {
-      val result = controller().onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
@@ -70,7 +77,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new Exception("")))
       when(mockAuthUrlBuilder.redirectToLogin).thenReturn(Results.SeeOther("foo"))
-      val result = controller().onSubmit(fakeRequest)
+      val result = Controller.onSubmit(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result).map {
         _.contains("foo") mustBe true
@@ -80,7 +87,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(()))
 
-      val result = controller().onSubmit(fakeRequest)
+      val result = Controller.onSubmit(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result).map {
         _.contains(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url) mustBe true
@@ -98,7 +105,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Some("payment"))))
 
-      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("payeURL")
 
@@ -111,7 +118,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Option.empty[String], Option.empty[String])))
 
-      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
 
@@ -124,7 +131,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Option.empty[String])))
 
-      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
     }
@@ -135,14 +142,14 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Option.empty[String]))
 
-      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
     }
     "redirect to index if not logged in" in new Setup {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new Exception("")))
-      val result = controller().continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("/eligibility-for-paye")
 
@@ -150,10 +157,10 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
   }
   "RegisterForPayeController" should {
     "use the correct paye redirect URL" in new Setup {
-      controller2().payeStartUrl mustBe "http://localhost:9870/register-for-paye/start-pay-as-you-earn"
+      Controller2.payeStartUrl mustBe "http://localhost:9870/register-for-paye/start-pay-as-you-earn"
     }
     "use the correct otrs redirect URL" in new Setup {
-      controller2().otrsUrl mustBe "https://www.tax.service.gov.uk/business-registration/select-taxes"
+      Controller2.otrsUrl mustBe "https://www.tax.service.gov.uk/business-registration/select-taxes"
     }
   }
 }

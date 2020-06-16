@@ -26,13 +26,13 @@ class AuthUrlBuilderImpl @Inject()(val appConfig: FrontendAppConfig) extends Aut
 
 trait AuthUrlBuilder {
   val appConfig: FrontendAppConfig
-  private lazy val loginCallback = appConfig.getConfString("auth.login-callback.url",throw new Exception(s"cant find config value - $configRoot.auth.login-callback.url"))
-  private lazy val appName        = appConfig.getString("appName")
+  private lazy val loginCallback = appConfig.config.getConfString("auth.login-callback.url",throw new Exception(s"cant find config value - $configRoot.auth.login-callback.url"))
+  private lazy val appName        = appConfig.config.getString("appName")
   private val configRoot          = "microservice.services"
 
   private lazy val buildCompanyAuthUrl = {
-    val companyAuthHost = appConfig.getConfString("company-auth.url",throw new Exception(s"cant find config value - $configRoot.company-auth.url"))
-    val loginPath = appConfig.getConfString("auth.login_path",throw new Exception(s"cant find config value - $configRoot.auth.login_path"))
+    val companyAuthHost = appConfig.config.getConfString("company-auth.url",throw new Exception(s"cant find config value - $configRoot.company-auth.url"))
+    val loginPath = appConfig.config.getConfString("auth.login_path",throw new Exception(s"cant find config value - $configRoot.auth.login_path"))
 
     s"$companyAuthHost$loginPath"
   }

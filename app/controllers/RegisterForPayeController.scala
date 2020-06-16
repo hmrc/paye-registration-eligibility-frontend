@@ -19,8 +19,8 @@ package controllers
 import config.FrontendAppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Result}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.{AuthUrlBuilder, DateUtil}
@@ -31,17 +31,19 @@ import scala.concurrent.Future
 
 
 class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
-                                              override val messagesApi: MessagesApi,
                                               val authConnector: AuthConnector,
                                               val authUrlBuilder: AuthUrlBuilder,
                                               val businessRegistrationConnector: BusinessRegistrationConnector,
-                                              val companyRegistrationConnector: CompanyRegistrationConnector) extends RegisterForPayeController {
+                                              val companyRegistrationConnector: CompanyRegistrationConnector,
+                                              controllerComponents: MessagesControllerComponents
+                                             ) extends RegisterForPayeController(controllerComponents) {
   lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
   lazy val otrsUrl                  = appConfig.otrsUrl
 }
 
 
-trait RegisterForPayeController extends FrontendController with I18nSupport with AuthorisedFunctions {
+abstract class RegisterForPayeController(controllerComponents: MessagesControllerComponents
+                                        ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
   val appConfig: FrontendAppConfig
   val payeStartUrl: String
   val otrsUrl: String
@@ -57,12 +59,12 @@ trait RegisterForPayeController extends FrontendController with I18nSupport with
 
   def onSubmit = Action.async {
     implicit request =>
-    authorised() {
-      Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS))
-  } recoverWith {
-      case  _ =>
-        Future.successful(authUrlBuilder.redirectToLogin)
-    }
+      authorised() {
+        Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS))
+      } recoverWith {
+        case  _ =>
+          Future.successful(authUrlBuilder.redirectToLogin)
+      }
   }
 
   private def navigateBasedOnStatusAndPaymentRef(statusAndPaymentRef: (Option[String], Option[String])): Result = {

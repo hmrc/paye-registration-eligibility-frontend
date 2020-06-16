@@ -23,6 +23,7 @@ import identifiers.AtLeastOneDirectorHasNinoId
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
@@ -31,7 +32,8 @@ import views.html.atLeastOneDirectorHasNino
 
 import scala.concurrent.Future
 
-class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with BeforeAndAfterEach {
+class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with BeforeAndAfterEach with MockitoSugar {
+
   def onwardRoute = routes.IndexController.onPageLoad()
 
   val formProvider = new AtLeastOneDirectorHasNinoFormProvider()
@@ -41,16 +43,21 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
 
   override def beforeEach(): Unit = reset(mockDataCacheConnector)
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new AtLeastOneDirectorHasNinoController(frontendAppConfig, messagesApi, mockDataCacheConnector, FakeAuthAction,
-      dataRetrievalAction, new DataRequiredActionImpl, formProvider)
+  object Controller extends AtLeastOneDirectorHasNinoController(
+    frontendAppConfig,
+    mockDataCacheConnector,
+    new FakeAuthAction(messagesControllerComponents),
+    getEmptyCacheMap,
+    new DataRequiredActionImpl(messagesControllerComponents),
+    formProvider, messagesControllerComponents
+  )
 
   def viewAsString(form: Form[_] = form) = atLeastOneDirectorHasNino(frontendAppConfig, form)(fakeRequest, messages).toString
 
   "AtLeastOneDirectorHasNino Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller().onPageLoad()(fakeRequest)
+      val result = Controller.onPageLoad()(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
@@ -58,9 +65,19 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
-      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)))
+      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents)
 
-      val result = controller(getRelevantData).onPageLoad()(fakeRequest)
+      object Controller extends AtLeastOneDirectorHasNinoController(
+        frontendAppConfig,
+        mockDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        getRelevantData,
+        new DataRequiredActionImpl(messagesControllerComponents),
+        formProvider, messagesControllerComponents
+      )
+
+
+      val result = Controller.onPageLoad()(fakeRequest)
 
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
@@ -72,7 +89,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       when(mockDataCacheConnector.save(any(),any(),any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      val result = controller().onSubmit()(postRequest)
+      val result = Controller.onSubmit()(postRequest)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.routes.OffshoreEmployerController.onPageLoad().url)
@@ -85,7 +102,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       when(mockDataCacheConnector.save(any(),any(),any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      val result = controller().onSubmit()(postRequest)
+      val result = Controller.onSubmit()(postRequest)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad().url)
@@ -95,7 +112,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller().onSubmit()(postRequest)
+      val result = Controller.onSubmit()(postRequest)
 
       status(result) mustBe BAD_REQUEST
       contentAsString(result) mustBe viewAsString(boundForm)

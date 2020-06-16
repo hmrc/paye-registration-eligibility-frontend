@@ -17,17 +17,18 @@
 package controllers.tests
 
 import javax.inject.Inject
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-class FeatureSwitchControllerLanguageImpl @Inject()() extends FeatureSwitchControllerLanguage
+class FeatureSwitchControllerLanguageImpl @Inject()(controllerComponents: MessagesControllerComponents
+                                                   ) extends FeatureSwitchControllerLanguage(controllerComponents)
 
-trait FeatureSwitchControllerLanguage extends FrontendController {
+abstract class FeatureSwitchControllerLanguage(controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
 
   def enableLanguageFunctionality(enable: Boolean): Action[AnyContent] = Action {
     implicit request =>
       sys.props += (("microservice.services.features.welsh-translation", enable.toString))
 
-        Redirect(controllers.routes.LanguageSwitchController.switchToLanguage("english"))
+      Redirect(controllers.routes.LanguageSwitchController.switchToLanguage("english"))
   }
 }

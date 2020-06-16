@@ -20,13 +20,15 @@ import play.api.test.Helpers._
 
 class FeedbackControllerSpec extends ControllerSpecBase {
 
-  def controller =
-    new FeedbackControllerImpl(frontendAppConfig, messagesApi)
+  object Controller extends FeedbackControllerImpl(
+    frontendAppConfig,
+    messagesControllerComponents
+  )
 
   "Feedback Controller" must {
 
     "Redirect to Feedback page on pageLoad" in {
-      val result = controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).map{
