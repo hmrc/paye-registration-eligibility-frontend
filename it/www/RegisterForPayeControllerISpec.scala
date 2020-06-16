@@ -24,9 +24,8 @@ import utils.{BooleanFeatureSwitch, PREFEFeatureSwitches}
 
 class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
-  override lazy val mockUrl = s"http://$mockHost:$mockPort"
-  override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
-  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
+  override val mockHost = WiremockHelper.wiremockHost
+  override val mockPort = WiremockHelper.wiremockPort
 
   def additionalConfiguration: Map[String, String] = Map(
     "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
@@ -53,8 +52,10 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     "feature.companyRegistration" -> "true"
   )
 
-  override val mockHost = WiremockHelper.wiremockHost
-  override val mockPort = WiremockHelper.wiremockPort
+  override lazy val mockUrl = s"http://$mockHost:$mockPort"
+  override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
+  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
+
   val sessionCookie = () => getSessionCookie()
   val featureSwitches = app.injector.instanceOf[PREFEFeatureSwitches]
   val regId = "6"
@@ -106,7 +107,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
       stubGet("/business-registration/business-tax-registration", Status.NOT_FOUND,
         s"""{
-            |}
+           |}
             """.stripMargin
       )
 
@@ -122,7 +123,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "redirect to PRFE when user has logged in and has BR record and a CT record with a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
       stubAuthorisation()
       stubAudits()
 
@@ -136,16 +137,16 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       stubGet(s"/company-registration/corporation-tax-registration/$regId/corporation-tax-registration", Status.OK,
-      s"""{
-        |  "status": "held",
-        |  "confirmationReferences": {
-          |  "transaction-id": "tx1234567",
-            |  "payment-reference": "122334456"
-            |  }
-            |}
+        s"""{
+           |  "status": "held",
+           |  "confirmationReferences": {
+           |  "transaction-id": "tx1234567",
+           |  "payment-reference": "122334456"
+           |  }
+           |}
             """.stripMargin
 
-            )
+      )
 
       val fResponse = buildClient("/authorised-for-paye").
         withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
@@ -159,26 +160,26 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
       stubAuthorisation()
       stubAudits()
 
       stubGet("/business-registration/business-tax-registration", Status.OK,
         s"""{
-            |  "registrationID": "$regId",
-            |  "completionCapacity": "Director",
-            |  "language": "EN"
-            |}
+           |  "registrationID": "$regId",
+           |  "completionCapacity": "Director",
+           |  "language": "EN"
+           |}
                   """.stripMargin
       )
 
       stubGet(s"/company-registration/corporation-tax-registration/$regId/corporation-tax-registration", Status.OK,
         s"""{
-            |  "status": "held",
-            |  "confirmationReferences": {
-            |  "transaction-id": "tx1234567"
-            |  }
-            |}
+           |  "status": "held",
+           |  "confirmationReferences": {
+           |  "transaction-id": "tx1234567"
+           |  }
+           |}
             """.stripMargin
 
       )
@@ -194,26 +195,26 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "STUB MODE - redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",false))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", false))
       stubAuthorisation()
       stubAudits()
 
       stubGet("/business-registration/business-tax-registration", Status.OK,
         s"""{
-            |  "registrationID": "$regId",
-            |  "completionCapacity": "Director",
-            |  "language": "EN"
-            |}
+           |  "registrationID": "$regId",
+           |  "completionCapacity": "Director",
+           |  "language": "EN"
+           |}
                   """.stripMargin
       )
 
       stubGet(s"/incorporation-frontend-stubs/$regId/corporation-tax-registration", Status.OK,
         s"""{
-            |  "status": "held",
-            |  "confirmationReferences": {
-            |  "transaction-id": "tx1234567"
-            |  }
-            |}
+           |  "status": "held",
+           |  "confirmationReferences": {
+           |  "transaction-id": "tx1234567"
+           |  }
+           |}
             """.stripMargin
 
       )
@@ -230,16 +231,16 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
 
     "redirect to OTRS when user has logged in and has BR record but NO CT record" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
       stubAuthorisation()
       stubAudits()
 
       stubGet("/business-registration/business-tax-registration", status = Status.OK,
         s"""{
-            |  "registrationID": "$regId",
-            |  "completionCapacity": "Director",
-            |  "language": "EN"
-            |}
+           |  "registrationID": "$regId",
+           |  "completionCapacity": "Director",
+           |  "language": "EN"
+           |}
                   """.stripMargin
       )
 
@@ -261,16 +262,16 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
     }
     "redirect to OTRS when user has logged in but BR returns a 202" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration",true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
       stubAuthorisation()
       stubAudits()
 
       stubGet("/business-registration/business-tax-registration", status = Status.ACCEPTED,
         s"""{
-            |  "registrationID": "$regId",
-            |  "completionCapacity": "Director",
-            |  "language": "EN"
-            |}
+           |  "registrationID": "$regId",
+           |  "completionCapacity": "Director",
+           |  "language": "EN"
+           |}
                   """.stripMargin
       )
 

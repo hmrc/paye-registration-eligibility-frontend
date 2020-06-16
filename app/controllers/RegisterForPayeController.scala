@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, MessagesControllerComponents, Result}
+import play.api.mvc.{MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.{AuthUrlBuilder, DateUtil}

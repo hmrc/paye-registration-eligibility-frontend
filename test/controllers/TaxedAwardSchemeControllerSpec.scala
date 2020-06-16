@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.TaxedAwardSchemeFormProvider
 import identifiers.TaxedAwardSchemeId
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import play.api.data.Form

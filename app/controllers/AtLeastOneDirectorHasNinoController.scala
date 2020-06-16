@@ -23,7 +23,7 @@ import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
 import javax.inject.Inject
 import play.api.data.Form
-import play.api.i18n.{I18nSupport}
+import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.{Navigator, UserAnswers}

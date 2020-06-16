@@ -16,12 +16,12 @@
 
 package controllers
 
-import connectors.{DataCacheConnector, DataCacheConnectorImpl, FakeDataCacheConnector}
+import connectors.{DataCacheConnector, FakeDataCacheConnector}
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
 import identifiers.OffshoreEmployerId
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import play.api.data.Form
 import play.api.libs.json.JsBoolean

@@ -20,7 +20,7 @@ package controllers
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import play.api.i18n.{Lang}
+import play.api.i18n.Lang
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
