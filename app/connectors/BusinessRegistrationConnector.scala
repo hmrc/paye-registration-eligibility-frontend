@@ -26,14 +26,9 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BusinessRegistrationConnectorImpl @Inject()(val appConfig: FrontendAppConfig,
-                                                  val wSHttp: HttpClient) extends BusinessRegistrationConnector {
- lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
-}
-
-trait BusinessRegistrationConnector {
-  val businessRegUrl: String
-  val wSHttp: CoreGet
+class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
+                                              val wSHttp: HttpClient) {
+  lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
 
   def retrieveCurrentProfile(implicit hc: HeaderCarrier, rds: HttpReads[HttpResponse]): Future[Option[String]] = {
 

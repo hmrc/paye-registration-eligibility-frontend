@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 
 class FeedbackControllerSpec extends ControllerSpecBase {
 
-  object Controller extends FeedbackControllerImpl(
+  object Controller extends FeedbackController(
     frontendAppConfig,
     messagesControllerComponents
   )

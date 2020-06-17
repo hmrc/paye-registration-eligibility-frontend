@@ -16,17 +16,18 @@
 
 package controllers.actions
 
+import config.FrontendAppConfig
 import models.requests.CacheIdentifierRequest
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeAuthAction(controllerComponents: MessagesControllerComponents) extends SessionAction {
+class FakeAuthAction(appConfig: FrontendAppConfig, controllerComponents: MessagesControllerComponents) extends SessionAction(appConfig, controllerComponents) {
   override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] =
     block(CacheIdentifierRequest(request, "id"))
 
   override val executionContext: ExecutionContext = controllerComponents.executionContext
 
-  override def parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
+  override val parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
 }
 

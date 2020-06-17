@@ -23,14 +23,9 @@ import utils._
 
 import scala.concurrent.Future
 
-class FeatureSwitchControllerImpl @Inject()(val featureManager: FeatureManager,
-                                            val prefeFeatureSwitch: PREFEFeatureSwitches,
-                                            controllerComponents: MessagesControllerComponents) extends FeatureSwitchController(controllerComponents)
-
-abstract class FeatureSwitchController(controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
-
-  val featureManager: FeatureManager
-  val prefeFeatureSwitch: PREFEFeatureSwitches
+class FeatureSwitchController @Inject()(val featureManager: FeatureManager,
+                                        val prefeFeatureSwitch: PREFEFeatureSwitches,
+                                        controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
 
   def switcher(featureName: String, featureState: String): Action[AnyContent] = Action.async {
     implicit request =>

@@ -20,10 +20,8 @@ import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-class FeatureSwitchControllerLanguageImpl @Inject()(controllerComponents: MessagesControllerComponents
-                                                   ) extends FeatureSwitchControllerLanguage(controllerComponents)
-
-abstract class FeatureSwitchControllerLanguage(controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
+class FeatureSwitchControllerLanguage @Inject()(controllerComponents: MessagesControllerComponents
+                                                   ) extends FrontendController(controllerComponents) {
 
   def enableLanguageFunctionality(enable: Boolean): Action[AnyContent] = Action {
     implicit request =>

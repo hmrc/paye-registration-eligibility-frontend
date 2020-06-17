@@ -40,7 +40,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
   }
 
   class Setup {
-    val controller = new FeatureSwitchControllerImpl(mockFeatureManager, mockFeatureSwitches, messagesControllerComponents)
+    val controller = new FeatureSwitchController(mockFeatureManager, mockFeatureSwitches, messagesControllerComponents)
   }
 
   "switcher" should {

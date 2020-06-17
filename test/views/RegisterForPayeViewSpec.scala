@@ -16,7 +16,7 @@
 
 package views
 
-import controllers.{RegisterForPayeController, RegisterForPayeControllerImpl}
+import controllers.RegisterForPayeController
 import org.jsoup.Jsoup
 import org.mockito.Mockito._
 import play.api.i18n.I18nSupport
@@ -39,7 +39,7 @@ class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
     reset(mockCompanyRegistrationConnector)
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
-    val controller = new RegisterForPayeControllerImpl(
+    val controller = new RegisterForPayeController(
       frontendAppConfig,mockAuthConnector,mockAuthUrlBuilder,mockBusinessRegistrationConnector, mockCompanyRegistrationConnector, messagesControllerComponents) {
       override lazy val payeStartUrl = "payeStartURL"
     }

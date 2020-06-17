@@ -21,29 +21,20 @@ import config.FrontendAppConfig
 import javax.inject.Inject
 import play.api.Logger
 import play.api.libs.json._
-import uk.gov.hmrc.http.{CoreGet, HeaderCarrier}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.PREFEFeatureSwitches
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CompanyRegistrationConnectorImpl @Inject()(val featureSwitch: PREFEFeatureSwitches,
-                                                 val http: HttpClient,
-                                                 val appConfig: FrontendAppConfig) extends CompanyRegistrationConnector {
+class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwitches,
+                                             val http: HttpClient,
+                                             val appConfig: FrontendAppConfig) {
   lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
   lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri",throw new Exception("company-registration.uri doesn't exist"))
   lazy val stubUrl: String = appConfig.config.baseUrl("incorporation-frontend-stubs")
   lazy val stubUri: String = appConfig.config.getConfString("incorporation-frontend-stubs.uri",throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
-}
-
-trait CompanyRegistrationConnector {
-  val companyRegistrationUrl: String
-  val companyRegistrationUri: String
-  val stubUrl: String
-  val stubUri: String
-  val http: CoreGet
-  val featureSwitch: PREFEFeatureSwitches
 
   def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier): Future[(Option[String],Option[String])] = {
 
@@ -51,8 +42,8 @@ trait CompanyRegistrationConnector {
 
     http.GET[JsObject](s"$url/$regId/corporation-tax-registration") map { response =>
       val statusAndPaymentRef = for {
-       status     <- (response \ "status").validate[String]
-       paymentRef <- (response \ "confirmationReferences" \ "payment-reference").validateOpt[String]
+        status     <- (response \ "status").validate[String]
+        paymentRef <- (response \ "confirmationReferences" \ "payment-reference").validateOpt[String]
       } yield (status, paymentRef)
 
       statusAndPaymentRef.fold({invalid =>

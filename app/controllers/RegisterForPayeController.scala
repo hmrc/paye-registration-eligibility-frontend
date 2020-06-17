@@ -30,26 +30,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
-                                              val authConnector: AuthConnector,
-                                              val authUrlBuilder: AuthUrlBuilder,
-                                              val businessRegistrationConnector: BusinessRegistrationConnector,
-                                              val companyRegistrationConnector: CompanyRegistrationConnector,
-                                              controllerComponents: MessagesControllerComponents
-                                             ) extends RegisterForPayeController(controllerComponents) {
+class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
+                                          val authConnector: AuthConnector,
+                                          val authUrlBuilder: AuthUrlBuilder,
+                                          val businessRegistrationConnector: BusinessRegistrationConnector,
+                                          val companyRegistrationConnector: CompanyRegistrationConnector,
+                                          controllerComponents: MessagesControllerComponents
+                                             ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
   lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
   lazy val otrsUrl                  = appConfig.otrsUrl
-}
-
-
-abstract class RegisterForPayeController(controllerComponents: MessagesControllerComponents
-                                        ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
-  val appConfig: FrontendAppConfig
-  val payeStartUrl: String
-  val otrsUrl: String
-  val authUrlBuilder: AuthUrlBuilder
-  val businessRegistrationConnector: BusinessRegistrationConnector
-  val companyRegistrationConnector: CompanyRegistrationConnector
 
   def onPageLoad = Action {
     implicit request =>

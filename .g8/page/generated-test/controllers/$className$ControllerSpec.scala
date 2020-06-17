@@ -6,7 +6,7 @@ class $className$ControllerSpec extends ControllerSpecBase {
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new $className$Controller(frontendAppConfig, messagesApi, FakeAuthAction,
-      dataRetrievalAction, new DataRequiredActionImpl)
+      dataRetrievalAction, new DataRequiredAction)
 
   def viewAsString() = $className;format="decap"$(frontendAppConfig)(fakeRequest, messages).toString
 
