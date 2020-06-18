@@ -46,9 +46,9 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
   object Controller extends AtLeastOneDirectorHasNinoController(
     frontendAppConfig,
     mockDataCacheConnector,
-    new FakeAuthAction(messagesControllerComponents),
+    new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
     getEmptyCacheMap,
-    new DataRequiredActionImpl(messagesControllerComponents),
+    new DataRequiredAction(messagesControllerComponents),
     formProvider, messagesControllerComponents
   )
 
@@ -65,14 +65,14 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
 
     "populate the view correctly on a GET when the question has previously been answered" in {
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
-      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents)
+      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
       object Controller extends AtLeastOneDirectorHasNinoController(
         frontendAppConfig,
         mockDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
+        new FakeAuthAction(frontendAppConfig ,messagesControllerComponents),
         getRelevantData,
-        new DataRequiredActionImpl(messagesControllerComponents),
+        new DataRequiredAction(messagesControllerComponents),
         formProvider, messagesControllerComponents
       )
 
@@ -86,7 +86,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
 
-      when(mockDataCacheConnector.save(any(),any(),any())(any()))
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
       val result = Controller.onSubmit()(postRequest)
@@ -99,7 +99,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(false))
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "false"))
 
-      when(mockDataCacheConnector.save(any(),any(),any())(any()))
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
       val result = Controller.onSubmit()(postRequest)

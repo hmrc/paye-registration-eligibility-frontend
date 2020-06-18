@@ -17,22 +17,15 @@
 package config
 
 import com.google.inject.AbstractModule
-import connectors._
-import controllers.actions._
-import controllers.tests.{FeatureSwitchController, FeatureSwitchControllerImpl, FeatureSwitchControllerLanguage, FeatureSwitchControllerLanguageImpl}
-import controllers.{FeedbackController, FeedbackControllerImpl, RegisterForPayeController, RegisterForPayeControllerImpl}
 import repositories.SessionRepository
 import utils._
 
 class Module extends AbstractModule {
 
   override def configure(): Unit = {
-    bindActions()
     bindOthers()
     bindUtils()
-    bindControllers()
     bindRepositories()
-    bindConnectors()
   }
 
   def bindOthers() = {
@@ -46,29 +39,8 @@ class Module extends AbstractModule {
     bind(classOf[SessionRepository]).asEagerSingleton()
   }
 
-  def bindActions() = {
-    // Bind the actions for DI
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    // For session based storage instead of cred based, change to SessionActionImpl
-    bind(classOf[SessionAction]).to(classOf[SessionActionImpl]).asEagerSingleton()
-  }
-
-  def bindControllers() = {
-    bind(classOf[FeatureSwitchController]).to(classOf[FeatureSwitchControllerImpl]).asEagerSingleton()
-    bind(classOf[FeatureSwitchControllerLanguage]).to(classOf[FeatureSwitchControllerLanguageImpl]).asEagerSingleton()
-    bind(classOf[RegisterForPayeController]).to(classOf[RegisterForPayeControllerImpl]).asEagerSingleton()
-    bind(classOf[FeedbackController]).to(classOf[FeedbackControllerImpl]).asEagerSingleton()
-  }
-
   def bindUtils() = {
     bind(classOf[AuthUrlBuilder]).to(classOf[AuthUrlBuilderImpl]).asEagerSingleton()
   }
 
-  def bindConnectors() = {
-    bind(classOf[DataCacheConnector]).to(classOf[DataCacheConnectorImpl]).asEagerSingleton()
-    bind(classOf[BusinessRegistrationConnector]).to(classOf[BusinessRegistrationConnectorImpl]).asEagerSingleton()
-    bind(classOf[CompanyRegistrationConnector]).to(classOf[CompanyRegistrationConnectorImpl]).asEagerSingleton()
-  }
 }
