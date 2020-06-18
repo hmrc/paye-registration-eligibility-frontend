@@ -26,7 +26,10 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+<<<<<<< HEAD
 @Singleton
+=======
+>>>>>>> origin/SAR-5687
 class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
                                               val wSHttp: HttpClient) {
   lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")

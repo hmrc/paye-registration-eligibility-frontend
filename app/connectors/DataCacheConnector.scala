@@ -25,7 +25,10 @@ import utils.CascadeUpsert
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+<<<<<<< HEAD
 @Singleton
+=======
+>>>>>>> origin/SAR-5687
 class DataCacheConnector @Inject()(val sessionRepository: SessionRepository, val cascadeUpsert: CascadeUpsert) {
 
   def save[A](cacheId: String, key: String, value: A)(implicit fmt: Format[A]): Future[CacheMap] = {

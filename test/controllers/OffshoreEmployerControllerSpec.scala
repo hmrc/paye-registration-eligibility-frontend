@@ -45,7 +45,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
   object Controller extends OffshoreEmployerController(
     frontendAppConfig,
     fakeDataCacheConnector,
-    new FakeAuthAction(messagesControllerComponents),
+    new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
     getEmptyCacheMap,
     new DataRequiredAction(messagesControllerComponents),
     formProvider,
@@ -70,7 +70,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends OffshoreEmployerController(
         frontendAppConfig,
         fakeDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
         getRelevantData,
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -89,7 +89,11 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends OffshoreEmployerController(
         frontendAppConfig,
         mockDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -113,7 +117,11 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends OffshoreEmployerController(
         frontendAppConfig,
         mockDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -143,7 +151,11 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends OffshoreEmployerController(
         frontendAppConfig,
         fakeDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -160,7 +172,11 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends OffshoreEmployerController(
         frontendAppConfig,
         fakeDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,

@@ -28,22 +28,35 @@ import utils.PREFEFeatureSwitches
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+<<<<<<< HEAD
 @Singleton
+=======
+>>>>>>> origin/SAR-5687
 class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwitches,
                                              val http: HttpClient,
                                              val appConfig: FrontendAppConfig) {
   lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
   lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri", throw new Exception("company-registration.uri doesn't exist"))
   lazy val stubUrl: String = appConfig.config.baseUrl("incorporation-frontend-stubs")
+<<<<<<< HEAD
   lazy val stubUri: String = appConfig.config.getConfString("incorporation-frontend-stubs.uri", throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
 
   def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier): Future[(Option[String], Option[String])] = {
+=======
+  lazy val stubUri: String = appConfig.config.getConfString("incorporation-frontend-stubs.uri",throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
+
+  def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier): Future[(Option[String],Option[String])] = {
+>>>>>>> origin/SAR-5687
 
     val url = if (useCompanyRegistration) s"$companyRegistrationUrl$companyRegistrationUri/corporation-tax-registration" else s"$stubUrl$stubUri"
 
     http.GET[JsObject](s"$url/$regId/corporation-tax-registration") map { response =>
       val statusAndPaymentRef = for {
+<<<<<<< HEAD
         status <- (response \ "status").validate[String]
+=======
+        status     <- (response \ "status").validate[String]
+>>>>>>> origin/SAR-5687
         paymentRef <- (response \ "confirmationReferences" \ "payment-reference").validateOpt[String]
       } yield (status, paymentRef)
 

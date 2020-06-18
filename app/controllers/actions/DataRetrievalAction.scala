@@ -29,7 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalAction @Inject()(val dataCacheConnector: DataCacheConnector,
                                     controllerComponents: MessagesControllerComponents
+<<<<<<< HEAD
                                    ) extends ActionTransformer[CacheIdentifierRequest, OptionalDataRequest] {
+=======
+                                       ) extends ActionTransformer[CacheIdentifierRequest, OptionalDataRequest] {
+>>>>>>> origin/SAR-5687
 
   override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -39,6 +43,9 @@ class DataRetrievalAction @Inject()(val dataCacheConnector: DataCacheConnector,
       case Some(data) => OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(data)))
     }
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/SAR-5687
   override protected val executionContext: ExecutionContext = controllerComponents.executionContext
 }

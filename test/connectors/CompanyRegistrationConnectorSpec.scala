@@ -33,11 +33,18 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
 
   class Setup(stubbed: Boolean) {
     val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, frontendAppConfig) {
+<<<<<<< HEAD
       override lazy val companyRegistrationUri = testUri
       override lazy val companyRegistrationUrl = testUrl
       override lazy val stubUri = testUri
       override lazy val stubUrl = testUrl
 
+=======
+      override lazy val companyRegistrationUri          = testUri
+      override lazy val companyRegistrationUrl          = testUrl
+      override lazy val stubUri                         = testUri
+      override lazy val stubUrl                         = testUrl
+>>>>>>> origin/SAR-5687
       override def useCompanyRegistration = stubbed
     }
     implicit val hc = HeaderCarrier()

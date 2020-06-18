@@ -26,8 +26,13 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
+<<<<<<< HEAD
 class SessionAction @Inject()(controllerComponents: MessagesControllerComponents)
   extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest] {
+=======
+class SessionAction @Inject()(config: FrontendAppConfig, controllerComponents: MessagesControllerComponents)
+                            extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest] {
+>>>>>>> origin/SAR-5687
 
   override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))

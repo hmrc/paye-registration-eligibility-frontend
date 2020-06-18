@@ -36,9 +36,15 @@ class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
                                           val businessRegistrationConnector: BusinessRegistrationConnector,
                                           val companyRegistrationConnector: CompanyRegistrationConnector,
                                           controllerComponents: MessagesControllerComponents
+<<<<<<< HEAD
                                          ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
   lazy val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
   lazy val otrsUrl = appConfig.otrsUrl
+=======
+                                             ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
+  lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+  lazy val otrsUrl                  = appConfig.otrsUrl
+>>>>>>> origin/SAR-5687
 
   def onPageLoad = Action {
     implicit request =>

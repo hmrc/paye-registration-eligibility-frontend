@@ -43,10 +43,14 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
 
   val fakeDataCacheConnector = new FakeDataCacheConnector(sessionRepository, cascadeUpsert)
 
+<<<<<<< HEAD
   object Controller extends TaxedAwardSchemeController(
+=======
+  object Controller extends TaxedAwardSchemeController (
+>>>>>>> origin/SAR-5687
     frontendAppConfig,
     fakeDataCacheConnector,
-    new FakeAuthAction(messagesControllerComponents),
+    new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
     getEmptyCacheMap,
     new DataRequiredAction(messagesControllerComponents),
     formProvider,
@@ -71,7 +75,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends TaxedAwardSchemeController(
         frontendAppConfig,
         fakeDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
         getRelevantData,
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -90,7 +94,11 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends TaxedAwardSchemeController(
         frontendAppConfig,
         mockDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -113,7 +121,11 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends TaxedAwardSchemeController(
         frontendAppConfig,
         mockDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -143,7 +155,11 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends TaxedAwardSchemeController(
         frontendAppConfig,
         fakeDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,
@@ -160,7 +176,11 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase with BeforeAndAf
       object Controller extends TaxedAwardSchemeController(
         frontendAppConfig,
         fakeDataCacheConnector,
+<<<<<<< HEAD
         new FakeAuthAction(messagesControllerComponents),
+=======
+        new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+>>>>>>> origin/SAR-5687
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
         new DataRequiredAction(messagesControllerComponents),
         formProvider,

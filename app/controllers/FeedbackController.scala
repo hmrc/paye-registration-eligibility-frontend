@@ -24,9 +24,15 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 class FeedbackController @Inject()(val appConfig: FrontendAppConfig,
                                    controllerComponents: MessagesControllerComponents
+<<<<<<< HEAD
                                   ) extends FrontendController(controllerComponents) with I18nSupport {
   val feedbackUrl = appConfig.feedbackLink
   val frontendUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}"
+=======
+                                      ) extends FrontendController(controllerComponents) with I18nSupport {
+  val feedbackUrl       = appConfig.feedbackLink
+  val frontendUrl       = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}"
+>>>>>>> origin/SAR-5687
 
   def onPageLoad: Action[AnyContent] = Action {
     _ => Redirect(s"$frontendUrl$feedbackUrl")
