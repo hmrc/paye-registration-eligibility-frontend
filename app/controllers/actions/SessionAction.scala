@@ -17,7 +17,6 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import controllers.routes
 import models.requests.CacheIdentifierRequest
 import play.api.mvc.Results._
@@ -27,10 +26,8 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SessionAction extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest]
-
-class SessionActionImpl @Inject()(config: FrontendAppConfig, controllerComponents: MessagesControllerComponents)
-                                 (implicit ec: ExecutionContext) extends SessionAction {
+class SessionAction @Inject()(controllerComponents: MessagesControllerComponents)
+  extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest] {
 
   override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))

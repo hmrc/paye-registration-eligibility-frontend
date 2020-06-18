@@ -40,7 +40,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
   }
 
   class Setup {
-    val controller = new FeatureSwitchControllerImpl(mockFeatureManager, mockFeatureSwitches, messagesControllerComponents)
+    val controller = new FeatureSwitchController(mockFeatureManager, mockFeatureSwitches, messagesControllerComponents)
   }
 
   "switcher" should {
@@ -53,7 +53,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
           .thenReturn(testFeatureSwitch)
 
 
-        val result = controller.switcher("system-date","2018-10-12")(fakeRequest)
+        val result = controller.switcher("system-date", "2018-10-12")(fakeRequest)
         status(result) mustBe OK
       }
     }
@@ -66,7 +66,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
         when(mockFeatureManager.clearSystemDate(any()))
           .thenReturn(testDisabledSwitch)
 
-        val result = controller.switcher("system-date","time-clear")(FakeRequest())
+        val result = controller.switcher("system-date", "time-clear")(FakeRequest())
         status(result) mustBe OK
       }
     }
@@ -76,7 +76,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
         when(mockFeatureSwitches(any()))
           .thenReturn(None)
 
-        val result = controller.switcher("invalidName","invalidState")(FakeRequest())
+        val result = controller.switcher("invalidName", "invalidState")(FakeRequest())
         status(result) mustBe BAD_REQUEST
       }
     }

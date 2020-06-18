@@ -21,7 +21,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.libs.json.{JsObject, Json}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{BadRequestException, CoreGet, HeaderCarrier}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,13 +32,12 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
   val testUri = "testUri"
 
   class Setup(stubbed: Boolean) {
-    val testConnector = new CompanyRegistrationConnector {
-      val companyRegistrationUri          = testUri
-      val companyRegistrationUrl          = testUrl
-      val stubUri                         = testUri
-      val stubUrl                         = testUrl
-      override val http: CoreGet          = mockHttpClient
-      override val featureSwitch          = mockFeatureSwitch
+    val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, frontendAppConfig) {
+      override lazy val companyRegistrationUri = testUri
+      override lazy val companyRegistrationUrl = testUrl
+      override lazy val stubUri = testUri
+      override lazy val stubUrl = testUrl
+
       override def useCompanyRegistration = stubbed
     }
     implicit val hc = HeaderCarrier()
@@ -81,7 +80,7 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
       val result = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
       result mustBe ((Some("submitted"), Option.empty[String]))
     }
-  "return a none is JSON returned with no status element in" in new Setup(false) {
+    "return a none is JSON returned with no status element in" in new Setup(false) {
       when(mockHttpClient.GET[JsObject](any())(any(), any[HeaderCarrier](), any()))
         .thenReturn(Future(profileJsonNoStatus))
 
@@ -94,10 +93,9 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
         .thenReturn(Future.failed(new BadRequestException("tstException")))
 
       val result = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
-      result mustBe ((Option.empty[String],Option.empty[String]))
+      result mustBe ((Option.empty[String], Option.empty[String]))
 
     }
-
 
 
   }

@@ -51,4 +51,8 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   def messagesControllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
 
+  lazy val cascadeUpsert: CascadeUpsert = injector.instanceOf[CascadeUpsert]
+
+  lazy val sessionRepository: SessionRepository = injector.instanceOf[SessionRepository]
+
 }
