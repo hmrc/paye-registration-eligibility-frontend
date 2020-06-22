@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
@@ -29,27 +29,17 @@ import views.html.registerForPaye
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+@Singleton
+class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
+                                          val authConnector: AuthConnector,
+                                          val authUrlBuilder: AuthUrlBuilder,
+                                          val businessRegistrationConnector: BusinessRegistrationConnector,
+                                          val companyRegistrationConnector: CompanyRegistrationConnector,
+                                          controllerComponents: MessagesControllerComponents
+                                         ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
 
-class RegisterForPayeControllerImpl @Inject()(val appConfig: FrontendAppConfig,
-                                              val authConnector: AuthConnector,
-                                              val authUrlBuilder: AuthUrlBuilder,
-                                              val businessRegistrationConnector: BusinessRegistrationConnector,
-                                              val companyRegistrationConnector: CompanyRegistrationConnector,
-                                              controllerComponents: MessagesControllerComponents
-                                             ) extends RegisterForPayeController(controllerComponents) {
-  lazy  val payeStartUrl            = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
-  lazy val otrsUrl                  = appConfig.otrsUrl
-}
-
-
-abstract class RegisterForPayeController(controllerComponents: MessagesControllerComponents
-                                        ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
-  val appConfig: FrontendAppConfig
-  val payeStartUrl: String
-  val otrsUrl: String
-  val authUrlBuilder: AuthUrlBuilder
-  val businessRegistrationConnector: BusinessRegistrationConnector
-  val companyRegistrationConnector: CompanyRegistrationConnector
+  lazy val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+  lazy val otrsUrl = appConfig.otrsUrl
 
   def onPageLoad = Action {
     implicit request =>
@@ -62,7 +52,7 @@ abstract class RegisterForPayeController(controllerComponents: MessagesControlle
       authorised() {
         Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS))
       } recoverWith {
-        case  _ =>
+        case _ =>
           Future.successful(authUrlBuilder.redirectToLogin)
       }
   }
@@ -73,13 +63,14 @@ abstract class RegisterForPayeController(controllerComponents: MessagesControlle
       case _ => Redirect(otrsUrl)
     }
   }
+
   def continueToPayeOrOTRS = Action.async {
     implicit request =>
       authorised() {
         businessRegistrationConnector.retrieveCurrentProfile.flatMap { reg =>
           reg.fold(Future.successful(Redirect(otrsUrl)))(
             regId =>
-              companyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(regId).map{
+              companyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(regId).map {
                 status =>
                   navigateBasedOnStatusAndPaymentRef(status)
               }

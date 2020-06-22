@@ -24,7 +24,7 @@ class IneligibleControllerSpec extends ControllerSpecBase {
 
   object Controller extends IneligibleController(
     frontendAppConfig,
-    new DataRequiredActionImpl(messagesControllerComponents),
+    new DataRequiredAction(messagesControllerComponents),
     messagesControllerComponents
   )
 

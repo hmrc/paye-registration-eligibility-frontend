@@ -18,12 +18,13 @@ package controllers
 
 import config.FrontendAppConfig
 import controllers.actions._
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.dropout
 
+@Singleton
 class IneligibleController @Inject()(appConfig: FrontendAppConfig,
                                      requireData: DataRequiredAction,
                                      controllerComponents: MessagesControllerComponents

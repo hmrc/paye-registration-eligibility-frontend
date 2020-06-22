@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http._
@@ -26,20 +26,16 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BusinessRegistrationConnectorImpl @Inject()(val appConfig: FrontendAppConfig,
-                                                  val wSHttp: HttpClient) extends BusinessRegistrationConnector {
- lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
-}
-
-trait BusinessRegistrationConnector {
-  val businessRegUrl: String
-  val wSHttp: CoreGet
+@Singleton
+class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
+                                              val wSHttp: HttpClient) {
+  lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
 
   def retrieveCurrentProfile(implicit hc: HeaderCarrier, rds: HttpReads[HttpResponse]): Future[Option[String]] = {
 
     wSHttp.GET[HttpResponse](s"$businessRegUrl/business-registration/business-tax-registration") map { profile =>
-      if(profile.status == 200) {
-        (profile.json.validate[JsObject].get \ "registrationID").validate[String].fold({invalid =>
+      if (profile.status == 200) {
+        (profile.json.validate[JsObject].get \ "registrationID").validate[String].fold({ invalid =>
           Logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
           None
         }, s => Some(s))

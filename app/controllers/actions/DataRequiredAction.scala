@@ -18,6 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import controllers.routes
+import javax.inject.Singleton
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, MessagesControllerComponents, Result}
@@ -25,7 +26,8 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRequiredActionImpl @Inject()(controllerComponents: MessagesControllerComponents) extends DataRequiredAction {
+@Singleton
+class DataRequiredAction @Inject()(controllerComponents: MessagesControllerComponents) extends ActionRefiner[OptionalDataRequest, DataRequest] {
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
     implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -39,5 +41,3 @@ class DataRequiredActionImpl @Inject()(controllerComponents: MessagesControllerC
 
   override protected val executionContext: ExecutionContext = controllerComponents.executionContext
 }
-
-trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]
