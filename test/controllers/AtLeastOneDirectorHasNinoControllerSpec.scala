@@ -46,7 +46,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
   object Controller extends AtLeastOneDirectorHasNinoController(
     frontendAppConfig,
     mockDataCacheConnector,
-    new FakeAuthAction(frontendAppConfig, messagesControllerComponents),
+    new FakeAuthAction(messagesControllerComponents),
     getEmptyCacheMap,
     new DataRequiredAction(messagesControllerComponents),
     formProvider, messagesControllerComponents
@@ -70,7 +70,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       object Controller extends AtLeastOneDirectorHasNinoController(
         frontendAppConfig,
         mockDataCacheConnector,
-        new FakeAuthAction(frontendAppConfig ,messagesControllerComponents),
+        new FakeAuthAction(messagesControllerComponents),
         getRelevantData,
         new DataRequiredAction(messagesControllerComponents),
         formProvider, messagesControllerComponents
