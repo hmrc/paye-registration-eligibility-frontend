@@ -16,20 +16,24 @@
 
 package controllers.actions
 
+import connectors.FakeDataCacheConnector
 import models.requests.{CacheIdentifierRequest, OptionalDataRequest}
 import play.api.mvc.MessagesControllerComponents
+import repositories.SessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
-import utils.UserAnswers
+import utils.{CascadeUpsert, UserAnswers}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(cacheMapToReturn: Option[CacheMap],
-                              controllerComponents: MessagesControllerComponents
-                             ) extends DataRetrievalAction {
+                              controllerComponents: MessagesControllerComponents,
+                              sessionRepository: SessionRepository,
+                              cascadeUpsert: CascadeUpsert
+                             ) extends DataRetrievalAction(new FakeDataCacheConnector(sessionRepository, cascadeUpsert), controllerComponents) {
   override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = cacheMapToReturn match {
     case None => Future(OptionalDataRequest(request.request, request.cacheId, None))
-    case Some(cacheMap)=> Future(OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(cacheMap))))
+    case Some(cacheMap) => Future(OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(cacheMap))))
   }
 
   override val executionContext: ExecutionContext = controllerComponents.executionContext

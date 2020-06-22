@@ -34,7 +34,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
 
-    object Controller extends RegisterForPayeControllerImpl(
+    object Controller extends RegisterForPayeController(
       frontendAppConfig,
       mockAuthConnector,
       mockAuthUrlBuilder,
@@ -45,7 +45,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       override lazy val otrsUrl = "otrsURL"
     }
 
-    object Controller2 extends RegisterForPayeControllerImpl(
+    object Controller2 extends RegisterForPayeController(
       frontendAppConfig,
       mockAuthConnector,
       mockAuthUrlBuilder,
@@ -53,6 +53,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       mockCompanyRegistrationConnector,
       messagesControllerComponents
     )
+
   }
 
   implicit val hc = HeaderCarrier()

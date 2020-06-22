@@ -23,27 +23,22 @@ import utils._
 
 import scala.concurrent.Future
 
-class FeatureSwitchControllerImpl @Inject()(val featureManager: FeatureManager,
-                                            val prefeFeatureSwitch: PREFEFeatureSwitches,
-                                            controllerComponents: MessagesControllerComponents) extends FeatureSwitchController(controllerComponents)
-
-abstract class FeatureSwitchController(controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
-
-  val featureManager: FeatureManager
-  val prefeFeatureSwitch: PREFEFeatureSwitches
+class FeatureSwitchController @Inject()(val featureManager: FeatureManager,
+                                        val prefeFeatureSwitch: PREFEFeatureSwitches,
+                                        controllerComponents: MessagesControllerComponents) extends FrontendController(controllerComponents) {
 
   def switcher(featureName: String, featureState: String): Action[AnyContent] = Action.async {
     implicit request =>
       def feature: FeatureSwitch = featureState match {
-        case x if x.matches(DateUtil.datePatternRegex)  => featureManager.setSystemDate(ValueSetFeatureSwitch(featureName, featureState))
-        case "true" | "false"                           => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, featureState.toBoolean))
-        case _ if featureName == "system-date"          => featureManager.clearSystemDate(ValueSetFeatureSwitch(featureName, "time-clear"))
-        case _                                          => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, false))
+        case x if x.matches(DateUtil.datePatternRegex) => featureManager.setSystemDate(ValueSetFeatureSwitch(featureName, featureState))
+        case "true" | "false" => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, featureState.toBoolean))
+        case _ if featureName == "system-date" => featureManager.clearSystemDate(ValueSetFeatureSwitch(featureName, "time-clear"))
+        case _ => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, false))
       }
 
       prefeFeatureSwitch(featureName) match {
-        case Some(_)  => Future.successful(Ok(feature.toString))
-        case None     => Future.successful(BadRequest)
+        case Some(_) => Future.successful(Ok(feature.toString))
+        case None => Future.successful(BadRequest)
       }
   }
 }

@@ -22,17 +22,12 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-class FeedbackControllerImpl @Inject()(val appConfig: FrontendAppConfig,
-                                       controllerComponents: MessagesControllerComponents
-                                      ) extends FeedbackController(controllerComponents) {
-  val feedbackUrl       = appConfig.feedbackLink
-  val frontendUrl       = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}"
-}
+class FeedbackController @Inject()(val appConfig: FrontendAppConfig,
+                                   controllerComponents: MessagesControllerComponents
+                                  ) extends FrontendController(controllerComponents) with I18nSupport {
 
-abstract class FeedbackController(controllerComponents: MessagesControllerComponents
-                                 ) extends FrontendController(controllerComponents) with I18nSupport {
-  val frontendUrl : String
-  val feedbackUrl : String
+  val feedbackUrl = appConfig.feedbackLink
+  val frontendUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}"
 
   def onPageLoad: Action[AnyContent] = Action {
     _ => Redirect(s"$frontendUrl$feedbackUrl")
