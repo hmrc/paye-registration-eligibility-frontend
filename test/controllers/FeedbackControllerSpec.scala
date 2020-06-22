@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 
 class FeedbackControllerSpec extends ControllerSpecBase {
 
-  object Controller extends FeedbackControllerImpl(
+  object Controller extends FeedbackController(
     frontendAppConfig,
     messagesControllerComponents
   )
@@ -31,7 +31,7 @@ class FeedbackControllerSpec extends ControllerSpecBase {
       val result = Controller.onPageLoad(fakeRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).map{
+      redirectLocation(result).map {
         _.contains("/register-for-paye/feedback") mustBe true
       }
     }

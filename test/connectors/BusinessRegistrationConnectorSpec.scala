@@ -16,7 +16,7 @@
 
 package connectors
 
-import base.{SpecBase, LogCapturing}
+import base.{LogCapturing, SpecBase}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.Eventually
@@ -24,6 +24,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,9 +33,9 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
 
   class Setup {
     reset(mockHttpClient)
-    val businessRegistrationConnector = new BusinessRegistrationConnector {
-      override val businessRegUrl: String = "foo"
-      override val wSHttp: CoreGet = mockHttpClient
+    val businessRegistrationConnector = new BusinessRegistrationConnector(frontendAppConfig, mockHttpClient) {
+      override lazy val businessRegUrl: String = "foo"
+      override val wSHttp: HttpClient = mockHttpClient
     }
 
     implicit val hc = HeaderCarrier()

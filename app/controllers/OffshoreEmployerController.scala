@@ -21,7 +21,7 @@ import connectors.DataCacheConnector
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
 import identifiers.OffshoreEmployerId
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
@@ -32,6 +32,7 @@ import views.html.offshoreEmployer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+@Singleton
 class OffshoreEmployerController @Inject()(appConfig: FrontendAppConfig,
                                            dataCacheConnector: DataCacheConnector,
                                            identify: SessionAction,
