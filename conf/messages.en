@@ -8,6 +8,7 @@ date.day                                            = Day
 date.month                                          = Month
 date.year                                           = Year
 
+error.titleError                                    = Error:
 error.boolean                                       = Please give an answer
 error.invalid_date                                  = Give a correct date
 error.date.day_blank                                = Enter a day

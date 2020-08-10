@@ -19,11 +19,12 @@
 @import controllers.routes._
 @import models.Mode
 @import utils.FormHelpers
+@import utils.TitleHelper.title
 
 @(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("offshoreEmployer.title"),
+    title = title(messages("offshoreEmployer.title"), form),
     appConfig = appConfig,
     bodyClasses = None) {
 
