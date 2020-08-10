@@ -61,15 +61,18 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
       }
 
       "rendered with an error" must {
+        lazy val doc = asDocument(createView(form.withError(error)))
         "show an error summary" in {
-          val doc = asDocument(createView(form.withError(error)))
           assertRenderedById(doc, "error-summary-heading")
         }
 
         "show an error in the value field's label" in {
-          val doc = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("error-notification").first
           errorSpan.text mustBe messages(errorMessage)
+        }
+
+        "show an error prefix in the title" in {
+          doc.title must include(messages("error.titleError"))
         }
       }
     }
