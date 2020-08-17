@@ -32,10 +32,9 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("offshoreEmployer.heading")
-
         @components.input_yes_no(
             field = form("value"),
+            isHeading = true,
             label = messages("offshoreEmployer.heading"),
             labelClass = Some("visually-hidden")
         )
