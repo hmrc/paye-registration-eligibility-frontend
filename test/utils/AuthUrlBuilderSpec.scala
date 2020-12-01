@@ -32,7 +32,7 @@ class AuthUrlBuilderSpec extends SpecBase {
     "be correct" in new Setup {
       val res = builder.redirectToLogin
       res.header.status mustBe 303
-      res.header.headers(HeaderNames.LOCATION) mustBe "http://localhost:9025/gg/sign-in?accountType=organisation&continue=http%3A%2F%2Flocalhost%3A9877%2Feligibility-for-paye%2Fauthorised-for-paye&origin=paye-registration-eligibility-frontend"
+      res.header.headers(HeaderNames.LOCATION) mustBe "http://localhost:9553/bas-gateway/sign-in?accountType=organisation&continue_url=http%3A%2F%2Flocalhost%3A9877%2Feligibility-for-paye%2Fauthorised-for-paye&origin=paye-registration-eligibility-frontend"
     }
   }
 }

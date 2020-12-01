@@ -26,20 +26,20 @@ class AuthUrlBuilderImpl @Inject()(val appConfig: FrontendAppConfig) extends Aut
 
 trait AuthUrlBuilder {
   val appConfig: FrontendAppConfig
-  private lazy val loginCallback = appConfig.config.getConfString("auth.login-callback.url",throw new Exception(s"cant find config value - $configRoot.auth.login-callback.url"))
-  private lazy val appName        = appConfig.config.getString("appName")
-  private val configRoot          = "microservice.services"
+  private lazy val loginCallback = appConfig.config.getConfString("auth.login-callback.url", throw new Exception(s"cant find config value - $configRoot.auth.login-callback.url"))
+  private lazy val appName = appConfig.config.getString("appName")
+  private val configRoot = "microservice.services"
 
   private lazy val buildCompanyAuthUrl = {
-    val companyAuthHost = appConfig.config.getConfString("company-auth.url",throw new Exception(s"cant find config value - $configRoot.company-auth.url"))
-    val loginPath = appConfig.config.getConfString("auth.login_path",throw new Exception(s"cant find config value - $configRoot.auth.login_path"))
+    val basGatewayHost = appConfig.config.getConfString("bas-gateway.url", throw new Exception(s"cant find config value - $configRoot.bas-gateway.url"))
+    val loginPath = appConfig.config.getConfString("auth.login_path", throw new Exception(s"cant find config value - $configRoot.auth.login_path"))
 
-    s"$companyAuthHost$loginPath"
+    s"$basGatewayHost$loginPath"
   }
 
   private lazy val continueUrl = s"$loginCallback${routes.RegisterForPayeController.continueToPayeOrOTRS()}"
   lazy val redirectToLogin: Result = Redirect(buildCompanyAuthUrl, Map(
-    "continue" -> Seq(continueUrl),
-    "origin"   -> Seq(appName)
+    "continue_url" -> Seq(continueUrl),
+    "origin" -> Seq(appName)
   ))
 }
