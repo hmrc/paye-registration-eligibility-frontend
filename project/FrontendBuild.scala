@@ -9,12 +9,11 @@ object FrontendBuild extends Build with MicroService {
 
 private object AppDependencies {
 
-  import play.core.PlayVersion
   import play.sbt.PlayImport._
 
   private val logbackJsonLoggerVersion = "4.6.0"
   private val govukTemplateVersion = "5.48.0-play-26"
-  private val playUiVersion = "8.7.0-play-26"
+  private val playUiVersion = "8.19.0-play-26"
   private val scalaTestVersion = "3.0.0"
   private val scalaTestPlusPlayVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
