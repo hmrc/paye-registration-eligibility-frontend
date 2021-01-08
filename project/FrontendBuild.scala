@@ -12,7 +12,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
 
   private val logbackJsonLoggerVersion = "4.6.0"
-  private val govukTemplateVersion = "5.48.0-play-26"
+  private val govukTemplateVersion = "5.60.0-play-26"
   private val playUiVersion = "8.19.0-play-26"
   private val scalaTestVersion = "3.0.0"
   private val scalaTestPlusPlayVersion = "3.1.2"
