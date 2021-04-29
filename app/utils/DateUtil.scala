@@ -18,23 +18,21 @@ package utils
 
 import java.time.LocalDate
 
-import scala.language.implicitConversions
-
 object DateUtil {
   val datePatternRegex = """([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"""
 
-  def startPeriod = LocalDate.of(DateUtil.getSystemDate.getYear, 2, 6)
+  def startPeriod: LocalDate = LocalDate.of(DateUtil.getSystemDate.getYear, 2, 6)
 
-  def taxYearStart = LocalDate.of(DateUtil.getSystemDate.getYear, 4, 6)
+  def taxYearStart: LocalDate = LocalDate.of(DateUtil.getSystemDate.getYear, 4, 6)
 
-  def dateTimeNow = LocalDate.now()
+  def dateTimeNow: LocalDate = LocalDate.now()
 
   def getSystemDate: LocalDate = Option(System.getProperty("feature.system-date")).fold(dateTimeNow) {
     case ""   => dateTimeNow
     case date => LocalDate.parse(date)
   }
 
-  def isInTaxYearPeriod = ((getSystemDate isEqual startPeriod) | (getSystemDate isAfter startPeriod)) & (getSystemDate isBefore taxYearStart)
+  def isInTaxYearPeriod: Boolean = ((getSystemDate isEqual startPeriod) | (getSystemDate isAfter startPeriod)) & (getSystemDate isBefore taxYearStart)
 
   def getCurrentPayeThreshold: String = {
     val now = getSystemDate

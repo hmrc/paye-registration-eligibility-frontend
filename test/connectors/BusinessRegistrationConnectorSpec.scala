@@ -24,7 +24,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -60,14 +60,14 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
       """.stripMargin)
 
     "return some(regid) when 200 returned with json body containing a registration id" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future(HttpResponse(responseStatus = 200, responseJson = Some(BusRegJson))))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe Some("regId")
     }
 
     "return None when 202 returned with no json body and log it" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future(HttpResponse(responseStatus = 202, responseJson = None)))
 
 
@@ -79,21 +79,21 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
     }
 
     "return None if 500 status is returned (Problem calling BR)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new HttpException("foo", 500)))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }
 
     "return None if 404 status is returned (None SCRS user)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new NotFoundException("foo")))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }
 
     "return None if no regid is in json (Exception)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future(HttpResponse(responseStatus = 200, responseJson = Some(BusRegJsonNoRegId))))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None

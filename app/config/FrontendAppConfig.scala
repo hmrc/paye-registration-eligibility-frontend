@@ -31,23 +31,25 @@ class FrontendAppConfig @Inject()(val config: ServicesConfig) {
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  lazy val authUrl = config.baseUrl("auth")
-  lazy val loginUrl = loadConfig("urls.login")
-  lazy val loginContinueUrl = loadConfig("urls.loginContinue")
+  lazy val authUrl: String = config.baseUrl("auth")
+  lazy val loginUrl: String = loadConfig("urls.login")
+  lazy val loginContinueUrl: String = loadConfig("urls.loginContinue")
 
-  lazy val payeRegFEUrl       = loadConfig("microservice.services.paye-registration-frontend.url")
-  lazy val compRegFEUrl       = loadConfig("microservice.services.company-registration-frontend.url")
-  lazy val otrsUrl            = loadConfig("urls.otrsUrl")
-  lazy val payeRegFEUri       = loadConfig("microservice.services.paye-registration-frontend.uri")
-  lazy val compRegFEUri       = loadConfig("microservice.services.company-registration-frontend.uri")
-  lazy val payeRegFEStartLink = loadConfig("microservice.services.paye-registration-frontend.start-paye")
-  lazy val compRegFEStartLink = loadConfig("microservice.services.company-registration-frontend.start-ct")
-  lazy val feedbackLink = loadConfig("microservice.services.paye-registration-frontend.feedback")
+  lazy val payeRegFEUrl: String = loadConfig("microservice.services.paye-registration-frontend.url")
+  lazy val compRegFEUrl: String = loadConfig("microservice.services.company-registration-frontend.url")
+  lazy val otrsUrl: String = loadConfig("urls.otrsUrl")
+  lazy val payeRegFEUri: String = loadConfig("microservice.services.paye-registration-frontend.uri")
+  lazy val compRegFEUri: String = loadConfig("microservice.services.company-registration-frontend.uri")
+  lazy val payeRegFEStartLink: String = loadConfig("microservice.services.paye-registration-frontend.start-paye")
+  lazy val compRegFEStartLink: String = loadConfig("microservice.services.company-registration-frontend.start-ct")
+  lazy val feedbackLink: String = loadConfig("microservice.services.paye-registration-frontend.feedback")
 
   def languageTranslationEnabled: Boolean = sys.props.get("microservice.services.features.welsh-translation").fold(false)(_.toBoolean)
+
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
+
   def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
   def accessibilityStatementRoute(pageUri: String) = s"$payeRegFEUrl$payeRegFEUri/accessibility-statement?pageUri=$pageUri"

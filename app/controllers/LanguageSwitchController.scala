@@ -19,17 +19,15 @@ package controllers
 
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
-import play.api.Configuration
 import play.api.i18n.Lang
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
 @Singleton
 class LanguageSwitchController @Inject()(appConfig: FrontendAppConfig,
-                                         configuration: Configuration,
                                          languageUtils: LanguageUtils,
-                                         controllerComponents: MessagesControllerComponents
-                                        ) extends LanguageController(configuration, languageUtils, controllerComponents) {
+                                         controllerComponents: ControllerComponents
+                                        ) extends LanguageController(languageUtils, controllerComponents) {
 
   def languageMap: Map[String, Lang] = appConfig.languageMap
 

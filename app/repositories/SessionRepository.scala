@@ -20,11 +20,10 @@ import javax.inject.Inject
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.{JsValue, Json}
 import play.api.{Configuration, Logger}
-import play.modules.reactivemongo.{MongoDbConnection, ReactiveMongoComponent}
+import play.modules.reactivemongo.{ReactiveMongoComponent}
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import reactivemongo.play.json.ImplicitBSONHandlers
 import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.ReactiveRepository

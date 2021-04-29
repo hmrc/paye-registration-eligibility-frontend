@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,13 @@ trait AuthHelper extends SessionCookieBaker {
   private def cookieData(additionalData: Map[String, String], userId: String = defaultUser): Map[String, String] = {
     Map(
       SessionKeys.sessionId -> sessionId,
-      SessionKeys.userId -> userId,
       "token" -> "token",
       "ap" -> "GGW",
       SessionKeys.lastRequestTimestamp -> new java.util.Date().getTime.toString
     ) ++ additionalData
   }
 
-  def getSessionCookie(additionalData: Map[String, String] = Map(), userId: String = defaultUser) = {
+  def getSessionCookie(additionalData: Map[String, String] = Map(), userId: String = defaultUser) : String = {
     cookieValue(cookieData(additionalData, userId))
   }
 
@@ -71,7 +70,7 @@ trait AuthHelper extends SessionCookieBaker {
   }
 
 
-  def stubAudits() = {
+  def stubAudits(): StubMapping = {
     stubFor(post(urlMatching("/write/audit"))
       .willReturn(
         aResponse().
@@ -93,7 +92,7 @@ trait SessionCookieBaker {
   val cookieSigner: DefaultCookieSigner
 
   val cookieKey = "gvBoGdgzqG1AarzF1LY0zQ=="
-  def cookieValue(sessionData: Map[String,String]) = {
+  def cookieValue(sessionData: Map[String,String]): String = {
     def encode(data: Map[String, String]): PlainText = {
       val encoded = data.map {
         case (k, v) => URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8")

@@ -16,15 +16,16 @@
 
 package connectors
 
-import base.SpecBase
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import play.api.libs.json.{JsObject, Json}
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 
+
+import base.SpecBase
+import play.api.libs.json.{JsObject, Json}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import play.api.test.Helpers._
 
 class CompanyRegistrationConnectorSpec extends SpecBase {
 
@@ -33,13 +34,13 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
 
   class Setup(stubbed: Boolean) {
     val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, frontendAppConfig) {
-      override lazy val companyRegistrationUri = testUri
-      override lazy val companyRegistrationUrl = testUrl
-      override lazy val stubUri = testUri
-      override lazy val stubUrl = testUrl
-      override def useCompanyRegistration = stubbed
+      override lazy val companyRegistrationUri: String = testUri
+      override lazy val companyRegistrationUrl: String = testUrl
+      override lazy val stubUri: String = testUri
+      override lazy val stubUrl: String = testUrl
+      override def useCompanyRegistration: Boolean = stubbed
     }
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
   }
 
   val status = "submitted"
@@ -47,7 +48,7 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
   val ackRefStatus = "04"
   val ackRefStatusOpt = Some(ackRefStatus)
 
-  val profileJson =
+  val profileJson: JsObject =
     Json.parse(
       s"""
          |{
@@ -63,7 +64,7 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
          |}
       """.stripMargin).as[JsObject]
 
-  val profileJsonNoStatus =
+  val profileJsonNoStatus: JsObject =
     Json.parse(
       s"""
          |{
@@ -73,25 +74,25 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
 
   "getCompanyRegistrationDetails" should {
     "return the status contained in the CT doc" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any())(any(), any[HeaderCarrier](), any()))
+      when(mockHttpClient.GET[JsObject](any(),any(),any())(any(), any[HeaderCarrier](), any()))
         .thenReturn(Future(profileJson))
 
-      val result = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
+      val result: (Option[String], Option[String]) = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
       result mustBe ((Some("submitted"), Option.empty[String]))
     }
     "return a none is JSON returned with no status element in" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any())(any(), any[HeaderCarrier](), any()))
+      when(mockHttpClient.GET[JsObject](any(),any(),any())(any(), any[HeaderCarrier](), any()))
         .thenReturn(Future(profileJsonNoStatus))
 
-      val result = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
+      val result: (Option[String], Option[String])= await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
       result mustBe ((Option.empty[String], Option.empty[String]))
     }
 
     "throw nothing if exception was thrown" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any())(any(), any[HeaderCarrier](), any()))
+      when(mockHttpClient.GET[JsObject](any(),any(),any())(any(), any[HeaderCarrier](), any()))
         .thenReturn(Future.failed(new BadRequestException("tstException")))
 
-      val result = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
+      val result: (Option[String], Option[String]) = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
       result mustBe ((Option.empty[String], Option.empty[String]))
 
     }

@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 @Singleton
 class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
                                               val wSHttp: HttpClient) {
-  lazy val businessRegUrl = appConfig.config.baseUrl("business-registration")
+  lazy val businessRegUrl: String = appConfig.config.baseUrl("business-registration")
 
   def retrieveCurrentProfile(implicit hc: HeaderCarrier, rds: HttpReads[HttpResponse]): Future[Option[String]] = {
 

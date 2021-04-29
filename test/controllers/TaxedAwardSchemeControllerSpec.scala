@@ -23,7 +23,7 @@ import identifiers.TaxedAwardSchemeId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
