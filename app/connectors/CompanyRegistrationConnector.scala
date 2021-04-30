@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import utils.PREFEFeatureSwitches
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,7 +41,6 @@ class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwit
   def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier): Future[(Option[String], Option[String])] = {
 
     val url = if (useCompanyRegistration) s"$companyRegistrationUrl$companyRegistrationUri/corporation-tax-registration" else s"$stubUrl$stubUri"
-
     http.GET[JsObject](s"$url/$regId/corporation-tax-registration") map { response =>
       val statusAndPaymentRef = for {
         status <- (response \ "status").validate[String]
