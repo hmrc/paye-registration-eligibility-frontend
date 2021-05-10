@@ -5,7 +5,7 @@ import sbt._
 object AppDependencies {
 
   private val logbackJsonLoggerVersion = "5.1.0"
-  private val govukTemplateVersion = "5.65.0-play-26"
+  private val govukTemplateVersion = "5.66.0-play-26"
   private val playUiVersion = "9.2.0-play-26"
   private val hmrcTestVersion = "3.10.0-play-26"
   private val scalaTestVersion = "3.0.8"
@@ -14,9 +14,9 @@ object AppDependencies {
   private val mockitoVersion = "3.9.0"
   private val httpCachingClientVersion = "9.4.0-play-26"
   private val simpleReactivemongoVersion = "8.0.0-play-26"
-  private val playConditionalFormMappingVersion = "1.6.0-play-26"
-  private val playLanguageVersion = "4.12.0-play-26"
-  private val bootstrapVersion = "4.3.0"
+  private val playConditionalFormMappingVersion = "1.9.0-play-26"
+  private val playLanguageVersion = "4.13.0-play-26"
+  private val bootstrapVersion = "5.2.0"
   private val wireMockVersion = "2.27.2"
   private val reactivemongoTestVersion = "5.0.0-play-26"
   private val scalacheckVersion = "1.15.3"
