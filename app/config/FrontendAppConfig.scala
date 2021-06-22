@@ -25,11 +25,7 @@ class FrontendAppConfig @Inject()(val config: ServicesConfig) {
 
   private def loadConfig(key: String) = config.getString(key)
 
-  private lazy val contactHost = config.getString("contact-frontend.host")
-  private val contactFormServiceIdentifier = "scrs"
-
-  lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val reportAProblemUrl = "https://www.tax.service.gov.uk/contact/report-technical-problem?service=SCRS"
 
   lazy val authUrl: String = config.baseUrl("auth")
   lazy val loginUrl: String = loadConfig("urls.login")
@@ -42,7 +38,7 @@ class FrontendAppConfig @Inject()(val config: ServicesConfig) {
   lazy val compRegFEUri: String = loadConfig("microservice.services.company-registration-frontend.uri")
   lazy val payeRegFEStartLink: String = loadConfig("microservice.services.paye-registration-frontend.start-paye")
   lazy val compRegFEStartLink: String = loadConfig("microservice.services.company-registration-frontend.start-ct")
-  lazy val feedbackLink: String = loadConfig("microservice.services.paye-registration-frontend.feedback")
+  lazy val scrsFeedbackLink = "https://www.tax.service.gov.uk/contact/beta-feedback?service=SCRS"
 
   def languageTranslationEnabled: Boolean = sys.props.get("microservice.services.features.welsh-translation").fold(false)(_.toBoolean)
 

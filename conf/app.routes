@@ -24,6 +24,4 @@ GET        /company-cant-register-online                controllers.IneligibleCo
 GET        /register-online                             controllers.RegisterForPayeController.onPageLoad()
 POST       /register-online                             controllers.RegisterForPayeController.onSubmit()
 
-GET        /feedback                                    controllers.FeedbackController.onPageLoad()
-
 GET        /authorised-for-paye                         controllers.RegisterForPayeController.continueToPayeOrOTRS()
