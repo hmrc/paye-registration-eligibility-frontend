@@ -18,23 +18,21 @@ package controllers.actions
 
 import com.google.inject.Inject
 import controllers.routes
-import javax.inject.Singleton
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, MessagesControllerComponents, Result}
-import uk.gov.hmrc.play.HeaderCarrierConverter
 
+import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DataRequiredAction @Inject()(controllerComponents: MessagesControllerComponents) extends ActionRefiner[OptionalDataRequest, DataRequest] {
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     request.userAnswers match {
       case None =>
-        Future.successful(Left(Redirect(routes.IndexController.onPageLoad())))
+        Future.successful(Left(Redirect(routes.IndexController.onPageLoad)))
       case Some(data) => Future.successful(Right(DataRequest(request.request, request.internalId, data)))
     }
   }

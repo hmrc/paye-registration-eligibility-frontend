@@ -21,8 +21,7 @@ import controllers.actions._
 import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{reset, when}
-import org.scalatest.BeforeAndAfterEach
+import org.mockito.Mockito.{when}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.libs.json.JsBoolean
@@ -32,33 +31,32 @@ import views.html.atLeastOneDirectorHasNino
 
 import scala.concurrent.Future
 
-class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with BeforeAndAfterEach with MockitoSugar {
+class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
 
-  def onwardRoute = routes.IndexController.onPageLoad()
+  def onwardRoute = routes.IndexController.onPageLoad
+
+  val view = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
   val formProvider = new AtLeastOneDirectorHasNinoFormProvider()
   val form = formProvider()
 
   val mockDataCacheConnector = mock[DataCacheConnector]
 
-  override def beforeEach(): Unit = reset(mockDataCacheConnector)
-
   object Controller extends AtLeastOneDirectorHasNinoController(
     frontendAppConfig,
     mockDataCacheConnector,
     new FakeAuthAction(messagesControllerComponents),
     getEmptyCacheMap,
-    new DataRequiredAction(messagesControllerComponents),
-    formProvider, messagesControllerComponents
+    formProvider, messagesControllerComponents,
+    view
   )
 
-  def viewAsString(form: Form[_] = form) = atLeastOneDirectorHasNino(frontendAppConfig, form)(fakeRequest, messages).toString
+  def viewAsString(form: Form[_] = form) = view(frontendAppConfig, form)(fakeRequest, messages).toString
 
   "AtLeastOneDirectorHasNino Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = Controller.onPageLoad()(fakeRequest)
-
+      val result = Controller.onPageLoad(fakeRequest)
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
@@ -72,8 +70,8 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         getRelevantData,
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider, messagesControllerComponents
+        formProvider, messagesControllerComponents,
+        view
       )
 
 
@@ -89,10 +87,10 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      val result = Controller.onSubmit()(postRequest)
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.OffshoreEmployerController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(controllers.routes.OffshoreEmployerController.onPageLoad.url)
     }
 
     "redirect to the Dropout page if no is selected" in {
@@ -102,17 +100,17 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase with Be
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      val result = Controller.onSubmit()(postRequest)
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad.url)
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = Controller.onSubmit()(postRequest)
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe BAD_REQUEST
       contentAsString(result) mustBe viewAsString(boundForm)

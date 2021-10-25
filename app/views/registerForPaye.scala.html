@@ -15,17 +15,22 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(formWithCSRF: FormWithCSRF,
+        submitButton: components.submit_button,
+        h1: components.heading,
+        mainTemplate: main_template)
 
 @(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages)
 
-@main_template(
+@mainTemplate(
     title = messages("registerForPaye.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
-    @components.heading("registerForPaye.heading")
+    @h1("registerForPaye.heading")
 
     <p>@messages("registerForPaye.p1")</p>
 
@@ -52,7 +57,7 @@
         <p>@messages("registerForPaye.p5")</p>
         <p>@messages("registerForPaye.p6")</p>
     }
-    @helpers.form(action = RegisterForPayeController.onSubmit(), 'autoComplete -> "off") {
-        @components.submit_button()
+    @formWithCSRF(action = RegisterForPayeController.onSubmit, 'autoComplete -> "off") {
+        @submitButton()
     }
 }

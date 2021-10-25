@@ -17,6 +17,8 @@
 @import viewmodels.AnswerSection
 @import views.html._
 
+@this(answerRow: components.answer_row)
+
 @(answerSection: AnswerSection)(implicit messages: Messages)
 
 @if(answerSection.headingKey.isDefined){
@@ -25,6 +27,6 @@
 
 <ul role="list" class="tabular-data tabular-data--list">
     @for(row <- answerSection.rows){
-        @components.answer_row(row)
+        @answerRow(row)
     }
 </ul>

@@ -16,11 +16,10 @@
 
 package repositories
 
-import javax.inject.Inject
 import org.joda.time.{DateTime, DateTimeZone}
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
-import play.api.{Configuration, Logger}
-import play.modules.reactivemongo.{ReactiveMongoComponent}
+import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
@@ -29,6 +28,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -57,11 +57,11 @@ class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
     collection.indexesManager.ensure(Index(Seq((field, IndexType.Ascending)), Some(indexName),
       options = BSONDocument(expireAfterSeconds -> ttl))) map {
       result => {
-        Logger.debug(s"set [$indexName] with value $ttl -> result : $result")
+        logger.debug(s"set [$indexName] with value $ttl -> result : $result")
         result
       }
     } recover {
-      case e => Logger.error("Failed to set TTL index", e)
+      case e => logger.error("Failed to set TTL index", e)
         false
     }
   }

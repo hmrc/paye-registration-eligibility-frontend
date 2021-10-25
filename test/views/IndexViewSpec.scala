@@ -21,10 +21,12 @@ import views.html.index
 
 class IndexViewSpec extends ViewBehaviours {
 
-  def view = () => index(frontendAppConfig)(fakeRequest, messages)
+  val view = app.injector.instanceOf[index]
+
+  def createView = () => view(frontendAppConfig)(fakeRequest, messages)
 
   "Index view" must {
 
-    behave like normalPage(view, "index", "guidance")
+    behave like normalPage(createView, "index", "guidance")
   }
 }

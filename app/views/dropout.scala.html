@@ -16,14 +16,17 @@
 
 @import config.FrontendAppConfig
 
+@this(h1: components.heading,
+        mainTemplate: main_template)
+
 @(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
-@main_template(
+@mainTemplate(
     title = messages("dropout.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
-    @components.heading("dropout.heading")
+    @h1("dropout.heading")
 
     <p>@messages("dropout.p1")</p>
 

@@ -70,10 +70,6 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
           val errorSpan = doc.getElementsByClass("error-notification").first
           errorSpan.text mustBe messages(errorMessage)
         }
-
-        "show an error prefix in the title" in {
-          doc.title must include(messages("error.titleError"))
-        }
       }
     }
   }

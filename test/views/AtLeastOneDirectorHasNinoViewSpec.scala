@@ -28,14 +28,16 @@ class AtLeastOneDirectorHasNinoViewSpec extends YesNoViewBehaviours {
 
   val form = new AtLeastOneDirectorHasNinoFormProvider()()
 
-  def createView = () => atLeastOneDirectorHasNino(frontendAppConfig, form)(fakeRequest, messages)
+  val view: atLeastOneDirectorHasNino = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
-  def createViewUsingForm = (form: Form[_]) => atLeastOneDirectorHasNino(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+
+  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
 
   "AtLeastOneDirectorHasNino view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.AtLeastOneDirectorHasNinoController.onSubmit().url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.AtLeastOneDirectorHasNinoController.onSubmit.url)
   }
 }

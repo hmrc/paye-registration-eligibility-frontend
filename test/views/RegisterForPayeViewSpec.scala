@@ -19,20 +19,20 @@ package views
 import controllers.RegisterForPayeController
 import org.jsoup.Jsoup
 import org.mockito.Mockito._
-import play.api.i18n.I18nSupport
 import play.api.test.Helpers._
-import views.behaviours.ViewBehaviours
 import views.html.registerForPaye
 
-class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
+class RegisterForPayeViewSpec extends ViewSpecBase {
 
   val messageKeyPrefix = "registerForPaye"
   val PAYEThresholdWeeklyAmount = "100"
-  def createNewTaxYearView = () => registerForPaye(frontendAppConfig, true, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  val view: registerForPaye = app.injector.instanceOf[registerForPaye]
 
-  def createNormalView = () => registerForPaye(frontendAppConfig, false, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  def createNewTaxYearView = () => view(frontendAppConfig, true, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
 
-  def createLoggedInView = () => registerForPaye(frontendAppConfig, false, false,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  def createNormalView = () => view(frontendAppConfig, false, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+
+  def createLoggedInView = () => view(frontendAppConfig, false, false,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
 
   class SetupPage {
     reset(mockBusinessRegistrationConnector)
@@ -40,20 +40,15 @@ class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
     val controller = new RegisterForPayeController(
-      frontendAppConfig,mockAuthConnector,mockAuthUrlBuilder,mockBusinessRegistrationConnector, mockCompanyRegistrationConnector, messagesControllerComponents) {
+      frontendAppConfig,mockAuthConnector,mockAuthUrlBuilder,mockBusinessRegistrationConnector, mockCompanyRegistrationConnector, messagesControllerComponents, view) {
       override lazy val payeStartUrl = "payeStartURL"
     }
-  }
-
-  "RegisterForPaye view" must {
-    behave like normalPage(createNewTaxYearView, messageKeyPrefix)
-
   }
 
   "Register for PAYE view " must {
     "not display the <signing in to the service> paragraph when logged in" in new SetupPage {
 
-        val result = controller.onPageLoad()(fakeRequest.withSession("authToken" -> "foo"))
+        val result = controller.onPageLoad(fakeRequest.withSession("authToken" -> "foo"))
         val document = Jsoup.parse(contentAsString(result))
 
         Option(document.getElementById("signing-in")) mustBe None
@@ -61,7 +56,7 @@ class RegisterForPayeViewSpec extends ViewBehaviours with I18nSupport {
 
     "Display the <signing in to the service> paragraph when not logged in" in new SetupPage {
 
-        val result = controller.onPageLoad()(fakeRequest)
+        val result = controller.onPageLoad(fakeRequest)
         val document = Jsoup.parse(contentAsString(result))
 
         document.getElementById("signing-in").text() mustBe "Signing in to the service"

@@ -22,13 +22,16 @@ import views.html.dropout
 
 class IneligibleControllerSpec extends ControllerSpecBase {
 
+  val view: dropout = app.injector.instanceOf[dropout]
+
   object Controller extends IneligibleController(
     frontendAppConfig,
     new DataRequiredAction(messagesControllerComponents),
-    messagesControllerComponents
+    messagesControllerComponents,
+    view
   )
 
-  def viewAsString() = dropout(frontendAppConfig)(fakeRequest, messages).toString
+  def viewAsString() = view(frontendAppConfig)(fakeRequest, messages).toString
 
   "Dropout Controller" must {
 

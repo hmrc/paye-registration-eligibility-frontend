@@ -65,7 +65,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
   def enableCompanyRegistrationFeature() = buildClient("/test-only/feature-flag/companyRegistration/true").get()
 
   "submit" should {
-    s"redirect to log in page with continue url of ${controllers.routes.RegisterForPayeController.onSubmit().url}" in {
+    s"redirect to log in page with continue url of ${controllers.routes.RegisterForPayeController.onSubmit.url}" in {
 
       stubAuthorisation(404)
       stubAudits()

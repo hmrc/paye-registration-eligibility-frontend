@@ -21,11 +21,12 @@ import connectors.DataCacheConnector
 import controllers.actions._
 import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
+
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.atLeastOneDirectorHasNino
 
@@ -37,27 +38,27 @@ class AtLeastOneDirectorHasNinoController @Inject()(appConfig: FrontendAppConfig
                                                     dataCacheConnector: DataCacheConnector,
                                                     identify: SessionAction,
                                                     getData: DataRetrievalAction,
-                                                    requireData: DataRequiredAction,
                                                     formProvider: AtLeastOneDirectorHasNinoFormProvider,
-                                                    controllerComponents: MessagesControllerComponents
+                                                    controllerComponents: MessagesControllerComponents,
+                                                    view: atLeastOneDirectorHasNino
                                                    ) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad() = (identify andThen getData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val preparedForm = request.userAnswers match {
         case None => form
         case Some(value) => value.atLeastOneDirectorHasNino.fold(form)(form.fill)
       }
-      Ok(atLeastOneDirectorHasNino(appConfig, preparedForm))
+      Ok(view(appConfig, preparedForm))
   }
 
-  def onSubmit() = (identify andThen getData).async {
+  def onSubmit: Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(atLeastOneDirectorHasNino(appConfig, formWithErrors))),
+          Future.successful(BadRequest(view(appConfig, formWithErrors))),
         (value) => {
           dataCacheConnector.save[Boolean](request.internalId, AtLeastOneDirectorHasNinoId.toString, value).map { cacheMap =>
             Redirect(Navigator.nextPage(AtLeastOneDirectorHasNinoId)(new UserAnswers(cacheMap)))

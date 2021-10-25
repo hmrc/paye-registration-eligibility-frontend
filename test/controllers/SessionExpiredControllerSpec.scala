@@ -21,15 +21,17 @@ import views.html.session_expired
 
 class SessionExpiredControllerSpec extends ControllerSpecBase {
 
+  val view: session_expired = app.injector.instanceOf[session_expired]
+
   "SessionExpired Controller" must {
     "return 200 for a GET" in {
-      val result = new SessionExpiredController(frontendAppConfig, messagesControllerComponents).onPageLoad()(fakeRequest)
+      val result = new SessionExpiredController(frontendAppConfig, messagesControllerComponents, view).onPageLoad(fakeRequest)
       status(result) mustBe OK
     }
 
     "return the correct view for a GET" in {
-      val result = new SessionExpiredController(frontendAppConfig, messagesControllerComponents).onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe session_expired(frontendAppConfig)(fakeRequest, messages).toString
+      val result = new SessionExpiredController(frontendAppConfig, messagesControllerComponents, view).onPageLoad(fakeRequest)
+      contentAsString(result) mustBe view(frontendAppConfig)(fakeRequest, messages).toString
     }
   }
 }

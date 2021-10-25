@@ -17,18 +17,17 @@
 package connectors
 
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.JsObject
-import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HttpClient, _}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
-                                              val wSHttp: HttpClient) {
+                                              val wSHttp: HttpClient) extends Logging {
   lazy val businessRegUrl: String = appConfig.config.baseUrl("business-registration")
 
   def retrieveCurrentProfile(implicit hc: HeaderCarrier, rds: HttpReads[HttpResponse]): Future[Option[String]] = {
@@ -36,18 +35,18 @@ class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
     wSHttp.GET[HttpResponse](s"$businessRegUrl/business-registration/business-tax-registration") map { profile =>
       if (profile.status == 200) {
         (profile.json.validate[JsObject].get \ "registrationID").validate[String].fold({ invalid =>
-          Logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
+          logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
           None
         }, s => Some(s))
       } else {
-        Logger.info(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] status not 200, actually ${profile.status} user directed to OTRS")
+        logger.info(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] status not 200, actually ${profile.status} user directed to OTRS")
         Option.empty[String]
       }
     } recover {
       case ex: NotFoundException =>
         Option.empty[String]
       case ex =>
-        Logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] exception returned ${ex.getMessage} user directed to OTRS")
+        logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] exception returned ${ex.getMessage} user directed to OTRS")
         Option.empty[String]
     }
   }

@@ -18,20 +18,19 @@ package connectors
 
 
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.PREFEFeatureSwitches
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwitches,
                                              val http: HttpClient,
-                                             val appConfig: FrontendAppConfig) {
+                                             val appConfig: FrontendAppConfig) extends Logging {
 
   lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
   lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri", throw new Exception("company-registration.uri doesn't exist"))
@@ -48,12 +47,12 @@ class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwit
       } yield (status, paymentRef)
 
       statusAndPaymentRef.fold({ invalid =>
-        Logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] json returned from CR does not contain status, user will redirect to OTRS")
+        logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] json returned from CR does not contain status, user will redirect to OTRS")
         (None, None)
       }, s => (Some(s._1), s._2))
     } recover {
       case ex =>
-        Logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] ${ex.getMessage}")
+        logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] ${ex.getMessage}")
         (None, None)
     }
   }

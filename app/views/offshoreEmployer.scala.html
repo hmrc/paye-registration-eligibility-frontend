@@ -15,30 +15,33 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
-@import models.Mode
-@import utils.FormHelpers
-@import utils.TitleHelper.title
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(formWithCSRF: FormWithCSRF,
+        errorSummary: components.error_summary,
+        yesNoRadio: components.input_yes_no,
+        submitButton: components.submit_button,
+        mainTemplate: main_template)
 
 @(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@main_template(
-    title = title(messages("offshoreEmployer.title"), form),
+@mainTemplate(
+    title = messages("offshoreEmployer.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
-    @helpers.form(action = OffshoreEmployerController.onSubmit(), 'autoComplete -> "off") {
+    @formWithCSRF(action = OffshoreEmployerController.onSubmit, 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
-        @components.input_yes_no(
+        @yesNoRadio(
             field = form("value"),
             isHeading = true,
             label = messages("offshoreEmployer.heading"),
             labelClass = Some("visually-hidden")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }
