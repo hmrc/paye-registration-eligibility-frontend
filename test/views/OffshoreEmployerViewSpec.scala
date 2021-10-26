@@ -28,14 +28,16 @@ class OffshoreEmployerViewSpec extends YesNoViewBehaviours {
 
   val form = new OffshoreEmployerFormProvider()()
 
-  def createView = () => offshoreEmployer(frontendAppConfig, form)(fakeRequest, messages)
+  val view: offshoreEmployer = app.injector.instanceOf[offshoreEmployer]
 
-  def createViewUsingForm = (form: Form[_]) => offshoreEmployer(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+
+  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
 
   "OffshoreEmployer view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.OffshoreEmployerController.onSubmit().url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.OffshoreEmployerController.onSubmit.url)
   }
 }

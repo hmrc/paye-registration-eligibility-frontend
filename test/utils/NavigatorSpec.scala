@@ -27,7 +27,7 @@ class NavigatorSpec extends SpecBase with MockitoSugar {
     "in Normal mode" must {
       "go to Index from an identifier that doesn't exist in the route map" in {
         case object UnknownIdentifier extends Identifier
-        Navigator.nextPage(UnknownIdentifier)(mock[UserAnswers]) mustBe routes.IndexController.onPageLoad()
+        Navigator.nextPage(UnknownIdentifier)(mock[UserAnswers]) mustBe routes.IndexController.onPageLoad
       }
     }
   }

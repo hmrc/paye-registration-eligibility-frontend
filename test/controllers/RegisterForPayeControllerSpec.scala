@@ -28,6 +28,8 @@ import scala.concurrent.Future
 
 class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
+  val view: registerForPaye = app.injector.instanceOf[registerForPaye]
+
   class Setup {
     reset(mockBusinessRegistrationConnector)
     reset(mockCompanyRegistrationConnector)
@@ -40,7 +42,9 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       mockAuthUrlBuilder,
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
-      messagesControllerComponents) {
+      messagesControllerComponents,
+      view
+    ) {
       override lazy val payeStartUrl = "payeURL"
       override lazy val otrsUrl = "otrsURL"
     }
@@ -51,7 +55,8 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       mockAuthUrlBuilder,
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
-      messagesControllerComponents
+      messagesControllerComponents,
+      view
     )
 
   }
@@ -60,7 +65,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
   val PAYEThresholdWeeklyAmount = DateUtil.getCurrentPayeThreshold
 
-  def viewAsString() = registerForPaye(frontendAppConfig, DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages).toString
+  def viewAsString() = view(frontendAppConfig, DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages).toString
 
   "onPageLoad" must {
 

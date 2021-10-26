@@ -15,29 +15,33 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
-@import utils.TitleHelper.title
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(formWithCSRF: FormWithCSRF,
+        error: components.error_summary,
+        yesNoRadio: components.input_yes_no,
+        submitButton: components.submit_button,
+        mainTemplate: main_template)
 
 @(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@main_template(
-    title = title(messages("atLeastOneDirectorHasNino.title"), form),
+@mainTemplate(
+    title = messages("atLeastOneDirectorHasNino.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
+    @formWithCSRF(action = AtLeastOneDirectorHasNinoController.onSubmit, 'autoComplete -> "off") {
 
-    @helpers.form(action = AtLeastOneDirectorHasNinoController.onSubmit(), 'autoComplete -> "off") {
+        @error(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_yes_no(
+        @yesNoRadio(
             field = form("value"),
             isHeading = true,
             label = messages("atLeastOneDirectorHasNino.heading"),
             labelClass = Some("visually-hidden")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

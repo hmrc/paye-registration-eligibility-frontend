@@ -70,17 +70,12 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
       when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
         .thenReturn(Future(HttpResponse(responseStatus = 202, responseJson = None)))
 
-
-      withCaptureOfLoggingFrom(Logger) { logEvents =>
         await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
-        logEvents.map(_.getMessage) mustBe List("[BusinessRegistrationConnector] [retrieveCurrentProfile] status not 200, actually 202 user directed to OTRS")
-        logEvents.size mustBe 1
-      }
     }
 
     "return None if 500 status is returned (Problem calling BR)" in new Setup {
       when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(),ArgumentMatchers.any(),ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future.failed(new HttpException("foo", 500)))
+        .thenReturn(Future.failed(new HttpException("foo", responseCode =  500)))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }

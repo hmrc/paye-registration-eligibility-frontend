@@ -17,18 +17,21 @@
 package handlers
 
 import config.FrontendAppConfig
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import views.html.error_template
 
 class ErrorHandler @Inject()(
                               appConfig: FrontendAppConfig,
-                              val messagesApi: MessagesApi
+                              val messagesApi: MessagesApi,
+                              view: error_template
                             ) extends FrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
-    views.html.error_template(pageTitle, heading, message, appConfig)
+   view(pageTitle, heading, message, appConfig)
 }
 

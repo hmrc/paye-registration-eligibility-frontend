@@ -14,9 +14,24 @@
 * limitations under the License.
 *@
 
-@import layouts.{govuk_template => hmrcGovUkTemplate}
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
-@import views.html.components.phaseBanner
+@import uk.gov.hmrc.play.views.html.layouts.{Footer, HeadWithTrackingConsent, HeaderNav}
+@import views.html.layouts.GovUkTemplate
+@import uk.gov.hmrc.play.views.html.layouts.FooterLinks
+@import uk.gov.hmrc.play.views.html.layouts.MainContentHeader
+@import uk.gov.hmrc.play.views.html.layouts.MainContent
+@import uk.gov.hmrc.play.views.html.layouts.ServiceInfo
+
+
+@this(  backLink: components.back_link,
+        GovUkTemplate: GovUkTemplate,
+        phaseBanner: components.phaseBanner,
+        headWithTrackingConsent: HeadWithTrackingConsent,
+        headerNav: HeaderNav,
+        footer: Footer,
+        mainContentHeaders: MainContentHeader,
+        mainContents: MainContent,
+        serviceInformation: ServiceInfo,
+        footerLink: FooterLinks)
 
 @(appConfig: config.FrontendAppConfig,
   title: String,
@@ -31,7 +46,7 @@
   backEnabled: Boolean)(implicit request: Request[_], messages: Messages)
 
 @head = {
-    @uiLayouts.headWithTrackingConsent(
+    @headWithTrackingConsent(
         linkElem = None,
         headScripts = None)
         <meta name="format-detection" content="telephone=no" />
@@ -41,7 +56,7 @@
 @headerNavLinks = {}
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @headerNav(
         navTitle = Some(messages("site.service_name")),
         navTitleLink = None,
         showBetaLink = false,
@@ -51,7 +66,7 @@
 @afterHeader = {}
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @footer(
         analyticsToken = None,
         analyticsHost = "",
         ssoUrl = None,
@@ -62,11 +77,11 @@
 
 @footerTop = {}
 @footerLinks = {
-    @uiLayouts.footer_links(accessibilityFooterUrl = Some(appConfig.accessibilityStatementRoute(request.uri)))
+    @footerLink(accessibilityFooterUrl = Some(appConfig.accessibilityStatementRoute(request.uri)))
 }
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
+    @serviceInformation(
         betaBanner = phaseBanner("BETA")(messages, appConfig),
         includeGridWrapper = false,
         serviceInfoContent = Some(serviceInfoContent),
@@ -74,7 +89,7 @@
 }
 
 @serviceHeader = {
-    @components.back_link()
+    @backLink()
     @if(appConfig.languageTranslationEnabled) {
         @views.html.language_selection(
             appConfig.languageMap,
@@ -83,12 +98,12 @@
 }
 
     @if(contentHeader.isDefined) {
-        @uiLayouts.main_content_header(contentHeader = contentHeader.get)
+        @mainContentHeaders(contentHeader = contentHeader.get)
     }
 }
 
 @mainContentHeader = {
-    @uiLayouts.main_content_header(contentHeader = serviceHeader)
+    @mainContentHeaders(contentHeader = serviceHeader)
 }
 
 @getHelpForm = {
@@ -99,7 +114,7 @@
 }
 
 @content = {
-    @uiLayouts.main_content(
+    @mainContents(
         article = mainContent,
         mainClass = mainClass,
         mainDataAttributes = mainDataAttributes,
@@ -109,4 +124,4 @@
         sidebar = sidebar)
 }
 
-@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), nav = true)(content)
+@GovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), nav = true)(content)

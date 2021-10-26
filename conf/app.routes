@@ -10,18 +10,18 @@ GET        /this-service-has-been-reset                 controllers.SessionExpir
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onPageLoad()
-POST       /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onSubmit()
+GET        /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onPageLoad
+POST       /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onSubmit
 
-GET        /offshore-employer                           controllers.OffshoreEmployerController.onPageLoad()
-POST       /offshore-employer                           controllers.OffshoreEmployerController.onSubmit()
+GET        /offshore-employer                           controllers.OffshoreEmployerController.onPageLoad
+POST       /offshore-employer                           controllers.OffshoreEmployerController.onSubmit
 
-GET        /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onPageLoad()
-POST       /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onSubmit()
+GET        /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onPageLoad
+POST       /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onSubmit
 
-GET        /company-cant-register-online                controllers.IneligibleController.onPageLoad()
+GET        /company-cant-register-online                controllers.IneligibleController.onPageLoad
 
-GET        /register-online                             controllers.RegisterForPayeController.onPageLoad()
-POST       /register-online                             controllers.RegisterForPayeController.onSubmit()
+GET        /register-online                             controllers.RegisterForPayeController.onPageLoad
+POST       /register-online                             controllers.RegisterForPayeController.onSubmit
 
 GET        /authorised-for-paye                         controllers.RegisterForPayeController.continueToPayeOrOTRS()

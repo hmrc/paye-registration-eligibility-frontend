@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{AuthUrlBuilder, DateUtil}
 import views.html.registerForPaye
 
@@ -35,7 +35,8 @@ class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
                                           val authUrlBuilder: AuthUrlBuilder,
                                           val businessRegistrationConnector: BusinessRegistrationConnector,
                                           val companyRegistrationConnector: CompanyRegistrationConnector,
-                                          controllerComponents: MessagesControllerComponents
+                                          controllerComponents: MessagesControllerComponents,
+                                          view: registerForPaye
                                          ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
 
   lazy val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
@@ -44,7 +45,7 @@ class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
   def onPageLoad = Action {
     implicit request =>
       val notLoggedIn = hc.authorization.isEmpty
-      Ok(registerForPaye(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
+      Ok(view(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
   }
 
   def onSubmit = Action.async {
@@ -77,7 +78,7 @@ class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
           )
         }
       } recover {
-        case _ => Redirect(routes.IndexController.onPageLoad())
+        case _ => Redirect(routes.IndexController.onPageLoad)
       }
   }
 }

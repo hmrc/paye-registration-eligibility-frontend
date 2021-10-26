@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 class SessionActionSpec extends SpecBase {
 
   class Harness(action: SessionAction) extends FrontendController(messagesControllerComponents) {
-    def onPageLoad() = action { request => Ok }
+    def onPageLoad = action { request => Ok }
   }
 
   "Session Action" when {
@@ -32,9 +32,9 @@ class SessionActionSpec extends SpecBase {
       "redirect to the session expired page" in {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
-        val result = controller.onPageLoad()(fakeRequest)
+        val result = controller.onPageLoad(fakeRequest)
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must startWith(controllers.routes.IndexController.onPageLoad().url)
+        redirectLocation(result).get must startWith(controllers.routes.IndexController.onPageLoad.url)
       }
     }
     "there's an active session" must {
@@ -42,7 +42,7 @@ class SessionActionSpec extends SpecBase {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
         val request = fakeRequest.withSession(SessionKeys.sessionId -> "foo")
-        val result = controller.onPageLoad()(request)
+        val result = controller.onPageLoad(request)
         status(result) mustBe 200
       }
     }

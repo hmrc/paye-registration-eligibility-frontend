@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.taxedAwardScheme
 
@@ -39,25 +39,26 @@ class TaxedAwardSchemeController @Inject()(appConfig: FrontendAppConfig,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            formProvider: TaxedAwardSchemeFormProvider,
-                                           controllerComponents: MessagesControllerComponents
+                                           controllerComponents: MessagesControllerComponents,
+                                           view: taxedAwardScheme
                                           ) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad() = (identify andThen getData andThen requireData) {
+  def onPageLoad = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.taxedAwardScheme match {
         case None => form
         case Some(value) => form.fill(value)
       }
-      Ok(taxedAwardScheme(appConfig, preparedForm))
+      Ok(view(appConfig, preparedForm))
   }
 
-  def onSubmit() = (identify andThen getData andThen requireData).async {
+  def onSubmit = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(taxedAwardScheme(appConfig, formWithErrors))),
+          Future.successful(BadRequest(view(appConfig, formWithErrors))),
         (value) =>
           dataCacheConnector.save[Boolean](request.internalId, TaxedAwardSchemeId.toString, value).map { cacheMap =>
             Redirect(Navigator.nextPage(TaxedAwardSchemeId)(new UserAnswers(cacheMap)))

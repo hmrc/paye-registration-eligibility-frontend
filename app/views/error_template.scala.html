@@ -16,6 +16,8 @@
 
 @import config.FrontendAppConfig
 
+@this(govUkWrapper: govuk_wrapper)
+
 @(pageTitle: String, heading: String, message: String, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, backEnabled: Boolean = true)
 
 @contentHeader = {
@@ -26,4 +28,4 @@
   <p>@message</p>
 }
 
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent, backEnabled = backEnabled)
+@govUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent, backEnabled = backEnabled)

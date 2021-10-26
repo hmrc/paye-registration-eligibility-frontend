@@ -15,24 +15,28 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html._
 @import controllers.routes._
-@import models.Mode
-@import utils.FormHelpers
-@import utils.TitleHelper.title
+@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
+@this(formWithCsrf: FormWithCSRF,
+        errorSummary: components.error_summary,
+        yesNoRadio: components.input_yes_no,
+        submitButton: components.submit_button,
+        mainTemplate: main_template,
+        h1: components.heading)
 
 @(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@main_template(
-    title = title(messages("taxedAwardScheme.title"), form),
+@mainTemplate(
+    title = messages("taxedAwardScheme.title"),
     appConfig = appConfig,
     bodyClasses = None) {
 
-    @helpers.form(action = TaxedAwardSchemeController.onSubmit(), 'autoComplete -> "off") {
+    @formWithCsrf(action = TaxedAwardSchemeController.onSubmit, 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
-        @components.heading("taxedAwardScheme.heading")
+        @h1("taxedAwardScheme.heading")
 
         <p>@messages("taxedAwardScheme.p1")</p>
 
@@ -45,13 +49,13 @@
             <li>@messages("taxedAwardScheme.l4")</li>
         </ul>
 
-        @components.input_yes_no(
+        @yesNoRadio(
             field = form("value"),
             isHeading = false,
             label = messages("taxedAwardScheme.heading"),
             labelClass = Some("visually-hidden")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

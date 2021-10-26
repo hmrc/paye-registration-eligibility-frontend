@@ -28,14 +28,16 @@ class TaxedAwardSchemeViewSpec extends YesNoViewBehaviours {
 
   val form = new TaxedAwardSchemeFormProvider()()
 
-  def createView = () => taxedAwardScheme(frontendAppConfig, form)(fakeRequest, messages)
+  val view: taxedAwardScheme = app.injector.instanceOf[taxedAwardScheme]
 
-  def createViewUsingForm = (form: Form[_]) => taxedAwardScheme(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+
+  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
 
   "TaxedAwardScheme view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.TaxedAwardSchemeController.onSubmit().url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.TaxedAwardSchemeController.onSubmit.url)
   }
 }

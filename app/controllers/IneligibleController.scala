@@ -21,17 +21,18 @@ import controllers.actions._
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.dropout
 
 @Singleton
 class IneligibleController @Inject()(appConfig: FrontendAppConfig,
                                      requireData: DataRequiredAction,
-                                     controllerComponents: MessagesControllerComponents
+                                     controllerComponents: MessagesControllerComponents,
+                                     view: dropout
                                     ) extends FrontendController(controllerComponents) with I18nSupport {
 
   def onPageLoad = Action {
     implicit request =>
-      Ok(dropout(appConfig))
+      Ok(view(appConfig))
   }
 }

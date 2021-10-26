@@ -31,5 +31,5 @@ class LanguageSwitchController @Inject()(appConfig: FrontendAppConfig,
 
   def languageMap: Map[String, Lang] = appConfig.languageMap
 
-  protected[controllers] def fallbackURL: String = routes.IndexController.onPageLoad().url
+  protected[controllers] def fallbackURL: String = routes.IndexController.onPageLoad.url
 }
