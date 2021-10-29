@@ -17,7 +17,6 @@
 package repositories
 
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
@@ -27,6 +26,7 @@ import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.ReactiveRepository
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,13 +43,13 @@ object DatedCacheMap {
   def apply(cacheMap: CacheMap): DatedCacheMap = DatedCacheMap(cacheMap.id, cacheMap.data)
 }
 
-class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
-  extends ReactiveRepository[DatedCacheMap, BSONObjectID](config.getString("mongodb.collectionName").get, mongo, DatedCacheMap.formats) {
+class ReactiveMongoRepository(config: ServicesConfig, mongo: () => DefaultDB)
+  extends ReactiveRepository[DatedCacheMap, BSONObjectID](config.getString("mongodb.collectionName"), mongo, DatedCacheMap.formats) {
 
   val fieldName = "lastUpdated"
   val createdIndexName = "userAnswersExpiry"
   val expireAfterSeconds = "expireAfterSeconds"
-  val timeToLiveInSeconds: Int = config.getInt("mongodb.timeToLiveInSeconds").get
+  val timeToLiveInSeconds: Int = config.getInt("mongodb.timeToLiveInSeconds")
 
   createIndex(fieldName, createdIndexName, timeToLiveInSeconds)
 
@@ -80,7 +80,7 @@ class ReactiveMongoRepository(config: Configuration, mongo: () => DefaultDB)
     collection.find(Json.obj("id" -> id), None)(JsObjectDocumentWriter, BSONDocumentWrites).one[CacheMap]
 }
 
-class SessionRepository @Inject()(config: Configuration, mongo: ReactiveMongoComponent) {
+class SessionRepository @Inject()(config: ServicesConfig, mongo: ReactiveMongoComponent) {
 
   private lazy val sessionRepository = new ReactiveMongoRepository(config, mongo.mongoConnector.db)
 

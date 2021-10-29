@@ -5,19 +5,19 @@ import sbt._
 object AppDependencies {
 
   private val logbackJsonLoggerVersion = "5.1.0"
-  private val govukTemplateVersion = "5.72.0-play-27"
-  private val playUiVersion = "9.7.0-play-27"
+  private val govukTemplateVersion = "5.72.0-play-28"
+  private val playUiVersion = "9.7.0-play-28"
   private val scalaTestVersion = "3.0.8"
   private val scalaTestPlusPlayVersion = "4.0.0"
   private val pegdownVersion = "1.6.0"
   private val mockitoVersion = "3.9.0"
-  private val httpCachingClientVersion = "9.5.0-play-27"
-  private val simpleReactivemongoVersion = "8.0.0-play-27"
-  private val playConditionalFormMappingVersion = "1.9.0-play-27"
-  private val playLanguageVersion = "5.1.0-play-27"
+  private val httpCachingClientVersion = "9.5.0-play-28"
+  private val simpleReactivemongoVersion = "8.0.0-play-28"
+  private val playConditionalFormMappingVersion = "1.9.0-play-28"
+  private val playLanguageVersion = "5.1.0-play-28"
   private val bootstrapVersion = "5.16.0"
   private val wireMockVersion = "2.27.2"
-  private val reactivemongoTestVersion = "5.0.0-play-27"
+  private val reactivemongoTestVersion = "5.0.0-play-28"
   private val scalacheckVersion = "1.15.3"
 
   val compile = Seq(
@@ -28,7 +28,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % bootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion
   )
 
