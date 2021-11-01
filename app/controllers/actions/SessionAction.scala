@@ -32,7 +32,7 @@ class SessionAction @Inject()(controllerComponents: MessagesControllerComponents
   extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest] {
 
   override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] = {
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     hc.sessionId match {
       case Some(session) => block(CacheIdentifierRequest(request, session.value))
