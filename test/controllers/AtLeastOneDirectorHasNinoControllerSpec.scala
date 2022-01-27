@@ -21,8 +21,7 @@ import controllers.actions._
 import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.{when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
@@ -43,15 +42,14 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
   val mockDataCacheConnector = mock[DataCacheConnector]
 
   object Controller extends AtLeastOneDirectorHasNinoController(
-    frontendAppConfig,
     mockDataCacheConnector,
     new FakeAuthAction(messagesControllerComponents),
     getEmptyCacheMap,
     formProvider, messagesControllerComponents,
     view
-  )
+  )(frontendAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(frontendAppConfig, form)(fakeRequest, messages).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, frontendAppConfig).toString
 
   "AtLeastOneDirectorHasNino Controller" must {
 
@@ -66,13 +64,12 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
       val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
       object Controller extends AtLeastOneDirectorHasNinoController(
-        frontendAppConfig,
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         getRelevantData,
         formProvider, messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
 
       val result = Controller.onPageLoad()(fakeRequest)

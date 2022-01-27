@@ -28,11 +28,11 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
   val PAYEThresholdWeeklyAmount = "100"
   val view: registerForPaye = app.injector.instanceOf[registerForPaye]
 
-  def createNewTaxYearView = () => view(frontendAppConfig, true, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  def createNewTaxYearView = () => view(showNewTaxYearContent = true, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
 
-  def createNormalView = () => view(frontendAppConfig, false, true,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  def createNormalView = () => view(showNewTaxYearContent = false, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
 
-  def createLoggedInView = () => view(frontendAppConfig, false, false,PAYEThresholdWeeklyAmount)(fakeRequest, messages)
+  def createLoggedInView = () => view(showNewTaxYearContent = false, notLoggedIn = false, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
 
   class SetupPage {
     reset(mockBusinessRegistrationConnector)
@@ -40,7 +40,13 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
     val controller = new RegisterForPayeController(
-      frontendAppConfig,mockAuthConnector,mockAuthUrlBuilder,mockBusinessRegistrationConnector, mockCompanyRegistrationConnector, messagesControllerComponents, view) {
+      mockAuthConnector,
+      mockAuthUrlBuilder,
+      mockBusinessRegistrationConnector,
+      mockCompanyRegistrationConnector,
+      messagesControllerComponents,
+      view
+    )(frontendAppConfig) {
       override lazy val payeStartUrl = "payeStartURL"
     }
   }
@@ -48,18 +54,18 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
   "Register for PAYE view " must {
     "not display the <signing in to the service> paragraph when logged in" in new SetupPage {
 
-        val result = controller.onPageLoad(fakeRequest.withSession("authToken" -> "foo"))
-        val document = Jsoup.parse(contentAsString(result))
+      val result = controller.onPageLoad(fakeRequest.withSession("authToken" -> "foo"))
+      val document = Jsoup.parse(contentAsString(result))
 
-        Option(document.getElementById("signing-in")) mustBe None
-      }
+      Option(document.getElementById("signing-in")) mustBe None
+    }
 
     "Display the <signing in to the service> paragraph when not logged in" in new SetupPage {
 
-        val result = controller.onPageLoad(fakeRequest)
-        val document = Jsoup.parse(contentAsString(result))
+      val result = controller.onPageLoad(fakeRequest)
+      val document = Jsoup.parse(contentAsString(result))
 
-        document.getElementById("signing-in").text() mustBe "Signing in to the service"
+      document.getElementById("signing-in").text() mustBe "Signing in to the service"
     }
   }
 }

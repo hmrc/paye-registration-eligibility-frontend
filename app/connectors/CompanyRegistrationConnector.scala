@@ -20,6 +20,7 @@ package connectors
 import config.FrontendAppConfig
 import play.api.Logging
 import play.api.libs.json._
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.PREFEFeatureSwitches
 

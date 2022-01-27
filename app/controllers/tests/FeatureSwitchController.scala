@@ -16,11 +16,11 @@
 
 package controllers.tests
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils._
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
@@ -34,7 +34,7 @@ class FeatureSwitchController @Inject()(val featureManager: FeatureManager,
         case x if x.matches(DateUtil.datePatternRegex) => featureManager.setSystemDate(ValueSetFeatureSwitch(featureName, featureState))
         case "true" | "false" => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, featureState.toBoolean))
         case _ if featureName == "system-date" => featureManager.clearSystemDate(ValueSetFeatureSwitch(featureName, "time-clear"))
-        case _ => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, false))
+        case _ => featureManager.enableORDisable(BooleanFeatureSwitch(featureName, setValue = false))
       }
 
       prefeFeatureSwitch(featureName) match {

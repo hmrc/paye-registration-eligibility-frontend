@@ -29,13 +29,13 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
     super.beforeEach()
   }
 
-  val featureSwitch         = new FeatureSwitchManager
-  val prefeFeatureSwitch    = new PREFEFeatureSwitch(featureSwitch)
+  val featureSwitch = new FeatureSwitchManager
+  val prefeFeatureSwitch = new PREFEFeatureSwitch(featureSwitch)
   val valueFeatureSwitch = ValueSetFeatureSwitch("test", "2018-10-12")
 
   "getProperty" should {
     "return a value feature switch with time-clear if the system property is undefined" in {
-      featureSwitch.getProperty("test","") mustBe ValueSetFeatureSwitch("test", "time-clear")
+      featureSwitch.getProperty("test", "") mustBe ValueSetFeatureSwitch("test", "time-clear")
     }
 
     "return an value feature switch with a date if the system property is defined as '2018-10-12'" in {

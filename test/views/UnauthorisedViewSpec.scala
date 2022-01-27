@@ -23,7 +23,7 @@ class UnauthorisedViewSpec extends ViewBehaviours {
 
   val view = app.injector.instanceOf[unauthorised]
 
-  def createView = () => view(frontendAppConfig)(fakeRequest, messages)
+  def createView = () => view()(fakeRequest, messages, frontendAppConfig)
 
   "Unauthorised view" must {
 

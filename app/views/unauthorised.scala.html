@@ -15,16 +15,14 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.h1
 
-@this(mainTemplate: main_template)
+@this(mainTemplate: main_template, h1: h1)
 
-@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(
-    title = messages("unauthorised.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+@mainTemplate(messages("unauthorised.title")) {
 
-    <h1 class="heading-xlarge">@messages("unauthorised.heading")</h1>
+    @h1(messages("unauthorised.heading"))
 
 }

@@ -17,22 +17,20 @@
 package controllers
 
 import config.FrontendAppConfig
-import controllers.actions._
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.dropout
 
-@Singleton
-class IneligibleController @Inject()(appConfig: FrontendAppConfig,
-                                     requireData: DataRequiredAction,
-                                     controllerComponents: MessagesControllerComponents,
-                                     view: dropout
-                                    ) extends FrontendController(controllerComponents) with I18nSupport {
+import javax.inject.{Inject, Singleton}
 
-  def onPageLoad = Action {
+@Singleton
+class IneligibleController @Inject()(controllerComponents: MessagesControllerComponents,
+                                     view: dropout
+                                    )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] = Action {
     implicit request =>
-      Ok(view(appConfig))
+      Ok(view())
   }
 }

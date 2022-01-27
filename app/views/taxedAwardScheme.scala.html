@@ -16,44 +16,44 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+@import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+@import views.html.components.{error_summary, h1, submit_button, yesNoRadio, p, bullets}
 
 @this(formWithCsrf: FormWithCSRF,
-        errorSummary: components.error_summary,
-        yesNoRadio: components.input_yes_no,
-        submitButton: components.submit_button,
+        errorSummary: error_summary,
+        yesNoRadio: yesNoRadio,
+        submitButton: submit_button,
         mainTemplate: main_template,
-        h1: components.heading)
+        h1: h1,
+        p: p,
+        bullets: bullets)
 
-@(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(
-    title = messages("taxedAwardScheme.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+@mainTemplate(messages("taxedAwardScheme.title")) {
 
     @formWithCsrf(action = TaxedAwardSchemeController.onSubmit, 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @h1("taxedAwardScheme.heading")
+        @h1(messages("taxedAwardScheme.heading"))
 
-        <p>@messages("taxedAwardScheme.p1")</p>
+        @p{@messages("taxedAwardScheme.p1")}
 
-        <p>@messages("taxedAwardScheme.p2")</p>
+        @p{@messages("taxedAwardScheme.p2")}
 
-        <ul class="list-bullet">
-            <li>@messages("taxedAwardScheme.l1")</li>
-            <li>@messages("taxedAwardScheme.l2")</li>
-            <li>@messages("taxedAwardScheme.l3")</li>
-            <li>@messages("taxedAwardScheme.l4")</li>
-        </ul>
+        @bullets(
+            messages("taxedAwardScheme.l1"),
+            messages("taxedAwardScheme.l2"),
+            messages("taxedAwardScheme.l3"),
+            messages("taxedAwardScheme.l4")
+        )
 
         @yesNoRadio(
-            field = form("value"),
-            isHeading = false,
-            label = messages("taxedAwardScheme.heading"),
-            labelClass = Some("visually-hidden")
+            form = form,
+            isPageHeading = false,
+            headingKey = "taxedAwardScheme.heading",
+            classes = "govuk-visually-hidden"
         )
 
         @submitButton()

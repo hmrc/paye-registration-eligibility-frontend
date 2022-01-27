@@ -21,10 +21,11 @@ import connectors.DataCacheConnector
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
 import identifiers.OffshoreEmployerId
+
 import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.offshoreEmployer
@@ -33,35 +34,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class OffshoreEmployerController @Inject()(appConfig: FrontendAppConfig,
-                                           dataCacheConnector: DataCacheConnector,
+class OffshoreEmployerController @Inject()(dataCacheConnector: DataCacheConnector,
                                            identify: SessionAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            formProvider: OffshoreEmployerFormProvider,
                                            controllerComponents: MessagesControllerComponents,
                                            view: offshoreEmployer
-                                          ) extends FrontendController(controllerComponents) with I18nSupport {
+                                          )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.offshoreEmployer match {
         case None => form
         case Some(value) => form.fill(value)
       }
-      Ok(view(appConfig, preparedForm))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit = (identify andThen getData andThen requireData).async {
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(appConfig, formWithErrors))),
-        (value) =>
-          dataCacheConnector.save[Boolean](request.internalId, OffshoreEmployerId.toString, value).map { cacheMap =>
-            Redirect(Navigator.nextPage(OffshoreEmployerId)(new UserAnswers(cacheMap)))
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          dataCacheConnector.save[Boolean](request.internalId, OffshoreEmployerId.toString, value).map {
+            cacheMap =>
+              Redirect(Navigator.nextPage(OffshoreEmployerId)(new UserAnswers(cacheMap)))
           }
       )
   }

@@ -37,14 +37,14 @@ class DateUtilSpec extends PlaySpec with BeforeAndAfterEach {
       result mustBe "118"
     }
 
-    "return the 2020-2021 tax year thresholds if the system date is 2020-04-06" in  {
+    "return the 2020-2021 tax year thresholds if the system date is 2020-04-06" in {
       System.setProperty("feature.system-date", "2020-04-06")
 
       val result = utils.DateUtil.getCurrentPayeThreshold
       result mustBe "120"
     }
 
-    "return the 2020-2021 tax year thresholds if the system date is 2020-10-26" in  {
+    "return the 2020-2021 tax year thresholds if the system date is 2020-10-26" in {
       System.setProperty("feature.system-date", "2020-10-26")
 
       val result = utils.DateUtil.getCurrentPayeThreshold

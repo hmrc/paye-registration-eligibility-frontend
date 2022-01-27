@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package views
+@this()
 
-import views.behaviours.ViewBehaviours
-import views.html.dropout
+@(messages: String*)
 
-class DropoutViewSpec extends ViewBehaviours {
-
-  val messageKeyPrefix = "dropout"
-
-  val view: dropout = app.injector.instanceOf[dropout]
-
-  def createView = () => view()(fakeRequest, messages, frontendAppConfig)
-
-  "Dropout view" must {
-    behave like normalPage(createView, messageKeyPrefix)
-  }
-}
+<ul class="govuk-list govuk-list--bullet">
+    @messages.map { msg =>
+        <li>@msg</li>
+    }
+</ul>

@@ -44,7 +44,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
   val fakeDataCacheConnector = new FakeDataCacheConnector(sessionRepository, cascadeUpsert)
 
   object Controller extends OffshoreEmployerController(
-    frontendAppConfig,
     fakeDataCacheConnector,
     new FakeAuthAction(messagesControllerComponents),
     getEmptyCacheMap,
@@ -52,9 +51,9 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
     formProvider,
     messagesControllerComponents,
     view
-  )
+  )(frontendAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(frontendAppConfig, form)(fakeRequest, messages).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, frontendAppConfig).toString
 
   "OffshoreEmployer Controller" must {
 
@@ -70,7 +69,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
       val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
       object Controller extends OffshoreEmployerController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         getRelevantData,
@@ -78,7 +76,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -90,7 +88,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
 
       object Controller extends OffshoreEmployerController(
-        frontendAppConfig,
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -98,7 +95,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -115,7 +112,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "false"))
 
       object Controller extends OffshoreEmployerController(
-        frontendAppConfig,
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -123,7 +119,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -146,7 +142,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
 
     "redirect to IndexController for a GET if no existing data is found" in {
       object Controller extends OffshoreEmployerController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -154,7 +149,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -164,7 +159,6 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
 
     "redirect to IndexController for a POST if no existing data is found" in {
       object Controller extends OffshoreEmployerController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -172,7 +166,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
       val result = Controller.onSubmit(postRequest)

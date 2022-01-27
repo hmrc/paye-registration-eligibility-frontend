@@ -29,7 +29,7 @@ object WiremockHelper {
   val url = s"http://$wiremockHost:$wiremockPort"
 }
 
-trait WiremockHelper extends AuthHelper{
+trait WiremockHelper extends AuthHelper {
   self: GuiceOneServerPerSuite =>
 
   import WiremockHelper._

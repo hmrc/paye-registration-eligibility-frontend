@@ -21,9 +21,8 @@ import play.twirl.api.HtmlFormat
 
 trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
-  def yesNoPage(createView: (Form[Boolean]) => HtmlFormat.Appendable,
-                messageKeyPrefix: String,
-                expectedFormAction: String) = {
+  def yesNoPage(createView: Form[Boolean] => HtmlFormat.Appendable,
+                messageKeyPrefix: String) = {
 
     "behave like a page with a Yes/No question" when {
       "rendered" must {
@@ -36,13 +35,13 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
         "contain an input for the value" in {
           val doc = asDocument(createView(form))
-          assertRenderedById(doc, "value-yes")
+          assertRenderedById(doc, "value")
           assertRenderedById(doc, "value-no")
         }
 
         "have no values checked when rendered with no form" in {
           val doc = asDocument(createView(form))
-          assert(!doc.getElementById("value-yes").hasAttr("checked"))
+          assert(!doc.getElementById("value").hasAttr("checked"))
           assert(!doc.getElementById("value-no").hasAttr("checked"))
         }
 
@@ -63,23 +62,23 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
       "rendered with an error" must {
         lazy val doc = asDocument(createView(form.withError(error)))
         "show an error summary" in {
-          assertRenderedById(doc, "error-summary-heading")
+          assertRenderedById(doc, "error-summary-title")
         }
 
         "show an error in the value field's label" in {
-          val errorSpan = doc.getElementsByClass("error-notification").first
-          errorSpan.text mustBe messages(errorMessage)
+          val errorSpan = doc.getElementsByClass("govuk-error-message").first
+          errorSpan.text mustBe "Error: " + messages(errorMessage)
         }
       }
     }
   }
 
 
-  def answeredYesNoPage(createView: (Form[Boolean]) => HtmlFormat.Appendable, answer: Boolean) = {
+  def answeredYesNoPage(createView: Form[Boolean] => HtmlFormat.Appendable, answer: Boolean) = {
 
     "have only the correct value checked" in {
       val doc = asDocument(createView(form.fill(answer)))
-      assert(doc.getElementById("value-yes").hasAttr("checked") == answer)
+      assert(doc.getElementById("value").hasAttr("checked") == answer)
       assert(doc.getElementById("value-no").hasAttr("checked") != answer)
     }
 

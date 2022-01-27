@@ -34,36 +34,34 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AtLeastOneDirectorHasNinoController @Inject()(appConfig: FrontendAppConfig,
-                                                    dataCacheConnector: DataCacheConnector,
+class AtLeastOneDirectorHasNinoController @Inject()(dataCacheConnector: DataCacheConnector,
                                                     identify: SessionAction,
                                                     getData: DataRetrievalAction,
                                                     formProvider: AtLeastOneDirectorHasNinoFormProvider,
                                                     controllerComponents: MessagesControllerComponents,
                                                     view: atLeastOneDirectorHasNino
-                                                   ) extends FrontendController(controllerComponents) with I18nSupport {
+                                                   )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       val preparedForm = request.userAnswers match {
+        case Some(userAnswers) => userAnswers.atLeastOneDirectorHasNino.fold(form)(form.fill)
         case None => form
-        case Some(value) => value.atLeastOneDirectorHasNino.fold(form)(form.fill)
       }
-      Ok(view(appConfig, preparedForm))
+      Ok(view(preparedForm))
   }
 
   def onSubmit: Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(appConfig, formWithErrors))),
-        (value) => {
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors))),
+        value =>
           dataCacheConnector.save[Boolean](request.internalId, AtLeastOneDirectorHasNinoId.toString, value).map { cacheMap =>
             Redirect(Navigator.nextPage(AtLeastOneDirectorHasNinoId)(new UserAnswers(cacheMap)))
           }
-        }
       )
   }
 }

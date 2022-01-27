@@ -5,8 +5,6 @@ import sbt._
 object AppDependencies {
 
   private val logbackJsonLoggerVersion = "5.1.0"
-  private val govukTemplateVersion = "5.72.0-play-28"
-  private val playUiVersion = "9.7.0-play-28"
   private val scalaTestVersion = "3.0.8"
   private val scalaTestPlusPlayVersion = "4.0.0"
   private val pegdownVersion = "1.6.0"
@@ -19,20 +17,9 @@ object AppDependencies {
   private val wireMockVersion = "2.27.2"
   private val reactivemongoTestVersion = "5.0.0-play-28"
   private val scalacheckVersion = "1.15.3"
+  private val hmrcFrontendVersion = "3.4.0-play-28"
 
-  val compile = Seq(
-    ws,
-    "uk.gov.hmrc" %% "simple-reactivemongo" % simpleReactivemongoVersion,
-    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
-    "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
-    "uk.gov.hmrc" %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
-    "uk.gov.hmrc" %% "play-language" % playLanguageVersion
-  )
-
-  private def testDeps(scope: String) = Seq(
+  private def testDependencies(scope: String): Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
     "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusPlayVersion % scope,
     "org.pegdown" % "pegdown" % pegdownVersion % scope,
@@ -41,19 +28,23 @@ object AppDependencies {
     "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope
   )
 
-  object Test {
-    def apply(): Seq[ModuleID] = testDeps("test") ++ Seq(
-      "org.mockito" % "mockito-core" % mockitoVersion % "test"
-    )
+  val appDependencies = Seq(
+    ws,
+    "uk.gov.hmrc" %% "simple-reactivemongo" % simpleReactivemongoVersion,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
+    "uk.gov.hmrc" %% "play-frontend-hmrc" % hmrcFrontendVersion,
+    "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
+    "uk.gov.hmrc" %% "play-conditional-form-mapping" % playConditionalFormMappingVersion,
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
+    "uk.gov.hmrc" %% "play-language" % playLanguageVersion
+  )
 
-  }
+  val unitTestDependencies: Seq[ModuleID] = testDependencies("test") ++ Seq("org.mockito" % "mockito-core" % mockitoVersion % "test")
 
-  object IntegrationTest {
-    def apply(): Seq[ModuleID] = testDeps("it") ++ Seq(
+  val itDependencies: Seq[ModuleID] = testDependencies("it") ++ Seq(
       "com.github.tomakehurst" % "wiremock-jre8" % wireMockVersion % "it",
       "uk.gov.hmrc" %% "reactivemongo-test" % reactivemongoTestVersion % "it"
     )
-  }
 
-  def apply(): Seq[ModuleID] = compile ++ Test() ++ IntegrationTest()
+  def apply(): Seq[ModuleID] = appDependencies ++ unitTestDependencies ++ itDependencies
 }

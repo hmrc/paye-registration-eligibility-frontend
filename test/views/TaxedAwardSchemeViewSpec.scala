@@ -16,7 +16,6 @@
 
 package views
 
-import controllers.routes
 import forms.TaxedAwardSchemeFormProvider
 import play.api.data.Form
 import views.behaviours.YesNoViewBehaviours
@@ -30,14 +29,14 @@ class TaxedAwardSchemeViewSpec extends YesNoViewBehaviours {
 
   val view: taxedAwardScheme = app.injector.instanceOf[taxedAwardScheme]
 
-  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(form)(fakeRequest, messages, frontendAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, frontendAppConfig)
 
   "TaxedAwardScheme view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.TaxedAwardSchemeController.onSubmit.url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix)
   }
 }

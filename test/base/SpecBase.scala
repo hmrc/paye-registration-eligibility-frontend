@@ -33,10 +33,10 @@ import utils.{AuthUrlBuilder, CascadeUpsert, PREFEFeatureSwitches}
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   val mockBusinessRegistrationConnector = mock[BusinessRegistrationConnector]
-  val mockCompanyRegistrationConnector  = mock[CompanyRegistrationConnector]
-  val mockAuthUrlBuilder                = mock[AuthUrlBuilder]
-  val mockAuthConnector                 = mock[AuthConnector]
-  val mockHttpClient : HttpClient         = mock[HttpClient]
+  val mockCompanyRegistrationConnector = mock[CompanyRegistrationConnector]
+  val mockAuthUrlBuilder = mock[AuthUrlBuilder]
+  val mockAuthConnector = mock[AuthConnector]
+  val mockHttpClient: HttpClient = mock[HttpClient]
   val mockFeatureSwitch: PREFEFeatureSwitches = mock[PREFEFeatureSwitches]
 
   def injector: Injector = app.injector

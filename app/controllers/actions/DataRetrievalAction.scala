@@ -19,14 +19,11 @@ package controllers.actions
 
 import com.google.inject.Inject
 import connectors.DataCacheConnector
-
-import javax.inject.Singleton
 import models.requests.{CacheIdentifierRequest, OptionalDataRequest}
 import play.api.mvc.{ActionTransformer, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.UserAnswers
 
+import javax.inject.Singleton
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 

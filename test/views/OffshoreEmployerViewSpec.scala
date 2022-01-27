@@ -16,7 +16,6 @@
 
 package views
 
-import controllers.routes
 import forms.OffshoreEmployerFormProvider
 import play.api.data.Form
 import views.behaviours.YesNoViewBehaviours
@@ -30,14 +29,14 @@ class OffshoreEmployerViewSpec extends YesNoViewBehaviours {
 
   val view: offshoreEmployer = app.injector.instanceOf[offshoreEmployer]
 
-  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(form)(fakeRequest, messages, frontendAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, frontendAppConfig)
 
   "OffshoreEmployer view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.OffshoreEmployerController.onSubmit.url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix)
   }
 }

@@ -17,13 +17,14 @@
 package utils
 
 import org.scalatest.{EitherValues, MustMatchers, OptionValues, WordSpec}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 object EnumerableSpec {
 
   sealed trait Foo
+
   case object Bar extends Foo
+
   case object Baz extends Foo
 
   object Foo {

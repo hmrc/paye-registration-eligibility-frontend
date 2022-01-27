@@ -16,7 +16,6 @@
 
 package controllers
 
-import controllers.actions._
 import play.api.test.Helpers._
 import views.html.dropout
 
@@ -25,13 +24,11 @@ class IneligibleControllerSpec extends ControllerSpecBase {
   val view: dropout = app.injector.instanceOf[dropout]
 
   object Controller extends IneligibleController(
-    frontendAppConfig,
-    new DataRequiredAction(messagesControllerComponents),
     messagesControllerComponents,
     view
-  )
+  )(frontendAppConfig)
 
-  def viewAsString() = view(frontendAppConfig)(fakeRequest, messages).toString
+  def viewAsString() = view()(fakeRequest, messages, frontendAppConfig).toString
 
   "Dropout Controller" must {
 
