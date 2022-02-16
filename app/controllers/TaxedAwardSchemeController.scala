@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,45 +21,44 @@ import connectors.DataCacheConnector
 import controllers.actions._
 import forms.TaxedAwardSchemeFormProvider
 import identifiers.TaxedAwardSchemeId
-import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.taxedAwardScheme
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class TaxedAwardSchemeController @Inject()(appConfig: FrontendAppConfig,
-                                           dataCacheConnector: DataCacheConnector,
+class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnector,
                                            identify: SessionAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            formProvider: TaxedAwardSchemeFormProvider,
                                            controllerComponents: MessagesControllerComponents,
                                            view: taxedAwardScheme
-                                          ) extends FrontendController(controllerComponents) with I18nSupport {
+                                          )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
-  def onPageLoad = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.taxedAwardScheme match {
         case None => form
         case Some(value) => form.fill(value)
       }
-      Ok(view(appConfig, preparedForm))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit = (identify andThen getData andThen requireData).async {
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(appConfig, formWithErrors))),
-        (value) =>
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors))),
+        value =>
           dataCacheConnector.save[Boolean](request.internalId, TaxedAwardSchemeId.toString, value).map { cacheMap =>
             Redirect(Navigator.nextPage(TaxedAwardSchemeId)(new UserAnswers(cacheMap)))
           }

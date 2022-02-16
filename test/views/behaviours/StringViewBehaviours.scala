@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
 
         "contain a label for the value" in {
           val doc = asDocument(createView(form))
-          val expectedHintText = expectedHintKey map(k => messages(k))
+          val expectedHintText = expectedHintKey map (k => messages(k))
           assertContainsLabel(doc, "value", messages(s"$messageKeyPrefix.heading"), expectedHintText)
         }
 

@@ -15,17 +15,15 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components._
 
-@this(mainTemplate: main_template)
+@this(mainTemplate: main_template, h1: h1, p: p)
 
-@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(
-    title = messages("session_expired.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+@mainTemplate(messages("session_expired.title")) {
 
-    <h1 class="heading-xlarge">@messages("session_expired.heading")</h1>
+    @h1(messages("session_expired.heading"))
 
-    <p>@messages("session_expired.guidance")</p>
+    @p{@messages("session_expired.guidance")}
 }

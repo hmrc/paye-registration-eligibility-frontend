@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class OptionFieldBehaviours extends FieldBehaviours {
 
     "bind all valid values" in {
 
-      for(value <- validValues) {
+      for (value <- validValues) {
 
         val result = form.bind(Map(fieldName -> value.toString)).apply(fieldName)
         result.value.value shouldEqual value.toString

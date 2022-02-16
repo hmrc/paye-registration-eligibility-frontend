@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,19 @@
 package handlers
 
 import config.FrontendAppConfig
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.error_template
 
-class ErrorHandler @Inject()(
-                              appConfig: FrontendAppConfig,
-                              val messagesApi: MessagesApi,
-                              view: error_template
-                            ) extends FrontendErrorHandler with I18nSupport {
+import javax.inject.Inject
+
+class ErrorHandler @Inject()(val messagesApi: MessagesApi,
+                             view: error_template
+                            )(implicit appConfig: FrontendAppConfig) extends FrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
-   view(pageTitle, heading, message, appConfig)
+    view(pageTitle, heading, message)
 }
 

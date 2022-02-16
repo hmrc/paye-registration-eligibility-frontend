@@ -16,30 +16,27 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+@import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+@import views.html.components.{error_summary, submit_button, yesNoRadio}
 
 @this(formWithCSRF: FormWithCSRF,
-        errorSummary: components.error_summary,
-        yesNoRadio: components.input_yes_no,
-        submitButton: components.submit_button,
+        errorSummary: error_summary,
+        yesNoRadio: yesNoRadio,
+        submitButton: submit_button,
         mainTemplate: main_template)
 
-@(appConfig: FrontendAppConfig, form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(
-    title = messages("offshoreEmployer.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+@mainTemplate(messages("offshoreEmployer.title")) {
 
     @formWithCSRF(action = OffshoreEmployerController.onSubmit, 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
         @yesNoRadio(
-            field = form("value"),
-            isHeading = true,
-            label = messages("offshoreEmployer.heading"),
-            labelClass = Some("visually-hidden")
+            form = form,
+            isPageHeading = true,
+            headingKey = "offshoreEmployer.heading"
         )
 
         @submitButton()

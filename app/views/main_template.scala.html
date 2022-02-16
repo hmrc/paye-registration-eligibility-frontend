@@ -14,40 +14,26 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcTrackingConsentSnippet, HmrcLayout, HmrcTimeoutDialogHelper}
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import views.html.helper.CSPNonce
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html.layouts.Sidebar
-@import uk.gov.hmrc.play.views.html.layouts.Article
 
-@this(govukWrapper: govuk_wrapper,
-        sideBars: Sidebar,
-        article: Article)
+@this(hmrcLayout: HmrcLayout,
+        hmrcHeader: HmrcHeader,
+        appConfig: FrontendAppConfig,
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+        standardBetaBanner: StandardBetaBanner,
+        hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper)
 
-@(title: String,
-  appConfig: FrontendAppConfig,
-  sidebarLinks: Option[Html] = None,
-  contentHeader: Option[Html] = None,
-  bodyClasses: Option[String] = None,
-  mainClass: Option[String] = None,
-  scriptElem: Option[Html] = None,
-  backEnabled: Boolean = true
-)(mainContent: Html)(implicit request : Request[_], messages: Messages)
+@(title: String)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@serviceInfoContent = {}
-
-@sidebar = {
-    @if(sidebarLinks.isDefined) {
-        @sideBars(sidebarLinks.get, Some("sidebar"))
-    }
-}
-
-@govukWrapper(appConfig = appConfig,
-               title = s"$title - ${messages("site.service_name")} - ${messages("site.govuk.label")}",
-               mainClass = mainClass,
-               bodyClasses = bodyClasses,
-               sidebar = sidebar,
-               contentHeader = contentHeader,
-               mainContent = article(mainContent),
-               backEnabled = backEnabled,
-               serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem
-)
+@hmrcLayout(
+    pageTitle = Some(s"$title - ${messages("service.name")} - ${messages("site.govuk.label")}"),
+    isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
+    accessibilityStatementUrl = Some(appConfig.accessibilityStatementRoute(request.uri)),
+    nonce = CSPNonce.get,
+    phaseBanner = Some(standardBetaBanner(url = appConfig.scrsFeedbackLink)),
+    serviceName = Some(messages("service.name"))
+)(contentBlock)

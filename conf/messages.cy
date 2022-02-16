@@ -41,7 +41,7 @@ site.no                                             = No welsh
 site.yes                                            = Yes welsh
 site.save_and_continue                              = Save and continue
 site.continue                                       = Continue welsh
-site.service_name                                   = Register an employer for PAYE welsh
+service.name                                        = Register an employer for PAYE welsh
 site.textarea.char_limit                            = (Limit is {0} characters)
 
 unauthorised.title                                  = You can’t access this service with this account

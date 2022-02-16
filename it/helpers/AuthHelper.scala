@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
 
 package helpers
 
-import java.net.{URLDecoder, URLEncoder}
-import java.nio.charset.StandardCharsets
-
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.Application
@@ -28,6 +25,9 @@ import play.api.libs.json.Json
 import play.api.libs.ws.WSCookie
 import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted, PlainText}
 import uk.gov.hmrc.http.SessionKeys
+
+import java.net.{URLDecoder, URLEncoder}
+import java.nio.charset.StandardCharsets
 
 trait AuthHelper extends SessionCookieBaker {
 
@@ -44,7 +44,7 @@ trait AuthHelper extends SessionCookieBaker {
     ) ++ additionalData
   }
 
-  def getSessionCookie(additionalData: Map[String, String] = Map(), userId: String = defaultUser) : String = {
+  def getSessionCookie(additionalData: Map[String, String] = Map(), userId: String = defaultUser): String = {
     cookieValue(cookieData(additionalData, userId))
   }
 
@@ -64,7 +64,7 @@ trait AuthHelper extends SessionCookieBaker {
       status = status,
       body = resp match {
         case Some(_) => resp
-        case None    => Some(Json.obj("authorise" -> Json.arr(), "retrieve" -> Json.arr()).toString())
+        case None => Some(Json.obj("authorise" -> Json.arr(), "retrieve" -> Json.arr()).toString())
       }
     )
   }
@@ -92,7 +92,8 @@ trait SessionCookieBaker {
   val cookieSigner: DefaultCookieSigner
 
   val cookieKey = "gvBoGdgzqG1AarzF1LY0zQ=="
-  def cookieValue(sessionData: Map[String,String]): String = {
+
+  def cookieValue(sessionData: Map[String, String]): String = {
     def encode(data: Map[String, String]): PlainText = {
       val encoded = data.map {
         case (k, v) => URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8")
@@ -116,7 +117,7 @@ trait SessionCookieBaker {
     val decrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).decrypt(Crypted(cookieData)).value
     val result = decrypted.split("&")
       .map(_.split("="))
-      .map { case Array(k, v) => (k, URLDecoder.decode(v, StandardCharsets.UTF_8.name()))}
+      .map { case Array(k, v) => (k, URLDecoder.decode(v, StandardCharsets.UTF_8.name())) }
       .toMap
 
     result

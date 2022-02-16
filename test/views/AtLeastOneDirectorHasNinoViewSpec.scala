@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package views
 
-import controllers.routes
 import forms.AtLeastOneDirectorHasNinoFormProvider
 import play.api.data.Form
 import views.behaviours.YesNoViewBehaviours
@@ -30,14 +29,14 @@ class AtLeastOneDirectorHasNinoViewSpec extends YesNoViewBehaviours {
 
   val view: atLeastOneDirectorHasNino = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
-  def createView = () => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createView = () => view(form)(fakeRequest, messages, frontendAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(frontendAppConfig, form)(fakeRequest, messages)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, frontendAppConfig)
 
   "AtLeastOneDirectorHasNino view" must {
 
     behave like normalPage(createView, messageKeyPrefix)
 
-    behave like yesNoPage(createViewUsingForm, messageKeyPrefix, routes.AtLeastOneDirectorHasNinoController.onSubmit.url)
+    behave like yesNoPage(createViewUsingForm, messageKeyPrefix)
   }
 }

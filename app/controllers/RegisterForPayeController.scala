@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,40 +18,40 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{AuthUrlBuilder, DateUtil}
 import views.html.registerForPaye
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
-                                          val authConnector: AuthConnector,
+class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
                                           val authUrlBuilder: AuthUrlBuilder,
                                           val businessRegistrationConnector: BusinessRegistrationConnector,
                                           val companyRegistrationConnector: CompanyRegistrationConnector,
                                           controllerComponents: MessagesControllerComponents,
                                           view: registerForPaye
-                                         ) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
+                                         )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
 
-  lazy val payeStartUrl = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
-  lazy val otrsUrl = appConfig.otrsUrl
+  lazy val payeStartUrl: String = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
+  lazy val otrsUrl: String = appConfig.otrsUrl
 
-  def onPageLoad = Action {
+  def onPageLoad: Action[AnyContent] = Action {
     implicit request =>
       val notLoggedIn = hc.authorization.isEmpty
-      Ok(view(appConfig, DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
+      Ok(view(DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
   }
 
-  def onSubmit = Action.async {
+  def onSubmit: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS))
+        Future.successful(Redirect(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS()))
       } recoverWith {
         case _ =>
           Future.successful(authUrlBuilder.redirectToLogin)
@@ -65,7 +65,7 @@ class RegisterForPayeController @Inject()(val appConfig: FrontendAppConfig,
     }
   }
 
-  def continueToPayeOrOTRS = Action.async {
+  def continueToPayeOrOTRS: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         businessRegistrationConnector.retrieveCurrentProfile.flatMap { reg =>

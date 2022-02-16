@@ -14,114 +14,74 @@
 * limitations under the License.
 *@
 
-@import uk.gov.hmrc.play.views.html.layouts.{Footer, HeadWithTrackingConsent, HeaderNav}
-@import views.html.layouts.GovUkTemplate
-@import uk.gov.hmrc.play.views.html.layouts.FooterLinks
-@import uk.gov.hmrc.play.views.html.layouts.MainContentHeader
-@import uk.gov.hmrc.play.views.html.layouts.MainContent
-@import uk.gov.hmrc.play.views.html.layouts.ServiceInfo
+@import config.FrontendAppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
+@import views.html.components.{language_select, phaseBanner, siteHeader}
 
+@this(hmrcBanner: HmrcBanner,
+        govukLayout: GovukLayout,
+        hmrcStandardFooter: HmrcStandardFooter,
+        hmrcTimeoutDialog: HmrcTimeoutDialog,
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+        languageSelect: language_select,
+        siteHeader: siteHeader,
+        phaseBanner: phaseBanner,
+        govukBackLink: GovukBackLink
+)
 
-@this(  backLink: components.back_link,
-        GovUkTemplate: GovUkTemplate,
-        phaseBanner: components.phaseBanner,
-        headWithTrackingConsent: HeadWithTrackingConsent,
-        headerNav: HeaderNav,
-        footer: Footer,
-        mainContentHeaders: MainContentHeader,
-        mainContents: MainContent,
-        serviceInformation: ServiceInfo,
-        footerLink: FooterLinks)
+@(pageTitle: Option[String] = None,
+        showBackLink: Boolean = true
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@(appConfig: config.FrontendAppConfig,
-  title: String,
-  mainClass: Option[String] = None,
-  mainDataAttributes: Option[Html] = None,
-  bodyClasses: Option[String] = None,
-  sidebar: Html = Html(""),
-  contentHeader: Option[Html] = None,
-  mainContent: Html = Html(""),
-  serviceInfoContent: Html = Html(""),
-  scriptElem: Option[Html] = None,
-  backEnabled: Boolean)(implicit request: Request[_], messages: Messages)
+@hmrcTrackingConsentSnippet()
 
-@head = {
-    @headWithTrackingConsent(
-        linkElem = None,
-        headScripts = None)
-        <meta name="format-detection" content="telephone=no" />
-        <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/payeregistrationeligibilityfrontend-app.css")' />
-}
+@beforeContentBlock = {
 
-@headerNavLinks = {}
+    @phaseBanner("beta")
 
-@insideHeader = {
-    @headerNav(
-        navTitle = Some(messages("site.service_name")),
-        navTitleLink = None,
-        showBetaLink = false,
-        navLinks = Some(headerNavLinks))
-}
+    @hmrcBanner(
+        Banner(if(messages.lang.code == "cy") {Cy} else En)
+    )
 
-@afterHeader = {}
-
-@bodyEnd = {
-    @footer(
-        analyticsToken = None,
-        analyticsHost = "",
-        ssoUrl = None,
-        scriptElem = scriptElem,
-        gaCalls = None)
-        <script src='@routes.Assets.versioned("javascripts/payeregistrationeligibilityfrontend-app.min.js")'> </script>
-}
-
-@footerTop = {}
-@footerLinks = {
-    @footerLink(accessibilityFooterUrl = Some(appConfig.accessibilityStatementRoute(request.uri)))
-}
-
-@serviceInfo = {
-    @serviceInformation(
-        betaBanner = phaseBanner("BETA")(messages, appConfig),
-        includeGridWrapper = false,
-        serviceInfoContent = Some(serviceInfoContent),
-        includeHMRCBranding = false)
-}
-
-@serviceHeader = {
-    @backLink()
-    @if(appConfig.languageTranslationEnabled) {
-        @views.html.language_selection(
-            appConfig.languageMap,
-            appConfig.routeToSwitchLanguage,
-            Some("translate float--right"))
-}
-
-    @if(contentHeader.isDefined) {
-        @mainContentHeaders(contentHeader = contentHeader.get)
-    }
-}
-
-@mainContentHeader = {
-    @mainContentHeaders(contentHeader = serviceHeader)
-}
-
-@getHelpForm = {
-    <div class="report-error">
-        <a href=@appConfig.reportAProblemUrl>@messages("report.a.problem.link")</a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            @if(showBackLink) {
+                @govukBackLink(BackLink(href = "#", content = Text(messages("site.back")), attributes = Map("id" -> "back-link")))
+            }
+        </div>
+        <div class="govuk-grid-column-one-half">
+            @if(appConfig.languageTranslationEnabled) {@languageSelect()}
+        </div>
     </div>
+}
 
+@scripts = {
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+    <script src='@controllers.routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+    <script>window.GOVUKFrontend.initAll();
+    window.HMRCFrontend.initAll()</script>
+    <script src="@controllers.routes.Assets.versioned("javascripts/backLink.js")"></script>
 }
 
 @content = {
-    @mainContents(
-        article = mainContent,
-        mainClass = mainClass,
-        mainDataAttributes = mainDataAttributes,
-        mainContentHeader = mainContentHeader,
-        serviceInfo = serviceInfo,
-        getHelpForm = getHelpForm,
-        sidebar = sidebar)
+    <div class="govuk-!-margin-bottom-6">
+        @contentBlock
+    </div>
+
+    <div class="govuk-body">
+        <a lang="en" hreflang="en" class="govuk-link " target="_blank" href="@{appConfig.reportAProblemUrl}">
+            @messages("getpagehelp.linkText")
+        </a>
+    </div>
 }
 
-@GovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), nav = true)(content)
+@govukLayout(
+    pageTitle = pageTitle,
+    headBlock = None,
+    headerBlock = Some(siteHeader()),
+    beforeContentBlock = Some(beforeContentBlock),
+    footerBlock = Some(hmrcStandardFooter()),
+    scriptsBlock = Some(scripts)
+)(content)

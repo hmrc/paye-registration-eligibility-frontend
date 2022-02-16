@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +33,7 @@ class CascadeUpsert {
     originalCacheMap copy(data = originalCacheMap.data + (key -> Json.toJson(values)))
   }
 
-  private def store[A](key:String, value: A, cacheMap: CacheMap)(implicit fmt: Format[A]) =
+  private def store[A](key:String, value: A, cacheMap: CacheMap)(implicit fmt: Format[A]): CacheMap =
     cacheMap copy (data = cacheMap.data + (key -> Json.toJson(value)))
 
-  private def clearIfFalse[A](key: String, value: A, keysToRemove: Set[String], cacheMap: CacheMap)(implicit fmt: Format[A]): CacheMap = {
-    val mapToStore = value match {
-      case JsBoolean(false) => cacheMap copy (data = cacheMap.data.filterKeys(s => !keysToRemove.contains(s)))
-      case _ => cacheMap
-    }
-    store(key, value, mapToStore)
-  }
 }

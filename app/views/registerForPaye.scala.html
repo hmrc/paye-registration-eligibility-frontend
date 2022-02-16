@@ -16,47 +16,49 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+@import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+@import views.html.components._
 
 @this(formWithCSRF: FormWithCSRF,
-        submitButton: components.submit_button,
-        h1: components.heading,
+        submitButton: submit_button,
+        h1: h1,
+        h2: h2,
+        bullets: bullets,
+        p: p,
         mainTemplate: main_template)
 
-@(appConfig: FrontendAppConfig, showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages)
+@(showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(
-    title = messages("registerForPaye.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+@mainTemplate(messages("registerForPaye.title")) {
 
-    @h1("registerForPaye.heading")
+    @h1(messages("registerForPaye.heading"))
 
-    <p>@messages("registerForPaye.p1")</p>
+    @p{@messages("registerForPaye.p1")}
 
-    <ul class="list-bullet">
-        <li>@messages("registerForPaye.l1",weeklyPAYEThreshold)</li>
-        <li>@messages("registerForPaye.l2")</li>
-        <li>@messages("registerForPaye.l3")</li>
-        <li>@messages("registerForPaye.l4")</li>
-    </ul>
+    @bullets(
+        messages("registerForPaye.l1", weeklyPAYEThreshold),
+        messages("registerForPaye.l2"),
+        messages("registerForPaye.l3"),
+        messages("registerForPaye.l4")
+    )
 
-    <p>@messages("registerForPaye.p2")</p>
+    @p{@messages("registerForPaye.p2")}
 
     @if(showNewTaxYearContent){
-        <h2 class="heading-medium">@messages("registerForPaye.subHeading")</h2>
+        @h2(messages("registerForPaye.subHeading"))
 
-        <p>@messages("registerForPaye.p3")</p>
+        @p{@messages("registerForPaye.p3")}
 
-        <p>@messages("registerForPaye.p4")</p>
+        @p{@messages("registerForPaye.p4")}
 
     }
 
     @if(notLoggedIn){
-        <h2 class="heading-medium" id="signing-in">@messages("registerForPaye.subHeading1")</h2>
-        <p>@messages("registerForPaye.p5")</p>
-        <p>@messages("registerForPaye.p6")</p>
+        @h2(messages("registerForPaye.subHeading1"), optId = Some("signing-in"))
+        @p{@messages("registerForPaye.p5")}
+        @p{@messages("registerForPaye.p6")}
     }
+
     @formWithCSRF(action = RegisterForPayeController.onSubmit, 'autoComplete -> "off") {
         @submitButton()
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,27 +37,25 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
     reset(mockAuthConnector)
 
     object Controller extends RegisterForPayeController(
-      frontendAppConfig,
       mockAuthConnector,
       mockAuthUrlBuilder,
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
       messagesControllerComponents,
       view
-    ) {
+    )(frontendAppConfig) {
       override lazy val payeStartUrl = "payeURL"
       override lazy val otrsUrl = "otrsURL"
     }
 
     object Controller2 extends RegisterForPayeController(
-      frontendAppConfig,
       mockAuthConnector,
       mockAuthUrlBuilder,
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
       messagesControllerComponents,
       view
-    )
+    )(frontendAppConfig)
 
   }
 
@@ -65,7 +63,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
   val PAYEThresholdWeeklyAmount = DateUtil.getCurrentPayeThreshold
 
-  def viewAsString() = view(frontendAppConfig, DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages).toString
+  def viewAsString() = view(DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig).toString
 
   "onPageLoad" must {
 

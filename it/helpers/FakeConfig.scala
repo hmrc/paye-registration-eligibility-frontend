@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ trait FakeConfig {
   val mockPort: Int
   lazy val mockUrl = s"http://$mockHost:$mockPort"
 
-  def fakeConfig(extraConfig: (String,String)*) = Map(
+  def fakeConfig(extraConfig: (String, String)*) = Map(
     "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
     "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
     "auditing.consumer.baseUri.host" -> s"$mockHost",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import forms.TaxedAwardSchemeFormProvider
 import identifiers.TaxedAwardSchemeId
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
@@ -45,8 +43,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
 
   val fakeDataCacheConnector = new FakeDataCacheConnector(sessionRepository, cascadeUpsert)
 
-  object Controller extends TaxedAwardSchemeController (
-    frontendAppConfig,
+  object Controller extends TaxedAwardSchemeController(
     fakeDataCacheConnector,
     new FakeAuthAction(messagesControllerComponents),
     getEmptyCacheMap,
@@ -54,9 +51,9 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
     formProvider,
     messagesControllerComponents,
     view
-  )
+  )(frontendAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(frontendAppConfig, form)(fakeRequest, messages).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, frontendAppConfig).toString
 
   "TaxedAwardScheme Controller" must {
 
@@ -72,7 +69,6 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
       val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
       object Controller extends TaxedAwardSchemeController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         getRelevantData,
@@ -80,7 +76,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -92,7 +88,6 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
 
       object Controller extends TaxedAwardSchemeController(
-        frontendAppConfig,
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -100,7 +95,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -116,7 +111,6 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "false"))
 
       object Controller extends TaxedAwardSchemeController(
-        frontendAppConfig,
         mockDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -124,7 +118,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -147,7 +141,6 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
 
     "redirect to IndexController for a GET if no existing data is found" in {
       object Controller extends TaxedAwardSchemeController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -155,7 +148,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -165,7 +158,6 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
 
     "redirect to IndexController for a POST if no existing data is found" in {
       object Controller extends TaxedAwardSchemeController(
-        frontendAppConfig,
         fakeDataCacheConnector,
         new FakeAuthAction(messagesControllerComponents),
         new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
@@ -173,7 +165,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )
+      )(frontendAppConfig)
 
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
       val result = Controller.onSubmit(postRequest)
