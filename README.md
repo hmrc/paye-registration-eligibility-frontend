@@ -1,7 +1,6 @@
-
 # paye-registration-eligibility-frontend
 
- [ ![Download](https://api.bintray.com/packages/hmrc/releases/paye-registration-eligibility-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/paye-registration-eligibility-frontend/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/hmrc/releases/paye-registration-eligibility-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/paye-registration-eligibility-frontend/_latestVersion)
 
 ## Running the Application
 
@@ -15,4 +14,5 @@ or ```sbt coverage test it:test coverageReport```
 
 ### License Information
 
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
+This code is open source software licensed under
+the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").

@@ -1,94 +1,82 @@
-checkYourAnswers.title                              = Check Your Answers
-checkYourAnswers.heading                            = Check Your Answers
-checkYourAnswers.guidance                           = Guidance for check your answers
-
-app.phaseBannerFeedback                             = This is a new service - your <a href="{0}">feedback</a> will help us to improve it.
-
-date.day                                            = Day
-date.month                                          = Month
-date.year                                           = Year
-
-error.titleError                                    = Error:
-error.boolean                                       = Please give an answer
-error.invalid_date                                  = Give a correct date
-error.date.day_blank                                = Enter a day
-error.date.day_invalid                              = Give a correct day using numbers 1 to 31
-error.date.month_blank                              = Enter a month
-error.date.month_invalid                            = Give a correct month using numbers 1 to 12
-error.date.year_blank                               = Enter a year
-error.date.year_invalid                             = Give a correct year
-error.integer                                       = Give an answer in whole numbers
-error.non_numeric                                   = Give a value using only numbers
-error.number                                        = Please enter a valid number
-error.required                                      = Please enter a value
-error.summary.title                                 = This page has errors
-error.summary.text                                  = Check the following
-
-index.title                                         = paye-registration-eligibility-frontend
-index.heading                                       = paye-registration-eligibility-frontend
-index.guidance                                      = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
-session_expired.title                               = For your security, this service has been reset
-session_expired.heading                             = For your security, this service has been reset
-session_expired.guidance                            = The details you have given have been deleted because you did not continue the service for 1 hour.
-
-site.back                                           = Back
-site.delete                                         = Remove
-site.edit                                           = Change
-site.hidden-delete                                  = Delete {0}
-site.hidden-edit                                    = Change {0}
-site.no                                             = No welsh
-site.yes                                            = Yes welsh
-site.save_and_continue                              = Save and continue
-site.continue                                       = Continue welsh
-service.name                                        = Register an employer for PAYE welsh
-site.textarea.char_limit                            = (Limit is {0} characters)
-
-unauthorised.title                                  = You can’t access this service with this account
-unauthorised.heading                                = You can’t access this service with this account
-
-atLeastOneDirectorHasNino.title                     = Does at least one company director have a UK National Insurance number welsh?
-atLeastOneDirectorHasNino.heading                   = Does at least one company director have a UK National Insurance number welsh?
-atLeastOneDirectorHasNino.error.required            = Tell us if at least one company director has a UK National Insurance number welsh
-
-offshoreEmployer.title                              = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.heading                            = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.error.required                     = Tell us if the company''s an offshore employer outside the EEA who doesn''t pay UK National Insurance
-
-taxedAwardScheme.title                              = Over the next 2 months, will the company pay out any non-cash incentive awards?
-taxedAwardScheme.heading                            = Over the next 2 months, will the company pay out any non-cash incentive awards?
-taxedAwardScheme.error.required                     = Tell us if the company will pay out any non-cash incentive awards over the next 2 months
-taxedAwardScheme.p1                                 = This could be to anyone, not just your own staff.
-taxedAwardScheme.p2                                 = Non-cash incentive awards include:
-taxedAwardScheme.l1                                 = vouchers - including ones that can be exchanged for cash
-taxedAwardScheme.l2                                 = any goods
-taxedAwardScheme.l3                                 = prizes for employer-run competitions
-taxedAwardScheme.l4                                 = holidays that the company’s paid for (but don’t include statutory holiday pay)
-
-dropout.title                                       = The company can''t register an employer online
-dropout.heading                                     = The company can''t register an employer online
-dropout.p1                                          = You should register by phone or post.
-dropout.p2                                          = <a href="{0}">Contact HMRC</a> - they''ll arrange for someone to call you back to help you register.
-dropout.p3                                          = You''ll need to provide the following details about the company.
-dropout.l1                                          = company name, registered address and phone number
-dropout.l2                                          = trading name if this is different
-dropout.l3                                          = business activities - for example, electrical engineering
-dropout.l4                                          = Unique Taxpayer Reference (UTR)
-dropout.l5                                          = company registration number
-dropout.l6                                          = the names and National Insurance numbers of every company director
-dropout.p4                                          = <a href="{0}">Return to GOV.UK</a>
-
-registerForPaye.title                               = You must register for PAYE online
-registerForPaye.heading                             = Register for PAYE online
-registerForPaye.p1                                  = Only continue if the company does, or intends to do, one of the following:
-registerForPaye.l1                                  = pay any employees, including company directors, £116 or more a week
-registerForPaye.l2                                  = employ someone, including any company director, who''s already receiving a pension or who has another job
-registerForPaye.l3                                  = provide expenses or benefits to employees, including company directors
-registerForPaye.l4                                  = hire subcontractors for work in the construction industry
-registerForPaye.p2                                  = You''ll need the National Insurance number of at least one company director.
-registerForPaye.subHeading                          = Starting PAYE in the new tax year (6 April)
-registerForPaye.p3                                  = If the company won''t start doing any of these things until the new tax year, you can continue but we won''t process the application until after 6 April.
-registerForPaye.p4                                  = If you''re not signed in, do it on the next screen, using the company''s online account details. If you don''t have an online account for the company, you''ll need to set one up.
-registerForPaye.subHeading1                         = Signing in to the service
-registerForPaye.p5                                  = You must sign in on the next screen.
-registerForPaye.p6                                  = Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn''t have one, you will be able to set one up by clicking ''Don''t have a Government Gateway account''. Agents should use their own account details.
+checkYourAnswers.title=Check Your Answers
+checkYourAnswers.heading=Check Your Answers
+checkYourAnswers.guidance=Guidance for check your answers
+app.phaseBannerFeedback=This is a new service - your <a href="{0}">feedback</a> will help us to improve it.
+date.day=Day
+date.month=Month
+date.year=Year
+error.titleError=Error:
+error.boolean=Please give an answer
+error.invalid_date=Give a correct date
+error.date.day_blank=Enter a day
+error.date.day_invalid=Give a correct day using numbers 1 to 31
+error.date.month_blank=Enter a month
+error.date.month_invalid=Give a correct month using numbers 1 to 12
+error.date.year_blank=Enter a year
+error.date.year_invalid=Give a correct year
+error.integer=Give an answer in whole numbers
+error.non_numeric=Give a value using only numbers
+error.number=Please enter a valid number
+error.required=Please enter a value
+error.summary.title=This page has errors
+error.summary.text=Check the following
+index.title=paye-registration-eligibility-frontend
+index.heading=paye-registration-eligibility-frontend
+index.guidance=Welcome to your new frontend. Please see the README file for a guide to getting started.
+session_expired.title=For your security, this service has been reset
+session_expired.heading=For your security, this service has been reset
+session_expired.guidance=The details you have given have been deleted because you did not continue the service for 1 hour.
+site.back=Back
+site.delete=Remove
+site.edit=Change
+site.hidden-delete=Delete {0}
+site.hidden-edit=Change {0}
+site.no=No welsh
+site.yes=Yes welsh
+site.save_and_continue=Save and continue
+site.continue=Continue welsh
+service.name=Register an employer for PAYE welsh
+site.textarea.char_limit=(Limit is {0} characters)
+unauthorised.title=You can’t access this service with this account
+unauthorised.heading=You can’t access this service with this account
+atLeastOneDirectorHasNino.title=Does at least one company director have a UK National Insurance number welsh?
+atLeastOneDirectorHasNino.heading=Does at least one company director have a UK National Insurance number welsh?
+atLeastOneDirectorHasNino.error.required=Tell us if at least one company director has a UK National Insurance number welsh
+offshoreEmployer.title=Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
+offshoreEmployer.heading=Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
+offshoreEmployer.error.required=Tell us if the company''s an offshore employer outside the EEA who doesn''t pay UK National Insurance
+taxedAwardScheme.title=Over the next 2 months, will the company pay out any non-cash incentive awards?
+taxedAwardScheme.heading=Over the next 2 months, will the company pay out any non-cash incentive awards?
+taxedAwardScheme.error.required=Tell us if the company will pay out any non-cash incentive awards over the next 2 months
+taxedAwardScheme.p1=This could be to anyone, not just your own staff.
+taxedAwardScheme.p2=Non-cash incentive awards include:
+taxedAwardScheme.l1=vouchers - including ones that can be exchanged for cash
+taxedAwardScheme.l2=any goods
+taxedAwardScheme.l3=prizes for employer-run competitions
+taxedAwardScheme.l4=holidays that the company’s paid for (but don’t include statutory holiday pay)
+dropout.title=The company can''t register an employer online
+dropout.heading=The company can''t register an employer online
+dropout.p1=You should register by phone or post.
+dropout.p2=<a href="{0}">Contact HMRC</a> - they''ll arrange for someone to call you back to help you register.
+dropout.p3=You''ll need to provide the following details about the company.
+dropout.l1=company name, registered address and phone number
+dropout.l2=trading name if this is different
+dropout.l3=business activities - for example, electrical engineering
+dropout.l4=Unique Taxpayer Reference (UTR)
+dropout.l5=company registration number
+dropout.l6=the names and National Insurance numbers of every company director
+dropout.p4=<a href="{0}">Return to GOV.UK</a>
+registerForPaye.title=You must register for PAYE online
+registerForPaye.heading=Register for PAYE online
+registerForPaye.p1=Only continue if the company does, or intends to do, one of the following:
+registerForPaye.l1=pay any employees, including company directors, £116 or more a week
+registerForPaye.l2=employ someone, including any company director, who''s already receiving a pension or who has another job
+registerForPaye.l3=provide expenses or benefits to employees, including company directors
+registerForPaye.l4=hire subcontractors for work in the construction industry
+registerForPaye.p2=You''ll need the National Insurance number of at least one company director.
+registerForPaye.subHeading=Starting PAYE in the new tax year (6 April)
+registerForPaye.p3=If the company won''t start doing any of these things until the new tax year, you can continue but we won''t process the application until after 6 April.
+registerForPaye.p4=If you''re not signed in, do it on the next screen, using the company''s online account details. If you don''t have an online account for the company, you''ll need to set one up.
+registerForPaye.subHeading1=Signing in to the service
+registerForPaye.p5=You must sign in on the next screen.
+registerForPaye.p6=Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn''t have one, you will be able to set one up by clicking ''Don''t have a Government Gateway account''. Agents should use their own account details.

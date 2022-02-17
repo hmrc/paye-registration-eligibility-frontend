@@ -39,5 +39,6 @@ class DataRetrievalAction @Inject()(val dataCacheConnector: DataCacheConnector,
       case Some(data) => OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(data)))
     }
   }
+
   override protected val executionContext: ExecutionContext = controllerComponents.executionContext
 }

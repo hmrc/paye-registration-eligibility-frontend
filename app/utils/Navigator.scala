@@ -17,7 +17,6 @@
 package utils
 
 
-
 import controllers.routes
 import identifiers._
 import play.api.mvc.Call
@@ -26,10 +25,10 @@ object Navigator {
 
   private[utils] val pageIdToLoad: (Identifier => Call) = {
     case AtLeastOneDirectorHasNinoId => controllers.routes.AtLeastOneDirectorHasNinoController.onPageLoad
-    case OffshoreEmployerId          => controllers.routes.OffshoreEmployerController.onPageLoad
-    case TaxedAwardSchemeId          => controllers.routes.TaxedAwardSchemeController.onPageLoad
-    case RegisterForPayeId           => controllers.routes.RegisterForPayeController.onPageLoad
-    case IneligibleId                => controllers.routes.IneligibleController.onPageLoad
+    case OffshoreEmployerId => controllers.routes.OffshoreEmployerController.onPageLoad
+    case TaxedAwardSchemeId => controllers.routes.TaxedAwardSchemeController.onPageLoad
+    case RegisterForPayeId => controllers.routes.RegisterForPayeController.onPageLoad
+    case IneligibleId => controllers.routes.IneligibleController.onPageLoad
   }
 
   private[utils] def nextOn(condition: Boolean, fromPage: Identifier, toPage: Identifier): (Identifier, UserAnswers => Call) = {

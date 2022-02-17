@@ -21,7 +21,9 @@ import javax.inject.Inject
 sealed trait FeatureSwitch {
 
   def name: String
+
   def value: String
+
   def enabled: Boolean
 }
 
@@ -29,11 +31,13 @@ class FeatureSwitchManager extends FeatureManager
 
 case class ValueSetFeatureSwitch(name: String, setValue: String) extends FeatureSwitch {
   override def value: String = setValue
+
   override def enabled = setValue.matches(DateUtil.datePatternRegex)
 }
 
 case class BooleanFeatureSwitch(name: String, setValue: Boolean) extends FeatureSwitch {
   override def value: String = setValue.toString
+
   override def enabled = setValue
 }
 
@@ -45,29 +49,30 @@ trait FeatureManager {
     val value = sys.props.get(systemPropertyName(name))
 
     value match {
-      case Some("true")                                           => BooleanFeatureSwitch(name, true)
-      case Some("false")                                          => BooleanFeatureSwitch(name, false)
-      case Some(date) if date.matches(DateUtil.datePatternRegex)  => ValueSetFeatureSwitch(name, date)
-      case _ if defaultValue.isInstanceOf[String]                 => ValueSetFeatureSwitch(name,"time-clear")
-      case _ if defaultValue.isInstanceOf[Boolean]                => BooleanFeatureSwitch(name, false)
+      case Some("true") => BooleanFeatureSwitch(name, true)
+      case Some("false") => BooleanFeatureSwitch(name, false)
+      case Some(date) if date.matches(DateUtil.datePatternRegex) => ValueSetFeatureSwitch(name, date)
+      case _ if defaultValue.isInstanceOf[String] => ValueSetFeatureSwitch(name, "time-clear")
+      case _ if defaultValue.isInstanceOf[Boolean] => BooleanFeatureSwitch(name, false)
     }
   }
 
   private[utils] def setProperty[T](name: String, value: String, default: T): FeatureSwitch = {
     sys.props += ((systemPropertyName(name), value))
-    getProperty[T](name,default)
+    getProperty[T](name, default)
   }
 
-  def enableORDisable(fs: FeatureSwitch): FeatureSwitch  = setProperty(fs.name, fs.value.toString, false)
+  def enableORDisable(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, fs.value.toString, false)
 
-  def setSystemDate(fs: FeatureSwitch): FeatureSwitch   = setProperty(fs.name, fs.value,"time-clear")
+  def setSystemDate(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, fs.value, "time-clear")
+
   def clearSystemDate(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, "", "time-clear")
 }
 
 class PREFEFeatureSwitch @Inject()(injManager: FeatureSwitchManager) extends PREFEFeatureSwitches {
-  val companyRegistration               = "companyRegistration"
-  override val manager: FeatureManager  = injManager
-  override val setSystemDate            = "system-date"
+  val companyRegistration = "companyRegistration"
+  override val manager: FeatureManager = injManager
+  override val setSystemDate = "system-date"
 }
 
 trait PREFEFeatureSwitches {
@@ -75,12 +80,13 @@ trait PREFEFeatureSwitches {
   protected val companyRegistration: String
   val manager: FeatureManager
 
-  def systemDate: FeatureSwitch           = manager.getProperty[String](setSystemDate, "time-clear")
-  def companyReg: FeatureSwitch           = manager.getProperty[Boolean](companyRegistration, false)
+  def systemDate: FeatureSwitch = manager.getProperty[String](setSystemDate, "time-clear")
+
+  def companyReg: FeatureSwitch = manager.getProperty[Boolean](companyRegistration, false)
 
   def apply(name: String): Option[FeatureSwitch] = name match {
     case `setSystemDate` => Some(systemDate)
     case `companyRegistration` => Some(companyReg)
-    case _               => None
+    case _ => None
   }
 }

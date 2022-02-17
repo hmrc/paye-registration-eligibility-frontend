@@ -28,7 +28,7 @@ object DateUtil {
   def dateTimeNow: LocalDate = LocalDate.now()
 
   def getSystemDate: LocalDate = Option(System.getProperty("feature.system-date")).fold(dateTimeNow) {
-    case ""   => dateTimeNow
+    case "" => dateTimeNow
     case date => LocalDate.parse(date)
   }
 

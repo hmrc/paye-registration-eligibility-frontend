@@ -1,23 +1,23 @@
 @*
- * Copyright 2021 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
-
+* Copyright 2022 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
 @import config.FrontendAppConfig
 @import controllers.routes._
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import views.html.components._
+@import views.html.templates.main_template
 
 @this(formWithCSRF: FormWithCSRF,
         submitButton: submit_button,
@@ -33,7 +33,9 @@
 
     @h1(messages("registerForPaye.heading"))
 
-    @p{@messages("registerForPaye.p1")}
+    @p {
+        @messages("registerForPaye.p1")
+    }
 
     @bullets(
         messages("registerForPaye.l1", weeklyPAYEThreshold),
@@ -42,21 +44,31 @@
         messages("registerForPaye.l4")
     )
 
-    @p{@messages("registerForPaye.p2")}
+    @p {
+        @messages("registerForPaye.p2")
+    }
 
-    @if(showNewTaxYearContent){
+    @if(showNewTaxYearContent) {
         @h2(messages("registerForPaye.subHeading"))
 
-        @p{@messages("registerForPaye.p3")}
+        @p {
+            @messages("registerForPaye.p3")
+        }
 
-        @p{@messages("registerForPaye.p4")}
+        @p {
+            @messages("registerForPaye.p4")
+        }
 
     }
 
-    @if(notLoggedIn){
+    @if(notLoggedIn) {
         @h2(messages("registerForPaye.subHeading1"), optId = Some("signing-in"))
-        @p{@messages("registerForPaye.p5")}
-        @p{@messages("registerForPaye.p6")}
+        @p {
+            @messages("registerForPaye.p5")
+        }
+        @p {
+            @messages("registerForPaye.p6")
+        }
     }
 
     @formWithCSRF(action = RegisterForPayeController.onSubmit, 'autoComplete -> "off") {
