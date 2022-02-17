@@ -42,9 +42,9 @@ object AppDependencies {
   val unitTestDependencies: Seq[ModuleID] = testDependencies("test") ++ Seq("org.mockito" % "mockito-core" % mockitoVersion % "test")
 
   val itDependencies: Seq[ModuleID] = testDependencies("it") ++ Seq(
-      "com.github.tomakehurst" % "wiremock-jre8" % wireMockVersion % "it",
-      "uk.gov.hmrc" %% "reactivemongo-test" % reactivemongoTestVersion % "it"
-    )
+    "com.github.tomakehurst" % "wiremock-jre8" % wireMockVersion % "it",
+    "uk.gov.hmrc" %% "reactivemongo-test" % reactivemongoTestVersion % "it"
+  )
 
   def apply(): Seq[ModuleID] = appDependencies ++ unitTestDependencies ++ itDependencies
 }

@@ -1,27 +1,27 @@
 # microservice specific routes
 
-GET        /                                            controllers.IndexController.onPageLoad
+GET         /                                       controllers.IndexController.onPageLoad
 
-GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                         controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
+GET         /this-service-has-been-reset            controllers.SessionExpiredController.onPageLoad
 
-GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                           controllers.UnauthorisedController.onPageLoad
 
-GET        /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onPageLoad
-POST       /one-director-national-insurance             controllers.AtLeastOneDirectorHasNinoController.onSubmit
+GET         /one-director-national-insurance        controllers.AtLeastOneDirectorHasNinoController.onPageLoad
+POST        /one-director-national-insurance        controllers.AtLeastOneDirectorHasNinoController.onSubmit
 
-GET        /offshore-employer                           controllers.OffshoreEmployerController.onPageLoad
-POST       /offshore-employer                           controllers.OffshoreEmployerController.onSubmit
+GET         /offshore-employer                      controllers.OffshoreEmployerController.onPageLoad
+POST        /offshore-employer                      controllers.OffshoreEmployerController.onSubmit
 
-GET        /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onPageLoad
-POST       /pay-non-cash-incentive-awards               controllers.TaxedAwardSchemeController.onSubmit
+GET         /pay-non-cash-incentive-awards          controllers.TaxedAwardSchemeController.onPageLoad
+POST        /pay-non-cash-incentive-awards          controllers.TaxedAwardSchemeController.onSubmit
 
-GET        /company-cant-register-online                controllers.IneligibleController.onPageLoad
+GET         /company-cant-register-online           controllers.IneligibleController.onPageLoad
 
-GET        /register-online                             controllers.RegisterForPayeController.onPageLoad
-POST       /register-online                             controllers.RegisterForPayeController.onSubmit
+GET         /register-online                        controllers.RegisterForPayeController.onPageLoad
+POST        /register-online                        controllers.RegisterForPayeController.onSubmit
 
-GET        /authorised-for-paye                         controllers.RegisterForPayeController.continueToPayeOrOTRS()
+GET         /authorised-for-paye                    controllers.RegisterForPayeController.continueToPayeOrOTRS()

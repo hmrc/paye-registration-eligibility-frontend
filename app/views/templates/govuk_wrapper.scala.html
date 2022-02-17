@@ -1,5 +1,5 @@
 @*
-* Copyright 2021 HM Revenue & Customs
+* Copyright 2022 HM Revenue & Customs
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
@@ -39,20 +38,22 @@
 
 @beforeContentBlock = {
 
-    @phaseBanner("beta")
+@phaseBanner("beta")
 
-    @hmrcBanner(
-        Banner(if(messages.lang.code == "cy") {Cy} else En)
-    )
+@hmrcBanner(
+    Banner(if(messages.lang.code == "cy") {
+        Cy
+    } else En)
+)
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            @if(showBackLink) {
-                @govukBackLink(BackLink(href = "#", content = Text(messages("site.back")), attributes = Map("id" -> "back-link")))
-            }
+        @if(showBackLink) {
+            @govukBackLink(BackLink(href = "#", content = Text(messages("site.back")), attributes = Map("id" -> "back-link")))
+        }
         </div>
         <div class="govuk-grid-column-one-half">
-            @if(appConfig.languageTranslationEnabled) {@languageSelect()}
+        @if(appConfig.languageTranslationEnabled) {@languageSelect()}
         </div>
     </div>
 }
@@ -67,12 +68,14 @@
 
 @content = {
     <div class="govuk-!-margin-bottom-6">
-        @contentBlock
+    @contentBlock
     </div>
 
     <div class="govuk-body">
-        <a lang="en" hreflang="en" class="govuk-link " target="_blank" href="@{appConfig.reportAProblemUrl}">
-            @messages("getpagehelp.linkText")
+        <a lang="en" hreflang="en" class="govuk-link " target="_blank" href="@{
+            appConfig.reportAProblemUrl
+        }">
+        @messages("getpagehelp.linkText")
         </a>
     </div>
 }

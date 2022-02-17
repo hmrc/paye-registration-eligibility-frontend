@@ -18,10 +18,11 @@ package controllers
 
 
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class LanguageSwitchController @Inject()(appConfig: FrontendAppConfig,

@@ -13,8 +13,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukRadios
 @import uk.gov.hmrc.govukfrontend.views.Aliases._
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukRadios
 
 @this(govukRadios: GovukRadios)
 
@@ -30,37 +30,37 @@
         fieldName: String = "value"
 )(implicit messages: Messages)
 
-@govukRadios(Radios(
-    classes = if(inline) "govuk-radios--inline" else "",
-    idPrefix = None,
-    name = fieldName,
-    fieldset = Some(Fieldset(
-        legend = Some(Legend(
-            content = Text(messages(headingKey, headingMessageArgs: _*)),
-            isPageHeading = isPageHeading,
-            classes = classes
-        ))
-    )),
-    hint = hint.map { hint =>
-        Hint(
-            content = HtmlContent(hint)
-        )
-    },
-    items = Seq(
-        RadioItem(
-            id = Some("value"),
-            value = Some("true"),
-            content = Text(messages("site.yes")),
-            checked = form(fieldName).value.contains("true"),
-            conditionalHtml = hiddenYesContent
+    @govukRadios(Radios(
+        classes = if(inline) "govuk-radios--inline" else "",
+        idPrefix = None,
+        name = fieldName,
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(messages(headingKey, headingMessageArgs: _*)),
+                isPageHeading = isPageHeading,
+                classes = classes
+            ))
+        )),
+        hint = hint.map { hint =>
+            Hint(
+                content = HtmlContent(hint)
+            )
+        },
+        items = Seq(
+            RadioItem(
+                id = Some("value"),
+                value = Some("true"),
+                content = Text(messages("site.yes")),
+                checked = form(fieldName).value.contains("true"),
+                conditionalHtml = hiddenYesContent
+            ),
+            RadioItem(
+                id = Some("value-no"),
+                value = Some("false"),
+                content = Text(messages("site.no")),
+                checked = form(fieldName).value.contains("false"),
+                conditionalHtml = hiddenNoContent
+            )
         ),
-        RadioItem(
-            id = Some("value-no"),
-            value = Some("false"),
-            content = Text(messages("site.no")),
-            checked = form(fieldName).value.contains("false"),
-            conditionalHtml = hiddenNoContent
-        )
-    ),
-    errorMessage = form(fieldName).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
-))
+        errorMessage = form(fieldName).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
+    ))

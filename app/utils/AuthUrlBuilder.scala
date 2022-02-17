@@ -18,9 +18,10 @@ package utils
 
 import config.FrontendAppConfig
 import controllers.routes
-import javax.inject.Inject
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
+
+import javax.inject.Inject
 
 class AuthUrlBuilderImpl @Inject()(val appConfig: FrontendAppConfig) extends AuthUrlBuilder
 

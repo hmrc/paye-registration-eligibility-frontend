@@ -18,13 +18,13 @@ package controllers.actions
 
 import com.google.inject.Inject
 import controllers.routes
-import javax.inject.Singleton
 import models.requests.CacheIdentifierRequest
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

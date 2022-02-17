@@ -1,2 +1,2 @@
-GET        /feature-flag/:featureName/:featureStatus                    controllers.tests.FeatureSwitchController.switcher(featureName: String, featureStatus: String)
-GET        /lang-feature/:enable                                        controllers.tests.FeatureSwitchControllerLanguage.enableLanguageFunctionality(enable: Boolean)
+GET        /feature-flag/:featureName/:featureStatus        controllers.tests.FeatureSwitchController.switcher(featureName: String, featureStatus: String)
+GET        /lang-feature/:enable                            controllers.tests.FeatureSwitchControllerLanguage.enableLanguageFunctionality(enable: Boolean)

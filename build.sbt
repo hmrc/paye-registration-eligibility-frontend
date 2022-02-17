@@ -10,9 +10,28 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin): _*)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
   .settings(
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*models.*;.*repositories.*;" +
-      ".*BuildInfo.*;.*javascript.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;.*DataCacheConnector;" +
-      ".*ControllerConfiguration;.*LanguageSwitchController",
+    ScoverageKeys.coverageExcludedFiles :=
+      Seq(
+        "<empty>",
+        "Reverse.*",
+        ".*config.*",
+        ".*filters.*",
+        ".*handlers.*",
+        ".*components.*",
+        ".*models.*",
+        ".*repositories.*",
+        ".*identifiers.*",
+        ".*BuildInfo.*",
+        ".*javascript.*",
+        ".*FrontendAuditConnector.*",
+        ".*Routes.*",
+        ".*GuiceInjector",
+        ".*DataCacheConnector",
+        ".*ControllerConfiguration",
+        ".*LanguageSwitchController",
+        ".*controllers.tests",
+        ".*views.html.*" // hides view components and templates from scoverage
+      ).mkString(";"),
     ScoverageKeys.coverageMinimum := 80,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
@@ -32,6 +51,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(integrationTestSettings())
 
-scalaVersion :=  "2.12.12"
+scalaVersion := "2.12.12"
 
 javaOptions in Test += "-Dlogger.resource=logback-test.xml"

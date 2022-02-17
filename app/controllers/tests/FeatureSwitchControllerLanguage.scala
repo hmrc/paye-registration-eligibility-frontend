@@ -16,9 +16,10 @@
 
 package controllers.tests
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class FeatureSwitchControllerLanguage @Inject()(controllerComponents: MessagesControllerComponents

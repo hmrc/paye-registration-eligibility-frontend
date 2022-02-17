@@ -16,12 +16,12 @@
 
 package connectors
 
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{Format, Json}
 import repositories.SessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.CascadeUpsert
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
