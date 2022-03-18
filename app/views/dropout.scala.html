@@ -15,16 +15,16 @@
 *@
 @import config.FrontendAppConfig
 @import views.html.components._
-@import views.html.templates.main_template
+@import views.html.templates.layout
 
 @this(h1: h1,
         p: p,
         bullets: bullets,
-        mainTemplate: main_template)
+        layout: layout)
 
 @()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(messages("dropout.title")) {
+    @layout(Some(messages("dropout.title"))) {
 
     @h1(messages("dropout.heading"))
 

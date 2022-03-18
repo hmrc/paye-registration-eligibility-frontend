@@ -36,8 +36,7 @@ trait ViewBehaviours extends ViewSpecBase {
 
         "display the correct browser title" in {
           val doc = asDocument(view())
-          val titleSuffix = " - Register an employer for PAYE - GOV.UK"
-          doc.title mustBe messages(s"$messageKeyPrefix.title") + titleSuffix
+          doc.title mustBe messages(s"$messageKeyPrefix.title")
         }
 
         "display the correct page title" in {

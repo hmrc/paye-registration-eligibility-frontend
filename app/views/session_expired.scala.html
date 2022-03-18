@@ -15,13 +15,17 @@
 *@
 @import config.FrontendAppConfig
 @import views.html.components._
-@import views.html.templates.main_template
+@import views.html.templates.layout
 
-@this(mainTemplate: main_template, h1: h1, p: p)
+@this(
+        layout: layout,
+        h1: h1,
+        p: p
+)
 
 @()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(messages("session_expired.title")) {
+@layout(Some(messages("session_expired.title"))) {
 
     @h1(messages("session_expired.heading"))
 
