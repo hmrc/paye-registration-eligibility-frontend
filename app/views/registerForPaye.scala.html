@@ -17,7 +17,7 @@
 @import controllers.routes._
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import views.html.components._
-@import views.html.templates.main_template
+@import views.html.templates.layout
 
 @this(formWithCSRF: FormWithCSRF,
         submitButton: submit_button,
@@ -25,11 +25,11 @@
         h2: h2,
         bullets: bullets,
         p: p,
-        mainTemplate: main_template)
+        layout: layout)
 
 @(showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(messages("registerForPaye.title")) {
+@layout(Some(messages("registerForPaye.title"))) {
 
     @h1(messages("registerForPaye.heading"))
 

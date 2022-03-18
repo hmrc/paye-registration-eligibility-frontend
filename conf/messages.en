@@ -2,6 +2,15 @@ checkYourAnswers.title                              = Check Your Answers
 checkYourAnswers.heading                            = Check Your Answers
 checkYourAnswers.guidance                           = Guidance for check your answers
 
+app.phaseBanner1                                    = This is a new service - your
+app.phaseBanner2                                    = feedback (opens in new tab)
+app.phaseBanner3                                    = will help us to improve it.
+
+service.name                                        = Register an employer for PAYE
+app.title                                           = Register an employer for PAYE
+
+getpagehelp.linkText                                = Is this page not working properly? (opens in new tab)
+
 app.phaseBannerFeedback                             = This is a new service - your <a href="{0}">feedback</a> will help us to improve it.
 
 date.day                                            = Day

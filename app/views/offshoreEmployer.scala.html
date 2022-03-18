@@ -17,17 +17,17 @@
 @import controllers.routes._
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import views.html.components.{error_summary, submit_button, yesNoRadio}
-@import views.html.templates.main_template
+@import views.html.templates.layout
 
 @this(formWithCSRF: FormWithCSRF,
         errorSummary: error_summary,
         yesNoRadio: yesNoRadio,
         submitButton: submit_button,
-        mainTemplate: main_template)
+        layout: layout)
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
-@mainTemplate(messages("offshoreEmployer.title")) {
+@layout(Some(messages("offshoreEmployer.title"))) {
 
     @formWithCSRF(action = OffshoreEmployerController.onSubmit, 'autoComplete -> "off") {
 

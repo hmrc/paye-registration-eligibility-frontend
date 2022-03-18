@@ -36,6 +36,12 @@
 
 @hmrcTrackingConsentSnippet()
 
+@head = {
+    <!--[if lte IE 8]><link href=' @controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
+}
+
 @beforeContentBlock = {
 
 @phaseBanner("beta")
@@ -82,7 +88,7 @@
 
 @govukLayout(
     pageTitle = pageTitle,
-    headBlock = None,
+    headBlock = Some(head),
     headerBlock = Some(siteHeader()),
     beforeContentBlock = Some(beforeContentBlock),
     footerBlock = Some(hmrcStandardFooter()),
