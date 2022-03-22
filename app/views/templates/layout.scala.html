@@ -91,6 +91,6 @@
     headBlock = Some(head),
     headerBlock = Some(siteHeader()),
     beforeContentBlock = Some(beforeContentBlock),
-    footerBlock = Some(hmrcStandardFooter()),
+    footerBlock = Some(hmrcStandardFooter(accessibilityStatementUrl = Some(appConfig.accessibilityStatementRoute(request.uri)))),
     scriptsBlock = Some(scripts)
 )(content)
