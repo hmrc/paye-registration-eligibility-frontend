@@ -21,7 +21,7 @@ import org.mockito.Mockito._
 import play.api.mvc.Results
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DateUtil
+import utils.TimeMachine
 import views.html.registerForPaye
 
 import scala.concurrent.Future
@@ -29,6 +29,8 @@ import scala.concurrent.Future
 class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
   val view: registerForPaye = app.injector.instanceOf[registerForPaye]
+
+  object TestTimeMachine extends TimeMachine(injectedAppConfig)
 
   class Setup {
     reset(mockBusinessRegistrationConnector)
@@ -42,8 +44,9 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
       messagesControllerComponents,
+      TestTimeMachine,
       view
-    )(frontendAppConfig) {
+    )(injectedAppConfig) {
       override lazy val payeStartUrl = "payeURL"
       override lazy val otrsUrl = "otrsURL"
     }
@@ -54,16 +57,17 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
       messagesControllerComponents,
+      TestTimeMachine,
       view
-    )(frontendAppConfig)
+    )(injectedAppConfig)
 
   }
 
   implicit val hc = HeaderCarrier()
 
-  val PAYEThresholdWeeklyAmount = DateUtil.getCurrentPayeThreshold
+  val PAYEThresholdWeeklyAmount = TestTimeMachine.getCurrentPayeThreshold
 
-  def viewAsString() = view(DateUtil.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig).toString
+  def viewAsString() = view(TestTimeMachine.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig).toString
 
   "onPageLoad" must {
 

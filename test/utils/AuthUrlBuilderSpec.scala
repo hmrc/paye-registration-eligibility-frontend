@@ -17,14 +17,14 @@
 package utils
 
 import base.SpecBase
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.http.HeaderNames
 
 class AuthUrlBuilderSpec extends SpecBase {
 
   class Setup {
     val builder = new AuthUrlBuilder {
-      override val appConfig: FrontendAppConfig = frontendAppConfig
+      override val appConfig: AppConfig = injectedAppConfig
     }
   }
 

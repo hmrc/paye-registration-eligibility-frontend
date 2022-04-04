@@ -20,6 +20,7 @@ import controllers.RegisterForPayeController
 import org.jsoup.Jsoup
 import org.mockito.Mockito._
 import play.api.test.Helpers._
+import utils.TimeMachine
 import views.html.registerForPaye
 
 class RegisterForPayeViewSpec extends ViewSpecBase {
@@ -28,25 +29,29 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
   val PAYEThresholdWeeklyAmount = "100"
   val view: registerForPaye = app.injector.instanceOf[registerForPaye]
 
-  def createNewTaxYearView = () => view(showNewTaxYearContent = true, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
+  def createNewTaxYearView = () => view(showNewTaxYearContent = true, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
 
-  def createNormalView = () => view(showNewTaxYearContent = false, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
+  def createNormalView = () => view(showNewTaxYearContent = false, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
 
-  def createLoggedInView = () => view(showNewTaxYearContent = false, notLoggedIn = false, PAYEThresholdWeeklyAmount)(fakeRequest, messages, frontendAppConfig)
+  def createLoggedInView = () => view(showNewTaxYearContent = false, notLoggedIn = false, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
 
   class SetupPage {
     reset(mockBusinessRegistrationConnector)
     reset(mockCompanyRegistrationConnector)
     reset(mockAuthUrlBuilder)
     reset(mockAuthConnector)
+
+    object TestTimeMachine extends TimeMachine(injectedAppConfig)
+
     val controller = new RegisterForPayeController(
       mockAuthConnector,
       mockAuthUrlBuilder,
       mockBusinessRegistrationConnector,
       mockCompanyRegistrationConnector,
       messagesControllerComponents,
+      TestTimeMachine,
       view
-    )(frontendAppConfig) {
+    )(injectedAppConfig) {
       override lazy val payeStartUrl = "payeStartURL"
     }
   }

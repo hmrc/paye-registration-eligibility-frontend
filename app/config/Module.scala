@@ -30,7 +30,6 @@ class Module extends AbstractModule {
 
   def bindOthers() = {
     bind(classOf[CascadeUpsert]).asEagerSingleton()
-    bind(classOf[FrontendAppConfig]).asEagerSingleton()
     bind(classOf[FeatureManager]).to(classOf[FeatureSwitchManager]).asEagerSingleton()
     bind(classOf[PREFEFeatureSwitches]).to(classOf[PREFEFeatureSwitch]).asEagerSingleton()
   }

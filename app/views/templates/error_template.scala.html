@@ -13,13 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-@import config.FrontendAppConfig
+@import config.AppConfig
 @import views.html.components.{h1, p}
 @import views.html.templates.layout
 
 @this(layout: layout, h1: h1, p: p)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(Some(pageTitle)) {
 

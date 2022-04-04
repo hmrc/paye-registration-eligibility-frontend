@@ -16,14 +16,14 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.{AuthUrlBuilder, DateUtil}
+import utils.{AuthUrlBuilder, TimeMachine}
 import views.html.registerForPaye
 
 import javax.inject.{Inject, Singleton}
@@ -36,8 +36,9 @@ class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
                                           val businessRegistrationConnector: BusinessRegistrationConnector,
                                           val companyRegistrationConnector: CompanyRegistrationConnector,
                                           controllerComponents: MessagesControllerComponents,
+                                          timeMachine: TimeMachine,
                                           view: registerForPaye
-                                         )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
+                                         )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
 
   lazy val payeStartUrl: String = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
   lazy val otrsUrl: String = appConfig.otrsUrl
@@ -45,7 +46,7 @@ class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
   def onPageLoad: Action[AnyContent] = Action {
     implicit request =>
       val notLoggedIn = hc.authorization.isEmpty
-      Ok(view(DateUtil.isInTaxYearPeriod, notLoggedIn, DateUtil.getCurrentPayeThreshold))
+      Ok(view(timeMachine.isInTaxYearPeriod, notLoggedIn, timeMachine.getCurrentPayeThreshold))
   }
 
   def onSubmit: Action[AnyContent] = Action.async {
@@ -68,14 +69,15 @@ class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
   def continueToPayeOrOTRS: Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
-        businessRegistrationConnector.retrieveCurrentProfile.flatMap { reg =>
-          reg.fold(Future.successful(Redirect(otrsUrl)))(
-            regId =>
-              companyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(regId).map {
-                status =>
-                  navigateBasedOnStatusAndPaymentRef(status)
-              }
-          )
+        businessRegistrationConnector.retrieveCurrentProfile.flatMap {
+          reg =>
+            reg.fold(Future.successful(Redirect(otrsUrl)))(
+              regId =>
+                companyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(regId).map {
+                  status =>
+                    navigateBasedOnStatusAndPaymentRef(status)
+                }
+            )
         }
       } recover {
         case _ => Redirect(routes.IndexController.onPageLoad)

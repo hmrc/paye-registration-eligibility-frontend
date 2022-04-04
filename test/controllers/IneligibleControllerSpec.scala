@@ -26,9 +26,9 @@ class IneligibleControllerSpec extends ControllerSpecBase {
   object Controller extends IneligibleController(
     messagesControllerComponents,
     view
-  )(frontendAppConfig)
+  )(injectedAppConfig)
 
-  def viewAsString() = view()(fakeRequest, messages, frontendAppConfig).toString
+  def viewAsString() = view()(fakeRequest, messages, injectedAppConfig).toString
 
   "Dropout Controller" must {
 

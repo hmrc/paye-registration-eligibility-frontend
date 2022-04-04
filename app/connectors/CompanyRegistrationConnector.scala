@@ -17,7 +17,7 @@
 package connectors
 
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.Logging
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 @Singleton
 class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwitches,
                                              val http: HttpClient,
-                                             val appConfig: FrontendAppConfig) extends Logging {
+                                             val appConfig: AppConfig) extends Logging {
 
   lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
   lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri", throw new Exception("company-registration.uri doesn't exist"))

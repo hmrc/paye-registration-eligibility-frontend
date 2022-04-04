@@ -23,7 +23,7 @@ class SessionExpiredViewSpec extends ViewBehaviours {
 
   val view: session_expired = app.injector.instanceOf[session_expired]
 
-  def createView = () => view()(fakeRequest, messages, frontendAppConfig)
+  def createView = () => view()(fakeRequest, messages, injectedAppConfig)
 
   "Session Expired view" must {
 

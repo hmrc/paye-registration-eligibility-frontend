@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package controllers
+package utils
 
 import config.AppConfig
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.unauthorised
 
+import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class UnauthorisedController @Inject()(controllerComponents: MessagesControllerComponents,
-                                       view: unauthorised
-                                      )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+class TimeMachine @Inject()(appConfig: AppConfig) {
 
-  def onPageLoad: Action[AnyContent] = Action {
-    implicit request =>
-      Ok(view())
-  }
+  val taxYearStart: LocalDate = LocalDate.parse(appConfig.taxYearStartDate)
+
+  def startPeriod: LocalDate = LocalDate.of(now.getYear, 2, 6)
+
+  def now: LocalDate = LocalDate.now()
+
+  def isInTaxYearPeriod: Boolean = ((now isEqual startPeriod) | (now isAfter startPeriod)) & (now isBefore taxYearStart)
+
+  def getCurrentPayeThreshold: String =
+    if (now.isEqual(taxYearStart) || now.isAfter(taxYearStart)) {
+      appConfig.currentPayeWeeklyThreshold.toString
+    } else {
+      appConfig.oldPayeWeeklyThreshold.toString
+    }
+
 }

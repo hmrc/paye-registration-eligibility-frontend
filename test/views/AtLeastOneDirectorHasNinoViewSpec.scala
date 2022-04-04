@@ -29,9 +29,9 @@ class AtLeastOneDirectorHasNinoViewSpec extends YesNoViewBehaviours {
 
   val view: atLeastOneDirectorHasNino = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
-  def createView = () => view(form)(fakeRequest, messages, frontendAppConfig)
+  def createView = () => view(form)(fakeRequest, messages, injectedAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, frontendAppConfig)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, injectedAppConfig)
 
   "AtLeastOneDirectorHasNino view" must {
 

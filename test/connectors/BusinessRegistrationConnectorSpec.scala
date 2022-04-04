@@ -31,7 +31,7 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
 
   class Setup {
     reset(mockHttpClient)
-    val businessRegistrationConnector = new BusinessRegistrationConnector(frontendAppConfig, mockHttpClient) {
+    val businessRegistrationConnector = new BusinessRegistrationConnector(injectedAppConfig, mockHttpClient) {
       override lazy val businessRegUrl: String = "foo"
       override val wSHttp: HttpClient = mockHttpClient
     }
