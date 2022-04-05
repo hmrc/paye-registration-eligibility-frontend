@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.DataCacheConnector
 import controllers.actions._
 import forms.TaxedAwardSchemeFormProvider
@@ -40,7 +40,7 @@ class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnecto
                                            formProvider: TaxedAwardSchemeFormProvider,
                                            controllerComponents: MessagesControllerComponents,
                                            view: taxedAwardScheme
-                                          )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+                                          )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 

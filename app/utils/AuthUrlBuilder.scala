@@ -16,17 +16,17 @@
 
 package utils
 
-import config.FrontendAppConfig
+import config.AppConfig
 import controllers.routes
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 
 import javax.inject.Inject
 
-class AuthUrlBuilderImpl @Inject()(val appConfig: FrontendAppConfig) extends AuthUrlBuilder
+class AuthUrlBuilderImpl @Inject()(val appConfig: AppConfig) extends AuthUrlBuilder
 
 trait AuthUrlBuilder {
-  val appConfig: FrontendAppConfig
+  val appConfig: AppConfig
   private lazy val loginCallback = appConfig.config.getConfString("auth.login-callback.url", throw new Exception(s"cant find config value - $configRoot.auth.login-callback.url"))
   private lazy val appName = appConfig.config.getString("appName")
   private val configRoot = "microservice.services"

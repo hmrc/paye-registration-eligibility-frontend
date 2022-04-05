@@ -13,13 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-@import config.FrontendAppConfig
+@import config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, PhaseBanner, Tag, Text}
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukPhaseBanner
 
 @this(govukPhaseBanner: GovukPhaseBanner)
 
-@(phase: String)(implicit messages: Messages, appConfig: FrontendAppConfig)
+@(phase: String)(implicit messages: Messages, appConfig: AppConfig)
 
     @feedbackBanner = {
     @messages("app.phaseBanner1")

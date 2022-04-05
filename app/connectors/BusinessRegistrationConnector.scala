@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.Logging
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HttpClient, _}
@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class BusinessRegistrationConnector @Inject()(val appConfig: FrontendAppConfig,
+class BusinessRegistrationConnector @Inject()(val appConfig: AppConfig,
                                               val wSHttp: HttpClient) extends Logging {
   lazy val businessRegUrl: String = appConfig.config.baseUrl("business-registration")
 

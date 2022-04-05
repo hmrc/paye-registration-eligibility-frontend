@@ -43,6 +43,8 @@ case class BooleanFeatureSwitch(name: String, setValue: Boolean) extends Feature
 
 trait FeatureManager {
 
+  val datePatternRegex: String = """([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"""
+
   private[utils] def systemPropertyName(name: String) = s"feature.$name"
 
   private[utils] def getProperty[T](name: String, defaultValue: T): FeatureSwitch = {

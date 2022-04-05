@@ -16,7 +16,7 @@
 
 package base
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.{BusinessRegistrationConnector, CompanyRegistrationConnector}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -41,7 +41,7 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   def injector: Injector = app.injector
 
-  def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+  def injectedAppConfig: AppConfig = injector.instanceOf[AppConfig]
 
   def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
 

@@ -51,9 +51,9 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
     formProvider,
     messagesControllerComponents,
     view
-  )(frontendAppConfig)
+  )(injectedAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, frontendAppConfig).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, injectedAppConfig).toString
 
   "TaxedAwardScheme Controller" must {
 
@@ -76,7 +76,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(frontendAppConfig)
+      )(injectedAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -95,7 +95,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(frontendAppConfig)
+      )(injectedAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -118,7 +118,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(frontendAppConfig)
+      )(injectedAppConfig)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -148,7 +148,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(frontendAppConfig)
+      )(injectedAppConfig)
 
       val result = Controller.onPageLoad(fakeRequest)
 
@@ -165,7 +165,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(frontendAppConfig)
+      )(injectedAppConfig)
 
       val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
       val result = Controller.onSubmit(postRequest)

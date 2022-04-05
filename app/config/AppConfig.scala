@@ -16,12 +16,15 @@
 
 package config
 
-import com.google.inject.Inject
 import controllers.routes
 import play.api.i18n.Lang
+import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class FrontendAppConfig @Inject()(val config: ServicesConfig) {
+import javax.inject.{Inject, Singleton}
+
+@Singleton
+class AppConfig @Inject()(val config: ServicesConfig) {
 
   private def loadConfig(key: String) = config.getString(key)
 
@@ -46,8 +49,10 @@ class FrontendAppConfig @Inject()(val config: ServicesConfig) {
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
 
-  def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
-
   def accessibilityStatementRoute(pageUri: String) = s"$payeRegFEUrl$payeRegFEUri/accessibility-statement?pageUri=$pageUri"
+
+  lazy val taxYearStartDate: String = config.getString("tax-year-start-date")
+  lazy val currentPayeWeeklyThreshold: Int = config.getInt("paye.weekly-threshold")
+  lazy val oldPayeWeeklyThreshold: Int = config.getInt("paye.old-weekly-threshold")
 
 }

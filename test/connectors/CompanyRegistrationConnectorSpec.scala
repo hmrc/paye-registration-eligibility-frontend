@@ -33,7 +33,7 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
   val testUri = "testUri"
 
   class Setup(stubbed: Boolean) {
-    val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, frontendAppConfig) {
+    val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, injectedAppConfig) {
       override lazy val companyRegistrationUri: String = testUri
       override lazy val companyRegistrationUrl: String = testUrl
       override lazy val stubUri: String = testUri

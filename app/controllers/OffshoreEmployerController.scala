@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.DataCacheConnector
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
@@ -40,7 +40,7 @@ class OffshoreEmployerController @Inject()(dataCacheConnector: DataCacheConnecto
                                            formProvider: OffshoreEmployerFormProvider,
                                            controllerComponents: MessagesControllerComponents,
                                            view: offshoreEmployer
-                                          )(implicit appConfig: FrontendAppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+                                          )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 
