@@ -55,7 +55,7 @@ unauthorised.heading                                = You can’t access this se
 
 atLeastOneDirectorHasNino.title                     = Does at least one company director have a UK National Insurance number?
 atLeastOneDirectorHasNino.heading                   = Does at least one company director have a UK National Insurance number?
-atLeastOneDirectorHasNino.error.required            = Tell us if at least one company director has a UK National Insurance number
+atLeastOneDirectorHasNino.error.required            = Select yes if the company pays UK National Insurance
 
 offshoreEmployer.title                              = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
 offshoreEmployer.heading                            = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
