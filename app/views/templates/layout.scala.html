@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import views.html.components.{language_select, phaseBanner, siteHeader}
 
-@this(hmrcBanner: HmrcBanner,
+@this(
         govukLayout: GovukLayout,
         hmrcStandardFooter: HmrcStandardFooter,
         hmrcTimeoutDialog: HmrcTimeoutDialog,
@@ -45,12 +45,6 @@
 @beforeContentBlock = {
 
 @phaseBanner("beta")
-
-@hmrcBanner(
-    Banner(if(messages.lang.code == "cy") {
-        Cy
-    } else En)
-)
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
