@@ -17,7 +17,7 @@ object AppDependencies {
   private val wireMockVersion = "2.27.2"
   private val reactivemongoTestVersion = "5.0.0-play-28"
   private val scalacheckVersion = "1.15.3"
-  private val hmrcFrontendVersion = "3.4.0-play-28"
+  private val hmrcFrontendVersion = "3.21.0-play-28"
 
   private def testDependencies(scope: String): Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
