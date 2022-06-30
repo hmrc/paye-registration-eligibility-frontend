@@ -1,82 +1,98 @@
-checkYourAnswers.title=Check Your Answers
-checkYourAnswers.heading=Check Your Answers
-checkYourAnswers.guidance=Guidance for check your answers
-app.phaseBannerFeedback=This is a new service - your <a href="{0}">feedback</a> will help us to improve it.
-date.day=Day
-date.month=Month
-date.year=Year
-error.titleError=Error:
-error.boolean=Please give an answer
-error.invalid_date=Give a correct date
-error.date.day_blank=Enter a day
-error.date.day_invalid=Give a correct day using numbers 1 to 31
-error.date.month_blank=Enter a month
-error.date.month_invalid=Give a correct month using numbers 1 to 12
-error.date.year_blank=Enter a year
-error.date.year_invalid=Give a correct year
-error.integer=Give an answer in whole numbers
-error.non_numeric=Give a value using only numbers
-error.number=Please enter a valid number
-error.required=Please enter a value
-error.summary.title=This page has errors
-error.summary.text=Check the following
-index.title=paye-registration-eligibility-frontend
-index.heading=paye-registration-eligibility-frontend
-index.guidance=Welcome to your new frontend. Please see the README file for a guide to getting started.
-session_expired.title=For your security, this service has been reset
-session_expired.heading=For your security, this service has been reset
-session_expired.guidance=The details you have given have been deleted because you did not continue the service for 1 hour.
-site.back=Back
-site.delete=Remove
-site.edit=Change
-site.hidden-delete=Delete {0}
-site.hidden-edit=Change {0}
-site.no=No welsh
-site.yes=Yes welsh
-site.save_and_continue=Save and continue
-site.continue=Continue welsh
-service.name=Register an employer for PAYE welsh
-site.textarea.char_limit=(Limit is {0} characters)
-unauthorised.title=You can’t access this service with this account
-unauthorised.heading=You can’t access this service with this account
-atLeastOneDirectorHasNino.title=Does at least one company director have a UK National Insurance number welsh?
-atLeastOneDirectorHasNino.heading=Does at least one company director have a UK National Insurance number welsh?
-atLeastOneDirectorHasNino.error.required=Tell us if at least one company director has a UK National Insurance number welsh
-offshoreEmployer.title=Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.heading=Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.error.required=Tell us if the company''s an offshore employer outside the EEA who doesn''t pay UK National Insurance
-taxedAwardScheme.title=Over the next 2 months, will the company pay out any non-cash incentive awards?
-taxedAwardScheme.heading=Over the next 2 months, will the company pay out any non-cash incentive awards?
-taxedAwardScheme.error.required=Tell us if the company will pay out any non-cash incentive awards over the next 2 months
-taxedAwardScheme.p1=This could be to anyone, not just your own staff.
-taxedAwardScheme.p2=Non-cash incentive awards include:
-taxedAwardScheme.l1=vouchers - including ones that can be exchanged for cash
-taxedAwardScheme.l2=any goods
-taxedAwardScheme.l3=prizes for employer-run competitions
-taxedAwardScheme.l4=holidays that the company’s paid for (but don’t include statutory holiday pay)
-dropout.title=The company can''t register an employer online
-dropout.heading=The company can''t register an employer online
-dropout.p1=You should register by phone or post.
-dropout.p2=<a href="{0}">Contact HMRC</a> - they''ll arrange for someone to call you back to help you register.
-dropout.p3=You''ll need to provide the following details about the company.
-dropout.l1=company name, registered address and phone number
-dropout.l2=trading name if this is different
-dropout.l3=business activities - for example, electrical engineering
-dropout.l4=Unique Taxpayer Reference (UTR)
-dropout.l5=company registration number
-dropout.l6=the names and National Insurance numbers of every company director
-dropout.p4=<a href="{0}">Return to GOV.UK</a>
-registerForPaye.title=You must register for PAYE online
-registerForPaye.heading=Register for PAYE online
-registerForPaye.p1=Only continue if the company does, or intends to do, one of the following:
-registerForPaye.l1=pay any employees, including company directors, £116 or more a week
-registerForPaye.l2=employ someone, including any company director, who''s already receiving a pension or who has another job
-registerForPaye.l3=provide expenses or benefits to employees, including company directors
-registerForPaye.l4=hire subcontractors for work in the construction industry
-registerForPaye.p2=You''ll need the National Insurance number of at least one company director.
-registerForPaye.subHeading=Starting PAYE in the new tax year (6 April)
-registerForPaye.p3=If the company won''t start doing any of these things until the new tax year, you can continue but we won''t process the application until after 6 April.
-registerForPaye.p4=If you''re not signed in, do it on the next screen, using the company''s online account details. If you don''t have an online account for the company, you''ll need to set one up.
-registerForPaye.subHeading1=Signing in to the service
-registerForPaye.p5=You must sign in on the next screen.
-registerForPaye.p6=Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn''t have one, you will be able to set one up by clicking ''Don''t have a Government Gateway account''. Agents should use their own account details.
+checkYourAnswers.title                                                          = Gwirio’ch Atebion
+checkYourAnswers.heading                                                        = Gwirio’ch Atebion
+checkYourAnswers.guidance                                                       = Arweiniad ar gyfer gwirio’ch atebion
+
+app.phaseBanner1                                                                = Mae hwn yn wasanaeth newydd – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
+
+service.name                                                                    = Cofrestru cyflogwr ar gyfer TWE
+app.title                                                                       = Cofrestru cyflogwr ar gyfer TWE
+
+getpagehelp.linkText                                                            = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
+
+app.phaseBannerFeedback                                                         = Mae hwn yn wasanaeth newydd – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
+
+date.day                                                                        = Diwrnod
+date.month                                                                      = Mis
+date.year                                                                       = Blwyddyn
+
+error.titleError                                                                = Gwall:
+error.boolean                                                                   = Rhowch ateb
+error.invalid_date                                                              = Rhowch ddyddiad cywir
+error.date.day_blank                                                            = Nodwch ddiwrnod
+error.date.day_invalid                                                          = Rhowch ddiwrnod cywir gan ddefnyddio’r rhifau 1 i 31
+error.date.month_blank                                                          = Nodwch fis
+error.date.month_invalid                                                        = Rhowch fis cywir gan ddefnyddio’r rhifau 1 i 12
+error.date.year_blank                                                           = Nodwch flwyddyn
+error.date.year_invalid                                                         = Rhowch flwyddyn gywir
+error.integer                                                                   = Rhowch ateb mewn rhifau cyfan
+error.non_numeric                                                               = Rhowch werth gan ddefnyddio rhifau yn unig
+error.number                                                                    = Nodwch rif dilys
+error.required                                                                  = Nodwch werth
+error.summary.title                                                             = Mae problem wedi codi
+error.summary.text                                                              = Gwiriwch y canlynol
+
+session_expired.title                                                           = Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
+session_expired.heading                                                         = Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
+session_expired.guidance                                                        = Mae’r manylion yr ydych wedi’u rhoi wedi cael eu dileu gan nad ydych wedi mynd yn eich blaen â’r gwasanaeth ers 1 awr.
+
+site.back                                                                       = Yn ôl
+site.delete                                                                     = Tynnu
+site.edit                                                                       = Newid
+site.hidden-delete                                                              = Dileu (ateb)
+site.hidden-edit                                                                = Newid {ateb}
+site.no                                                                         = Na
+site.yes                                                                        = lawn
+site.save_and_continue                                                          = Yn eich blaen
+site.continue                                                                   = Cadw ac yn eich blaen
+service.name                                                                    = Cofrestru cyflogwr ar gyfer TWE
+site.govuk.label                                                                = GOV.UK/CYMRAEG
+site.textarea.char_limit                                                        = (Y terfyn yw {0} o gymeriadau)
+
+unauthorised.title                                                              = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
+unauthorised.heading                                                            = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
+
+atLeastOneDirectorHasNino.title                                                 = A oes gan o leiaf un cyfarwyddwr cwmni rif Yswiriant Gwladol y DU?
+atLeastOneDirectorHasNino.heading                                               = A oes gan o leiaf un cyfarwyddwr cwmni rif Yswiriant Gwladol y DU?
+atLeastOneDirectorHasNino.error.required                                        = Rhowch wybod i ni os oes gan o leiaf un cyfarwyddwr cwmni rif Yswiriant Gwladol y DU
+
+offshoreEmployer.title                                                          = A yw’r cwmni’n gyflogwr alltraeth y tu allan i’r Ardal Economaidd Ewropeaidd nad yw’n talu Yswiriant Gwladol y DU?
+offshoreEmployer.heading                                                        = A yw’r cwmni’n gyflogwr alltraeth y tu allan i’r Ardal Economaidd Ewropeaidd nad yw’n talu Yswiriant Gwladol y DU?
+offshoreEmployer.error.required                                                 = Rhowch wybod i ni os yw’r cwmni’n gyflogwr alltraeth y tu allan i’r AEE nad yw’n talu Yswiriant Gwladol y DU
+
+taxedAwardScheme.title                                                          = Dros y 2 fis nesaf, a fydd y cwmni’n talu unrhyw ddyfarniadau cymhelliad nad ydynt yn arian parod?
+taxedAwardScheme.heading                                                        = Dros y 2 fis nesaf, a fydd y cwmni’n talu unrhyw ddyfarniadau cymhelliad nad ydynt yn arian parod?
+taxedAwardScheme.error.required                                                 = Rhowch wybod i ni a fydd y cwmni’n talu unrhyw ddyfarniadau cymhelliad nad ydynt yn arian parod dros y 2 fis nesaf
+taxedAwardScheme.p1                                                             = Gallai hyn fod i unrhyw un, nid dim ond eich staff eich hun.
+taxedAwardScheme.p2                                                             = Mae dyfarniadau cymhelliad nad ydynt yn arian parod yn cynnwys:
+taxedAwardScheme.l1                                                             = talebau - gan gynnwys rhai y gellir eu cyfnewid am arian parod
+taxedAwardScheme.l2                                                             = unrhyw nwyddau
+taxedAwardScheme.l3                                                             = gwobrau ar gyfer cystadlaethau sy’n cael eu cynnal gan gyflogwyr
+taxedAwardScheme.l4                                                             = gwyliau y talodd y cwmni amdanynt (ond nad ydynt yn cynnwys tâl gwyliau statudol)
+
+dropout.title                                                                   = Does dim modd i’r cwmni gofrestru cyflogwr ar-lein
+dropout.heading                                                                 = Does dim modd i’r cwmni gofrestru cyflogwr ar-lein
+dropout.p1                                                                      = Dylech gofrestru dros y ffôn neu drwy’r post
+dropout.p2                                                                      = Cysylltwch â CThEM - bydd yn trefnu i rywun eich ffonio’n ôl i’ch helpu i gofrestru.
+dropout.p3                                                                      = Bydd yn rhaid i chi roi’r wybodaeth ganlynol am y cwmni.
+dropout.l1                                                                      = enw’r cwmni, y cyfeiriad cofrestredig a’r rhif ffôn
+dropout.l2                                                                      = yr enw masnachu, os yw’n wahanol
+dropout.l3                                                                      = gweithgareddau busnes - er enghraifft, peirianneg drydanol
+dropout.l4                                                                      = Cyfeirnod Unigryw y Trethdalwr (UTR)
+dropout.l5                                                                      = rhif cofrestru'r cwmni
+dropout.l6                                                                      = enwau a rhifau Yswiriant Gwladol pob cyfarwyddwr y cwmni
+dropout.p4                                                                      = Yn ôl i GOV.UK
+
+registerForPaye.title                                                           = Cofrestru ar gyfer TWE ar-lein
+registerForPaye.heading                                                         = Cofrestru ar gyfer TWE ar-lein
+registerForPaye.p1                                                              = Dylech barhau dim ond os yw’r cwmni’n gwneud, neu’n bwriadu gwneud, un o’r canlynol:
+registerForPaye.l1                                                              = talu unrhyw gyflogeion, gan gynnwys cyfarwyddwyr y cwmni, £{0} neu fwy yr wythnos
+registerForPaye.l2                                                              = cyflogi rhywun, gan gynnwys unrhyw gyfarwyddwr cwmni, sydd eisoes yn cael pensiwn neu sydd â swydd arall
+registerForPaye.l3                                                              = darparu treuliau neu fuddiannau i gyflogeion, gan gynnwys cyfarwyddwyr y cwmni
+registerForPaye.l4                                                              = hurio isgontractwyr ar gyfer gwaith yn y diwydiant adeiladu
+registerForPaye.p2                                                              = Bydd arnoch angen rhif Yswiriant Gwladol o leiaf un cyfarwyddwr cwmni.
+registerForPaye.subHeading                                                      = Dechrau TWE yn y flwyddyn dreth newydd (6 Ebrill)
+registerForPaye.p3                                                              = Os na fydd y cwmni’n dechrau gwneud unrhyw un o’r pethau hyn tan y flwyddyn dreth newydd, gallwch barhau ond ni fyddwn yn prosesu’r cais tan ar ôl 6 Ebrill.
+registerForPaye.p4                                                              = Os nad ydych wedi mewngofnodi, gwnewch hynny ar y sgrin nesaf, gan ddefnyddio manylion cyfrif ar-lein y cwmni. Os nad oes gennych gyfrif ar-lein ar gyfer y cwmni, bydd angen i chi greu un.
+registerForPaye.subHeading1                                                     = Mewngofnodi i’r gwasanaeth
+registerForPaye.p5                                                              = Rhaid i chi fewngofnodi ar y sgrin nesaf.
+registerForPaye.p6                                                              = Oni bai eich bod yn asiant treth proffesiynol sy’n cofrestru cleient, defnyddiwch gyfrif y llywodraeth ar gyfer y busnes rydych am ei gofrestru. Os nad oes gan y busnes un, bydd modd i chi greu un drwy glicio ''Nid oes gennyf gyfrif Porth y Llywodraeth'. Dylai asiantau ddefnyddio manylion eu cyfrif eu hunain.
