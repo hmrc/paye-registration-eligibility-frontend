@@ -30,6 +30,9 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
   val testFeatureSwitch = ValueSetFeatureSwitch("system-date", "2018-10-12")
   val testDisabledSwitch = ValueSetFeatureSwitch("system-date", "time-clear")
 
+  val testWelshFeatureSwitch = ValueSetFeatureSwitch("isWelsh", "true")
+  val testWelshDisabledSwitch = ValueSetFeatureSwitch("isWelsh", "false")
+
   val mockFeatureSwitches = mock[PREFEFeatureSwitches]
   val mockFeatureManager = mock[FeatureManager]
 
@@ -67,6 +70,26 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
           .thenReturn(testDisabledSwitch)
 
         val result = controller.switcher("system-date", "time-clear")(FakeRequest())
+        status(result) mustBe OK
+      }
+    }
+
+    "Welsh Feature Switch" should {
+      "return true if the isWelshEnabled property is true" in new Setup {
+        when(mockFeatureSwitches(any())).thenReturn(Some(testWelshFeatureSwitch))
+
+        when(mockFeatureManager.enableORDisable(any())).thenReturn(testWelshFeatureSwitch)
+
+        val result = controller.switcher("isWelsh", "true")(FakeRequest())
+        status(result) mustBe OK
+      }
+
+      "return false if the isWelshEnabled property is false" in new Setup {
+        when(mockFeatureSwitches(any())).thenReturn(Some(testWelshFeatureSwitch))
+
+        when(mockFeatureManager.enableORDisable(any())).thenReturn(testWelshDisabledSwitch)
+
+        val result = controller.switcher("isWelsh", "false")(FakeRequest())
         status(result) mustBe OK
       }
     }
