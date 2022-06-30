@@ -73,6 +73,7 @@ trait FeatureManager {
 
 class PREFEFeatureSwitch @Inject()(injManager: FeatureSwitchManager) extends PREFEFeatureSwitches {
   val companyRegistration = "companyRegistration"
+  val isWelsh = "isWelsh"
   override val manager: FeatureManager = injManager
   override val setSystemDate = "system-date"
 }
@@ -80,15 +81,19 @@ class PREFEFeatureSwitch @Inject()(injManager: FeatureSwitchManager) extends PRE
 trait PREFEFeatureSwitches {
   val setSystemDate: String
   protected val companyRegistration: String
+  protected val isWelsh: String
   val manager: FeatureManager
 
   def systemDate: FeatureSwitch = manager.getProperty[String](setSystemDate, "time-clear")
 
   def companyReg: FeatureSwitch = manager.getProperty[Boolean](companyRegistration, false)
 
+  def isWelshEnabled: FeatureSwitch = manager.getProperty[Boolean](isWelsh, false)
+
   def apply(name: String): Option[FeatureSwitch] = name match {
     case `setSystemDate` => Some(systemDate)
     case `companyRegistration` => Some(companyReg)
+    case `isWelsh` => Some(isWelshEnabled)
     case _ => None
   }
 }
