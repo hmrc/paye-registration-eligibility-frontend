@@ -20,11 +20,13 @@ import controllers.routes
 import play.api.i18n.Lang
 import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import utils.PREFEFeatureSwitches
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(val config: ServicesConfig) {
+class AppConfig @Inject()(val config: ServicesConfig,
+                          featureSwitch: PREFEFeatureSwitches) {
 
   private def loadConfig(key: String) = config.getString(key)
 
@@ -43,7 +45,7 @@ class AppConfig @Inject()(val config: ServicesConfig) {
   lazy val compRegFEStartLink: String = loadConfig("microservice.services.company-registration-frontend.start-ct")
   lazy val scrsFeedbackLink = "https://www.tax.service.gov.uk/contact/beta-feedback?service=SCRS"
 
-  def languageTranslationEnabled: Boolean = sys.props.get("microservice.services.features.welsh-translation").fold(false)(_.toBoolean)
+  def languageTranslationEnabled: Boolean = featureSwitch.isWelshEnabled.value.toBoolean
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
