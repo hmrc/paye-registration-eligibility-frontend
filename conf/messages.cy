@@ -3,6 +3,8 @@ checkYourAnswers.heading                                                        
 checkYourAnswers.guidance                                                       = Arweiniad ar gyfer gwirio’ch atebion
 
 app.phaseBanner1                                                                = Mae hwn yn wasanaeth newydd – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
+app.phaseBanner2                                                                =
+app.phaseBanner3                                                                =
 
 service.name                                                                    = Cofrestru cyflogwr ar gyfer TWE
 app.title                                                                       = Cofrestru cyflogwr ar gyfer TWE

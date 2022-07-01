@@ -27,7 +27,7 @@ import java.time.LocalDate
 
 class TimeMachineSpec extends PlaySpec with BeforeAndAfterEach with MockitoSugar {
 
-  object TestAppConfig extends AppConfig(mock[ServicesConfig]) {
+  object TestAppConfig extends AppConfig(mock[ServicesConfig], mock[PREFEFeatureSwitches]) {
     override lazy val taxYearStartDate: String = LocalDate.now().toString
     override lazy val currentPayeWeeklyThreshold: Int = 10
     override lazy val oldPayeWeeklyThreshold: Int = 5
