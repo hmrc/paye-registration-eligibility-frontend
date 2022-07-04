@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukBackLink
 
 @this(
-        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
         hmrcLayout: HmrcLayout,
         standardBetaBanner: StandardBetaBanner,
         govukBackLink: GovukBackLink
@@ -32,7 +31,6 @@
     <!--[if lte IE 8]><link href=' @controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--> <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" />
         <!--<![endif]-->
-@hmrcTrackingConsentSnippet()
 }
 
 
