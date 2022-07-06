@@ -97,4 +97,4 @@ registerForPaye.p3                                  = If the company won’t sta
 registerForPaye.p4                                  = If you’re not signed in, do it on the next screen, using the company’s online account details. If you don’t have an online account for the company, you’ll need to set one up.
 registerForPaye.subHeading1                         = Signing in to the service
 registerForPaye.p5                                  = You must sign in on the next screen.
-registerForPaye.p6                                  = Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn’t have one, you will be able to set one up by clicking ’Don’t have a Government Gateway account’. Agents should use their own account details.
+registerForPaye.p6                                  = Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn’t have one, you will be able to set one up by clicking ‘Don’t have a Government Gateway account’. Agents should use their own account details.
