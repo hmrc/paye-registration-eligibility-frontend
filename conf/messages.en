@@ -57,9 +57,9 @@ atLeastOneDirectorHasNino.title                     = Does at least one company 
 atLeastOneDirectorHasNino.heading                   = Does at least one company director have a UK National Insurance number?
 atLeastOneDirectorHasNino.error.required            = Select yes if at least one company director has a UK National Insurance number
 
-offshoreEmployer.title                              = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.heading                            = Is the company an offshore employer outside the European Economic Area that doesn''t pay UK National Insurance?
-offshoreEmployer.error.required                     = Tell us if the company''s an offshore employer outside the EEA who doesn''t pay UK National Insurance
+offshoreEmployer.title                              = Is the company an offshore employer outside the European Economic Area that doesn’t pay UK National Insurance?
+offshoreEmployer.heading                            = Is the company an offshore employer outside the European Economic Area that doesn’t pay UK National Insurance?
+offshoreEmployer.error.required                     = Tell us if the company’s an offshore employer outside the EEA who doesn’t pay UK National Insurance
 
 taxedAwardScheme.title                              = Over the next 2 months, will the company pay out any non-cash incentive awards?
 taxedAwardScheme.heading                            = Over the next 2 months, will the company pay out any non-cash incentive awards?
@@ -71,11 +71,11 @@ taxedAwardScheme.l2                                 = any goods
 taxedAwardScheme.l3                                 = prizes for employer-run competitions
 taxedAwardScheme.l4                                 = holidays that the company’s paid for (but don’t include statutory holiday pay)
 
-dropout.title                                       = The company can''t register an employer online
-dropout.heading                                     = The company can''t register an employer online
+dropout.title                                       = The company can’t register an employer online
+dropout.heading                                     = The company can’t register an employer online
 dropout.p1                                          = You should register by phone or post.
-dropout.p2                                          = <a href="{0}">Contact HMRC</a> - they''ll arrange for someone to call you back to help you register.
-dropout.p3                                          = You''ll need to provide the following details about the company.
+dropout.p2                                          = <a href="{0}">Contact HMRC</a> - they’ll arrange for someone to call you back to help you register.
+dropout.p3                                          = You’ll need to provide the following details about the company.
 dropout.l1                                          = company name, registered address and phone number
 dropout.l2                                          = trading name if this is different
 dropout.l3                                          = business activities - for example, electrical engineering
@@ -88,13 +88,13 @@ registerForPaye.title                               = Register for PAYE online
 registerForPaye.heading                             = Register for PAYE online
 registerForPaye.p1                                  = Only continue if the company does, or intends to do, one of the following:
 registerForPaye.l1                                  = pay any employees, including company directors, £{0} or more a week
-registerForPaye.l2                                  = employ someone, including any company director, who''s already receiving a pension or who has another job
+registerForPaye.l2                                  = employ someone, including any company director, who’s already receiving a pension or who has another job
 registerForPaye.l3                                  = provide expenses or benefits to employees, including company directors
 registerForPaye.l4                                  = hire subcontractors for work in the construction industry
-registerForPaye.p2                                  = You''ll need the National Insurance number of at least one company director.
+registerForPaye.p2                                  = You’ll need the National Insurance number of at least one company director.
 registerForPaye.subHeading                          = Starting PAYE in the new tax year (6 April)
-registerForPaye.p3                                  = If the company won''t start doing any of these things until the new tax year, you can continue but we won''t process the application until after 6 April.
-registerForPaye.p4                                  = If you''re not signed in, do it on the next screen, using the company''s online account details. If you don''t have an online account for the company, you''ll need to set one up.
+registerForPaye.p3                                  = If the company won’t start doing any of these things until the new tax year, you can continue but we won’t process the application until after 6 April.
+registerForPaye.p4                                  = If you’re not signed in, do it on the next screen, using the company’s online account details. If you don’t have an online account for the company, you’ll need to set one up.
 registerForPaye.subHeading1                         = Signing in to the service
 registerForPaye.p5                                  = You must sign in on the next screen.
-registerForPaye.p6                                  = Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn''t have one, you will be able to set one up by clicking ''Don''t have a Government Gateway account''. Agents should use their own account details.
+registerForPaye.p6                                  = Unless you are a professional tax agent registering a client, use the government account for the business you want to register. If the business doesn’t have one, you will be able to set one up by clicking ‘Don’t have a Government Gateway account’. Agents should use their own account details.
