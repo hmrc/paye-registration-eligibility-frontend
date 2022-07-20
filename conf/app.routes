@@ -6,6 +6,8 @@ GET         /                                       controllers.IndexController.
 GET         /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
 
 GET         /language/:lang                         controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /defaultLanguage/:lang                  controllers.LanguageSwitchController.setLanguage(lang: String)
+
 
 GET         /this-service-has-been-reset            controllers.SessionExpiredController.onPageLoad
 
