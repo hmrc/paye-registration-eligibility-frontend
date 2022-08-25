@@ -19,10 +19,10 @@ package forms.behaviours
 import forms.FormSpec
 import generators.Generators
 import org.scalacheck.Gen
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 
-trait FieldBehaviours extends FormSpec with PropertyChecks with Generators {
+trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
   def fieldThatBindsValidData(form: Form[_],
                               fieldName: String,
@@ -33,7 +33,7 @@ trait FieldBehaviours extends FormSpec with PropertyChecks with Generators {
       forAll(validDataGenerator -> "validDataItem") {
         dataItem: String =>
           val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value shouldBe dataItem
+          result.value.value mustBe dataItem
       }
     }
   }
@@ -45,13 +45,13 @@ trait FieldBehaviours extends FormSpec with PropertyChecks with Generators {
     "not bind when key is not present at all" in {
 
       val result = form.bind(emptyForm).apply(fieldName)
-      result.errors shouldEqual Seq(requiredError)
+      result.errors mustEqual Seq(requiredError)
     }
 
     "not bind blank values" in {
 
       val result = form.bind(Map(fieldName -> "")).apply(fieldName)
-      result.errors shouldEqual Seq(requiredError)
+      result.errors mustEqual Seq(requiredError)
     }
   }
 }

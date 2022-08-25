@@ -16,24 +16,27 @@
 
 package helpers
 
+import org.mongodb.scala.bson.BsonDocument
+import org.mongodb.scala.result.DeleteResult
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.{DefaultReads, Format, Json}
-import repositories.ReactiveMongoRepository
+import repositories.SessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.mongo.MongoSpecSupport
+import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-trait SessionHelper extends MongoSpecSupport with BeforeAndAfterEach with DefaultReads {
+trait SessionHelper extends MongoSupport with BeforeAndAfterEach with DefaultReads {
   self: IntegrationSpecBase =>
 
-  lazy val repo = new ReactiveMongoRepository(app.injector.instanceOf[ServicesConfig], mongo)
+  lazy val repo = new SessionRepository(app.injector.instanceOf[ServicesConfig], mongoComponent)
+
+  def clearDocs(): DeleteResult = await(repo.collection.deleteMany(BsonDocument()).toFuture())
+  def count(): Long = await(repo.collection.countDocuments().toFuture())
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    await(repo.drop)
-    await(repo.count) mustBe 0
+    clearDocs()
+    count mustBe 0
     resetWiremock()
   }
 
@@ -43,7 +46,6 @@ trait SessionHelper extends MongoSpecSupport with BeforeAndAfterEach with Defaul
   }
 
   def cacheSessionData[T](id: String, key: String, data: T)(implicit format: Format[T]): Unit = {
-    val initialCount = await(repo.count)
     val cacheMap = await(repo.get(id))
     val updatedCacheMap =
       cacheMap.fold(CacheMap(id, Map(key -> Json.toJson(data))))(map => map.copy(data = map.data + (key -> Json.toJson(data))))

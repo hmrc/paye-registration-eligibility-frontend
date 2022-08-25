@@ -18,7 +18,8 @@ package filters
 
 import akka.stream.Materializer
 import com.google.inject.Inject
-import org.scalatest.{MustMatchers, WordSpecLike}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.{DefaultHttpFilters, HttpFilters}
@@ -46,7 +47,7 @@ object SessionIdFilterSpec {
 
 }
 
-class SessionIdFilterSpec extends AbstractController(stubControllerComponents()) with WordSpecLike with MustMatchers with GuiceOneAppPerSuite {
+class SessionIdFilterSpec extends AbstractController(stubControllerComponents()) with AnyWordSpecLike with Matchers with GuiceOneAppPerSuite {
 
   import SessionIdFilterSpec._
 
