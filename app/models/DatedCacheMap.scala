@@ -16,17 +16,18 @@
 
 package models
 
-import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.{Format, JsValue, Json}
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+
+import java.time.{LocalDateTime, ZoneOffset}
 
 case class DatedCacheMap(id: String,
                          data: Map[String, JsValue],
-                         lastUpdated: DateTime = DateTime.now(DateTimeZone.UTC))
+                         lastUpdated: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC))
 
 object DatedCacheMap {
-  implicit val dateFormat: Format[DateTime] = MongoJodaFormats.dateTimeFormat //TODO: Temporary, future stories to switch to JavaTime
+  implicit val dateFormat: Format[LocalDateTime] = MongoJavatimeFormats.localDateTimeFormat
   implicit val formats = Json.format[DatedCacheMap]
 
   def apply(cacheMap: CacheMap): DatedCacheMap = DatedCacheMap(cacheMap.id, cacheMap.data)
