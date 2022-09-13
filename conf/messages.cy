@@ -6,8 +6,8 @@ app.phaseBanner1                                                                
 app.phaseBanner2                                                                =
 app.phaseBanner3                                                                =
 
-service.name                                                                    = Cofrestru cyflogwr ar gyfer TWE
-app.title                                                                       = Cofrestru cyflogwr ar gyfer TWE
+service.name                                                                    = Cofrestru fel cyflogwr ar gyfer TWE
+app.title                                                                       = Cofrestru fel cyflogwr ar gyfer TWE
 
 getpagehelp.linkText                                                            = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
 
@@ -46,7 +46,6 @@ site.no                                                                         
 site.yes                                                                        = lawn
 site.save_and_continue                                                          = Yn eich blaen
 site.continue                                                                   = Cadw ac yn eich blaen
-service.name                                                                    = Cofrestru cyflogwr ar gyfer TWE
 site.govuk.label                                                                = GOV.UK/CYMRAEG
 site.textarea.char_limit                                                        = (Y terfyn yw {0} o gymeriadau)
 
