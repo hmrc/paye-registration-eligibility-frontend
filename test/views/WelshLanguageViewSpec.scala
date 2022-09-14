@@ -37,7 +37,7 @@ class WelshLanguageISpec extends ViewBehaviours {
     }
 
     "retrieve correct welsh text" in {
-      messagesApi("service.name")(Lang("cy")) mustBe "Cofrestru cyflogwr ar gyfer TWE"
+      messagesApi("service.name")(Lang("cy")) mustBe "Cofrestru fel cyflogwr ar gyfer TWE"
     }
   }
 
