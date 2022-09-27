@@ -8,12 +8,12 @@ object AppDependencies {
 
   private val scalaTestVersion = "3.2.12"
   private val scalaTestPlusPlayVersion = "5.1.0"
-  private val httpCachingClientVersion = s"9.5.0$playVersion"
-  private val playConditionalFormMappingVersion = s"1.9.0$playVersion"
+  private val httpCachingClientVersion = s"9.6.0$playVersion"
+  private val playConditionalFormMappingVersion = s"1.11.0$playVersion"
   private val bootstrapVersion = "5.16.0"
   private val wireMockVersion = "2.27.2"
-  private val hmrcFrontendVersion = s"3.21.0$playVersion"
-  private val hmrcMongoVersion = "0.71.0"
+  private val hmrcFrontendVersion = s"3.28.0$playVersion"
+  private val hmrcMongoVersion = "0.73.0"
   private val flexmarkAllVersion = "0.62.2"
 
   val appDependencies = Seq(
