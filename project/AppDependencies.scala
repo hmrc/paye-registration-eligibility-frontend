@@ -8,12 +8,12 @@ object AppDependencies {
 
   private val scalaTestVersion = "3.2.12"
   private val scalaTestPlusPlayVersion = "5.1.0"
-  private val httpCachingClientVersion = s"9.5.0$playVersion"
-  private val playConditionalFormMappingVersion = s"1.9.0$playVersion"
+  private val httpCachingClientVersion = s"9.6.0$playVersion"
+  private val playConditionalFormMappingVersion = s"1.11.0$playVersion"
   private val bootstrapVersion = "5.16.0"
-  private val wireMockVersion = "2.27.2"
-  private val hmrcFrontendVersion = s"3.21.0$playVersion"
-  private val hmrcMongoVersion = "0.71.0"
+  private val wireMockVersion = "2.33.2"
+  private val hmrcFrontendVersion = s"3.28.0$playVersion"
+  private val hmrcMongoVersion = "0.73.0"
   private val flexmarkAllVersion = "0.62.2"
 
   val appDependencies = Seq(
@@ -28,7 +28,7 @@ object AppDependencies {
   private def testDependencies(scope: String): Seq[ModuleID] = Seq(
     "org.scalatest"             %% "scalatest"              % scalaTestVersion          % scope,
     "org.scalatestplus.play"    %% "scalatestplus-play"     % scalaTestPlusPlayVersion  % scope,
-    "org.jsoup"                 %  "jsoup"                  % "1.10.3"                  % scope,
+    "org.jsoup"                 %  "jsoup"                  % "1.15.3"                  % scope,
     "com.typesafe.play"         %% "play-test"              % PlayVersion.current       % scope,
     "org.scalatestplus"         %% "scalacheck-1-16"        % s"$scalaTestVersion.0"    % scope,
     "com.vladsch.flexmark"      %  "flexmark-all"           % flexmarkAllVersion        % scope
@@ -39,7 +39,7 @@ object AppDependencies {
   )
 
   val itDependencies: Seq[ModuleID] = testDependencies("it") ++ Seq(
-    "com.github.tomakehurst"    %   "wiremock-jre8"               % wireMockVersion     % "it",
+    "com.github.tomakehurst"    %   "wiremock-jre8-standalone"    % wireMockVersion     % "it",
     "uk.gov.hmrc.mongo"         %% s"hmrc-mongo-test$playVersion" % hmrcMongoVersion    % "it"
   )
 
