@@ -56,7 +56,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
           .thenReturn(testFeatureSwitch)
 
 
-        val result = controller.switcher("system-date", "2018-10-12")(fakeRequest)
+        val result = controller.switcher("system-date", "2018-10-12")(fakeRequest())
         status(result) mustBe OK
       }
     }

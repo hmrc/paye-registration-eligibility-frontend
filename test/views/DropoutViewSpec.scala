@@ -25,7 +25,7 @@ class DropoutViewSpec extends ViewBehaviours {
 
   val view: dropout = app.injector.instanceOf[dropout]
 
-  def createView = () => view()(fakeRequest, messages, injectedAppConfig)
+  def createView = () => view()(fakeRequest(), messages, injectedAppConfig)
 
   "Dropout view" must {
     behave like normalPage(createView, messageKeyPrefix)

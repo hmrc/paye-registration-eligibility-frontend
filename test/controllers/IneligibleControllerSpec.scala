@@ -28,12 +28,12 @@ class IneligibleControllerSpec extends ControllerSpecBase {
     view
   )(injectedAppConfig)
 
-  def viewAsString() = view()(fakeRequest, messages, injectedAppConfig).toString
+  def viewAsString() = view()(fakeRequest(), messages, injectedAppConfig).toString
 
   "Dropout Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()

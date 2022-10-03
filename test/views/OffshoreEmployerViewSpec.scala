@@ -29,9 +29,9 @@ class OffshoreEmployerViewSpec extends YesNoViewBehaviours {
 
   val view: offshoreEmployer = app.injector.instanceOf[offshoreEmployer]
 
-  def createView = () => view(form)(fakeRequest, messages, injectedAppConfig)
+  def createView = () => view(form)(fakeRequest(), messages, injectedAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, injectedAppConfig)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest(), messages, injectedAppConfig)
 
   "OffshoreEmployer view" must {
 

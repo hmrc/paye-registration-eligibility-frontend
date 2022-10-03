@@ -29,9 +29,9 @@ class TaxedAwardSchemeViewSpec extends YesNoViewBehaviours {
 
   val view: taxedAwardScheme = app.injector.instanceOf[taxedAwardScheme]
 
-  def createView = () => view(form)(fakeRequest, messages, injectedAppConfig)
+  def createView = () => view(form)(fakeRequest(), messages, injectedAppConfig)
 
-  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest, messages, injectedAppConfig)
+  def createViewUsingForm = (form: Form[_]) => view(form)(fakeRequest(), messages, injectedAppConfig)
 
   "TaxedAwardScheme view" must {
 

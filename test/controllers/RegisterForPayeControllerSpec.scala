@@ -67,12 +67,12 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
   val PAYEThresholdWeeklyAmount = TestTimeMachine.getCurrentPayeThreshold
 
-  def viewAsString() = view(TestTimeMachine.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig).toString
+  def viewAsString() = view(TestTimeMachine.isInTaxYearPeriod, true, PAYEThresholdWeeklyAmount)(fakeRequest(), messages, injectedAppConfig).toString
 
   "onPageLoad" must {
 
     "return OK and the correct view for a GET" in new Setup {
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
@@ -84,7 +84,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new Exception("")))
       when(mockAuthUrlBuilder.redirectToLogin).thenReturn(Results.SeeOther("foo"))
-      val result = Controller.onSubmit(fakeRequest)
+      val result = Controller.onSubmit(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result).map {
         _.contains("foo") mustBe true
@@ -94,7 +94,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(()))
 
-      val result = Controller.onSubmit(fakeRequest)
+      val result = Controller.onSubmit(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result).map {
         _.contains(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url) mustBe true
@@ -112,7 +112,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Some("payment"))))
 
-      val result = Controller.continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("payeURL")
 
@@ -125,7 +125,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Option.empty[String], Option.empty[String])))
 
-      val result = Controller.continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
 
@@ -138,7 +138,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Option.empty[String])))
 
-      val result = Controller.continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
     }
@@ -149,14 +149,14 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Option.empty[String]))
 
-      val result = Controller.continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("otrsURL")
     }
     "redirect to index if not logged in" in new Setup {
       when(mockAuthConnector.authorise[Unit](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.failed(new Exception("")))
-      val result = Controller.continueToPayeOrOTRS(fakeRequest)
+      val result = Controller.continueToPayeOrOTRS(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some("/eligibility-for-paye")
 

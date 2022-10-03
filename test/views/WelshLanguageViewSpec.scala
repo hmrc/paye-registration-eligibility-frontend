@@ -16,13 +16,12 @@
 
 package views
 
-import org.apache.commons.io.IOUtils
 import play.api.i18n.{Lang, MessagesApi}
 import views.behaviours.ViewBehaviours
 
 import scala.io.{BufferedSource, Source}
 
-class WelshLanguageISpec extends ViewBehaviours {
+class WelshLanguageViewSpec extends ViewBehaviours {
 
   override val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
@@ -49,7 +48,8 @@ class WelshLanguageISpec extends ViewBehaviours {
     try {
       testCode(messageKeysEnglish, messageKeysWelsh)
     } finally {
-      IOUtils.close(englishMessages, welshMessages)
+      englishMessages.close()
+      welshMessages.close()
     }
   }
 

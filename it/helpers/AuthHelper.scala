@@ -23,7 +23,7 @@ import play.api.http.HeaderNames
 import play.api.libs.crypto.DefaultCookieSigner
 import play.api.libs.json.Json
 import play.api.libs.ws.WSCookie
-import uk.gov.hmrc.crypto.{CompositeSymmetricCrypto, Crypted, PlainText}
+import uk.gov.hmrc.crypto.{Crypted, PlainText, SymmetricCryptoFactory}
 import uk.gov.hmrc.http.SessionKeys
 
 import java.net.{URLDecoder, URLEncoder}
@@ -40,7 +40,8 @@ trait AuthHelper extends SessionCookieBaker {
       SessionKeys.sessionId -> sessionId,
       "token" -> "token",
       "ap" -> "GGW",
-      SessionKeys.lastRequestTimestamp -> new java.util.Date().getTime.toString
+      SessionKeys.lastRequestTimestamp -> new java.util.Date().getTime.toString,
+      SessionKeys.authToken -> "FooBarToken"
     ) ++ additionalData
   }
 
@@ -103,7 +104,7 @@ trait SessionCookieBaker {
     }
 
     val encodedCookie = encode(sessionData)
-    val encrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).encrypt(encodedCookie).value
+    val encrypted = SymmetricCryptoFactory.aesGcmCrypto(cookieKey).encrypt(encodedCookie).value
 
     s"""mdtp="$encrypted"; Path=/; HTTPOnly"; Path=/; HTTPOnly"""
   }
@@ -114,7 +115,7 @@ trait SessionCookieBaker {
 
   def getCookieData(cookieData: String): Map[String, String] = {
 
-    val decrypted = CompositeSymmetricCrypto.aesGCM(cookieKey, Seq()).decrypt(Crypted(cookieData)).value
+    val decrypted = SymmetricCryptoFactory.aesGcmCrypto(cookieKey).decrypt(Crypted(cookieData)).value
     val result = decrypted.split("&")
       .map(_.split("="))
       .map { case Array(k, v) => (k, URLDecoder.decode(v, StandardCharsets.UTF_8.name())) }

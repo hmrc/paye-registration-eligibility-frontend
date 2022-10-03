@@ -22,7 +22,7 @@ class IndexControllerSpec extends ControllerSpecBase {
 
   "Index Controller" must {
     "redirect to the first eligibility question" in {
-      val result = new IndexController(injectedAppConfig, messagesControllerComponents, languageUtils).onPageLoad(fakeRequest)
+      val result = new IndexController(injectedAppConfig, messagesControllerComponents, languageUtils).onPageLoad(fakeRequest())
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.routes.AtLeastOneDirectorHasNinoController.onPageLoad.url)
     }

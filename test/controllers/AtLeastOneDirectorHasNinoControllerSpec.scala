@@ -49,12 +49,12 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
     view
   )(injectedAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, injectedAppConfig).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
   "AtLeastOneDirectorHasNino Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
@@ -72,14 +72,14 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
       )(injectedAppConfig)
 
 
-      val result = Controller.onPageLoad()(fakeRequest)
+      val result = Controller.onPageLoad()(fakeRequest())
 
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
 
     "redirect to the Offshore Employers page if yes is selected" in {
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -92,7 +92,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
 
     "redirect to the Dropout page if no is selected" in {
       val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(false))
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "false"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "false"))
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -104,7 +104,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "invalid value"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val result = Controller.onSubmit(postRequest)

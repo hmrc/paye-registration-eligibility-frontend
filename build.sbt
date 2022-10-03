@@ -32,17 +32,17 @@ lazy val microservice = Project(appName, file("."))
         ".*controllers.tests",
         ".*views.html.*" // hides view components and templates from scoverage
       ).mkString(";"),
-    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageMinimumStmtTotal := 80,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    parallelExecution in Test := false
+    Test / parallelExecution := false
   )
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 0)
   .settings(
-    scalacOptions ++= Seq("-feature"),
+    scalacOptions ++= Seq("-feature", "-Xlint:-unused"),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true
   )
@@ -51,6 +51,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(integrationTestSettings())
 
-scalaVersion := "2.12.12"
+scalaVersion := "2.12.15"
 
-javaOptions in Test += "-Dlogger.resource=logback-test.xml"
+Test / javaOptions += "-Dlogger.resource=logback-test.xml"
