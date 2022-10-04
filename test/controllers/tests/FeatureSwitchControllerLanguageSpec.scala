@@ -32,7 +32,7 @@ class FeatureSwitchControllerLanguageSpec extends ControllerSpecBase with Before
     sys.props += (("microservice.services.features.welsh-translation", "false"))
     val before = sys.props.get("microservice.services.features.welsh-translation")
     before mustBe Some("false")
-    val result = controller.enableLanguageFunctionality(true)(fakeRequest)
+    val result = controller.enableLanguageFunctionality(true)(fakeRequest())
     status(result) mustBe 303
     headers(result).get(HeaderNames.LOCATION).get mustBe controllers.routes.LanguageSwitchController.switchToLanguage("english").url
     await(result)
@@ -44,7 +44,7 @@ class FeatureSwitchControllerLanguageSpec extends ControllerSpecBase with Before
     sys.props += (("microservice.services.features.welsh-translation", "true"))
     val before = sys.props.get("microservice.services.features.welsh-translation")
     before mustBe Some("true")
-    val result = controller.enableLanguageFunctionality(false)(fakeRequest)
+    val result = controller.enableLanguageFunctionality(false)(fakeRequest())
     status(result) mustBe 303
     headers(result).get(HeaderNames.LOCATION).get mustBe controllers.routes.LanguageSwitchController.switchToLanguage("english").url
     await(result)

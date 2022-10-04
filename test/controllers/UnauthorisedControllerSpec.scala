@@ -25,13 +25,13 @@ class UnauthorisedControllerSpec extends ControllerSpecBase {
 
   "Unauthorised Controller" must {
     "return 200 for a GET" in {
-      val result = new UnauthorisedController(messagesControllerComponents, view)(injectedAppConfig).onPageLoad(fakeRequest)
+      val result = new UnauthorisedController(messagesControllerComponents, view)(injectedAppConfig).onPageLoad(fakeRequest())
       status(result) mustBe OK
     }
 
     "return the correct view for a GET" in {
-      val result = new UnauthorisedController(messagesControllerComponents, view)(injectedAppConfig).onPageLoad(fakeRequest)
-      contentAsString(result) mustBe view()(fakeRequest, messages, injectedAppConfig).toString
+      val result = new UnauthorisedController(messagesControllerComponents, view)(injectedAppConfig).onPageLoad(fakeRequest())
+      contentAsString(result) mustBe view()(fakeRequest(), messages, injectedAppConfig).toString
     }
   }
 }

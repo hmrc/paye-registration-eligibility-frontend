@@ -28,6 +28,4 @@ trait ControllerSpecBase extends SpecBase {
 
   def getEmptyCacheMap = new FakeDataRetrievalAction(Some(emptyCacheMap), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
-  def fakeDataRequest = fakeRequest
-
 }

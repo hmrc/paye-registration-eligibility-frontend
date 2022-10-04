@@ -29,11 +29,11 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
   val PAYEThresholdWeeklyAmount = "100"
   val view: registerForPaye = app.injector.instanceOf[registerForPaye]
 
-  def createNewTaxYearView = () => view(showNewTaxYearContent = true, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
+  def createNewTaxYearView = () => view(showNewTaxYearContent = true, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest(), messages, injectedAppConfig)
 
-  def createNormalView = () => view(showNewTaxYearContent = false, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
+  def createNormalView = () => view(showNewTaxYearContent = false, notLoggedIn = true, PAYEThresholdWeeklyAmount)(fakeRequest(), messages, injectedAppConfig)
 
-  def createLoggedInView = () => view(showNewTaxYearContent = false, notLoggedIn = false, PAYEThresholdWeeklyAmount)(fakeRequest, messages, injectedAppConfig)
+  def createLoggedInView = () => view(showNewTaxYearContent = false, notLoggedIn = false, PAYEThresholdWeeklyAmount)(fakeRequest(), messages, injectedAppConfig)
 
   class SetupPage {
     reset(mockBusinessRegistrationConnector)
@@ -59,7 +59,7 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
   "Register for PAYE view " must {
     "not display the <signing in to the service> paragraph when logged in" in new SetupPage {
 
-      val result = controller.onPageLoad(fakeRequest.withSession("authToken" -> "foo"))
+      val result = controller.onPageLoad(fakeRequest().withSession("authToken" -> "foo"))
       val document = Jsoup.parse(contentAsString(result))
 
       Option(document.getElementById("signing-in")) mustBe None
@@ -67,7 +67,7 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
 
     "Display the <signing in to the service> paragraph when not logged in" in new SetupPage {
 
-      val result = controller.onPageLoad(fakeRequest)
+      val result = controller.onPageLoad(fakeRequest())
       val document = Jsoup.parse(contentAsString(result))
 
       document.getElementById("signing-in").text() mustBe "Signing in to the service"

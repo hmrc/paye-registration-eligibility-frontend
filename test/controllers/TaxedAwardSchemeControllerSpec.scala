@@ -53,12 +53,12 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
     view
   )(injectedAppConfig)
 
-  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest, messages, injectedAppConfig).toString
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
   "TaxedAwardScheme Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
@@ -78,14 +78,14 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         view
       )(injectedAppConfig)
 
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
 
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
 
     "redirect to the dropout page if yes is selected" in {
       val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(true))
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
 
       object Controller extends TaxedAwardSchemeController(
         mockDataCacheConnector,
@@ -108,7 +108,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
 
     "redirect to the you must register page if no is selected" in {
       val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(false))
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "false"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "false"))
 
       object Controller extends TaxedAwardSchemeController(
         mockDataCacheConnector,
@@ -130,7 +130,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "invalid value"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val result = Controller.onSubmit(postRequest)
@@ -150,7 +150,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         view
       )(injectedAppConfig)
 
-      val result = Controller.onPageLoad(fakeRequest)
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad.url)
@@ -167,7 +167,7 @@ class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
         view
       )(injectedAppConfig)
 
-      val postRequest = fakeRequest.withFormUrlEncodedBody(("value", "true"))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
       val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe SEE_OTHER

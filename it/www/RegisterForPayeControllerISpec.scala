@@ -56,7 +56,6 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
   override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
   override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
 
-  val sessionCookie = () => getSessionCookie()
   val featureSwitches = app.injector.instanceOf[PREFEFeatureSwitches]
   val regId = "6"
   val txID = "tx1234567"
@@ -70,7 +69,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       stubAuthorisation(404)
       stubAudits()
       val fResponse = buildClient("/register-online").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         post(Map(
           "csrfToken" -> Seq("xxx-ignored-xxx")
         ))
@@ -86,7 +85,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       stubAuthorisation()
       stubAudits()
       val fResponse = buildClient("/register-online").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         post(Map(
           "csrfToken" -> Seq("xxx-ignored-xxx")
         ))
@@ -112,7 +111,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)
@@ -149,7 +148,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)
@@ -185,7 +184,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)
@@ -220,7 +219,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)
@@ -251,7 +250,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)
@@ -276,7 +275,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       )
 
       val fResponse = buildClient("/authorised-for-paye").
-        withHeaders(HeaderNames.COOKIE -> sessionCookie(), "Csrf-Token" -> "nocheck").
+        withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
         get
 
       val response = await(fResponse)

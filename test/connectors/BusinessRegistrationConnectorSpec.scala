@@ -59,14 +59,14 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
 
     "return some(regid) when 200 returned with json body containing a registration id" in new Setup {
       when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(responseStatus = 200, responseJson = Some(BusRegJson))))
+        .thenReturn(Future(HttpResponse(200, json = BusRegJson, Map())))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe Some("regId")
     }
 
     "return None when 202 returned with no json body and log it" in new Setup {
       when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(responseStatus = 202, responseJson = None)))
+        .thenReturn(Future(HttpResponse(202, "")))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }
@@ -87,7 +87,7 @@ class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with 
 
     "return None if no regid is in json (Exception)" in new Setup {
       when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(responseStatus = 200, responseJson = Some(BusRegJsonNoRegId))))
+        .thenReturn(Future(HttpResponse(200, json = BusRegJsonNoRegId, Map())))
 
       await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }

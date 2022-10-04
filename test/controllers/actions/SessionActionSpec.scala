@@ -19,7 +19,7 @@ package controllers.actions
 import base.SpecBase
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 class SessionActionSpec extends SpecBase {
 
@@ -32,7 +32,7 @@ class SessionActionSpec extends SpecBase {
       "redirect to the session expired page" in {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val result = controller.onPageLoad(fakeRequest())
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(controllers.routes.IndexController.onPageLoad.url)
       }
@@ -41,7 +41,7 @@ class SessionActionSpec extends SpecBase {
       "perform the action" in {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
-        val request = fakeRequest.withSession(SessionKeys.sessionId -> "foo")
+        val request = fakeRequest().withSession(SessionKeys.sessionId -> "foo")
         val result = controller.onPageLoad(request)
         status(result) mustBe 200
       }
