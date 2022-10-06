@@ -21,7 +21,7 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class OffshoreEmployerFormProvider @Inject() extends FormErrorHelper with Mappings {
+class OffshoreEmployerFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(

@@ -21,7 +21,7 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class AtLeastOneDirectorHasNinoFormProvider @Inject() extends FormErrorHelper with Mappings {
+class AtLeastOneDirectorHasNinoFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(

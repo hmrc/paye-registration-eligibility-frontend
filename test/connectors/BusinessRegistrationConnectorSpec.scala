@@ -16,7 +16,7 @@
 
 package connectors
 
-import base.{LogCapturing, SpecBase}
+import base.SpecBase
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.Eventually
@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.{HttpClient, _}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BusinessRegistrationConnectorSpec extends SpecBase with LogCapturing with Eventually {
+class BusinessRegistrationConnectorSpec extends SpecBase with Eventually {
 
   class Setup {
     reset(mockHttpClient)

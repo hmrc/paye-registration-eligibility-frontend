@@ -18,7 +18,7 @@ package connectors
 
 
 import config.AppConfig
-import play.api.Logging
+import utils.Logging
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -48,12 +48,12 @@ class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwit
       } yield (status, paymentRef)
 
       statusAndPaymentRef.fold({ invalid =>
-        logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] json returned from CR does not contain status, user will redirect to OTRS")
+        logger.error(s"[getCompanyRegistrationStatusAndPaymentRef] json returned from CR does not contain status, user will redirect to OTRS")
         (None, None)
       }, s => (Some(s._1), s._2))
     } recover {
       case ex =>
-        logger.error(s"[CompanyRegConnector] [getCompanyRegistrationDetails] ${ex.getMessage}")
+        logger.error(s"[getCompanyRegistrationStatusAndPaymentRef] ${ex.getMessage}")
         (None, None)
     }
   }

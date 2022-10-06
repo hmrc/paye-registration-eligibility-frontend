@@ -24,38 +24,6 @@ import utils.{BooleanFeatureSwitch, PREFEFeatureSwitches}
 
 class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
-  override val mockHost = WiremockHelper.wiremockHost
-  override val mockPort = WiremockHelper.wiremockPort
-
-  def additionalConfiguration: Map[String, String] = Map(
-    "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
-    "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
-    "microservice.services.auth.host" -> s"$mockHost",
-    "microservice.services.auth.port" -> s"$mockPort",
-    "auditing.consumer.baseUri.host" -> s"$mockHost",
-    "auditing.consumer.baseUri.port" -> s"$mockPort",
-    "microservice.services.paye-registration.host" -> s"$mockHost",
-    "microservice.services.paye-registration.port" -> s"$mockPort",
-    "microservice.services.company-registration.host" -> s"$mockHost",
-    "microservice.services.company-registration.port" -> s"$mockPort",
-    "microservice.services.business-registration.host" -> s"$mockHost",
-    "microservice.services.business-registration.port" -> s"$mockPort",
-    "microservice.services.incorporation-frontend-stubs.port" -> s"$mockPort",
-    "microservice.services.incorporation-frontend-stubs.port" -> s"$mockPort",
-    "microservice.services.cachable.session-cache.host" -> s"$mockHost",
-    "microservice.services.cachable.session-cache.port" -> s"$mockPort",
-    "microservice.services.cachable.session-cache.domain" -> "keystore",
-    "microservice.services.cachable.short-lived-cache.host" -> s"$mockHost",
-    "microservice.services.cachable.short-lived-cache.port" -> s"$mockPort",
-    "microservice.services.cachable.short-lived-cache.domain" -> "save4later",
-    "mongodb.uri" -> s"$mongoUri",
-    "feature.companyRegistration" -> "true"
-  )
-
-  override lazy val mockUrl = s"http://$mockHost:$mockPort"
-  override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
-  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
-
   val featureSwitches = app.injector.instanceOf[PREFEFeatureSwitches]
   val regId = "6"
   val txID = "tx1234567"

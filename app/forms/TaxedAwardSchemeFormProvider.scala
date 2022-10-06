@@ -21,7 +21,7 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class TaxedAwardSchemeFormProvider @Inject() extends FormErrorHelper with Mappings {
+class TaxedAwardSchemeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
