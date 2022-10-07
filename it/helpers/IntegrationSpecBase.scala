@@ -21,6 +21,8 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.crypto.DefaultCookieSigner
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import uk.gov.hmrc.mongo.test.MongoSupport
 
@@ -35,13 +37,40 @@ trait IntegrationSpecBase extends PlaySpec
   with BeforeAndAfterAll
   with FutureAwaits
   with DefaultAwaitTimeout
-  with MongoSupport with FakeConfig {
-
-  val mockPort = 11111
-  val mockHost = "localhost"
-  val url = s"http://$mockHost:$mockPort"
+  with MongoSupport {
 
   override implicit def defaultAwaitTimeout: Timeout = 5.seconds
+
+  val mockHost = WiremockHelper.wiremockHost
+  val mockPort = WiremockHelper.wiremockPort
+
+  def additionalConfiguration: Map[String, String] = Map(
+    "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
+    "play.filters.csrf.header.bypassHeaders.Csrf-Token" -> "nocheck",
+    "microservice.services.auth.host" -> s"$mockHost",
+    "microservice.services.auth.port" -> s"$mockPort",
+    "auditing.consumer.baseUri.host" -> s"$mockHost",
+    "auditing.consumer.baseUri.port" -> s"$mockPort",
+    "microservice.services.paye-registration.host" -> s"$mockHost",
+    "microservice.services.paye-registration.port" -> s"$mockPort",
+    "microservice.services.company-registration.host" -> s"$mockHost",
+    "microservice.services.company-registration.port" -> s"$mockPort",
+    "microservice.services.business-registration.host" -> s"$mockHost",
+    "microservice.services.business-registration.port" -> s"$mockPort",
+    "microservice.services.incorporation-frontend-stubs.port" -> s"$mockPort",
+    "microservice.services.incorporation-frontend-stubs.port" -> s"$mockPort",
+    "microservice.services.cachable.session-cache.host" -> s"$mockHost",
+    "microservice.services.cachable.session-cache.port" -> s"$mockPort",
+    "microservice.services.cachable.session-cache.domain" -> "keystore",
+    "microservice.services.cachable.short-lived-cache.host" -> s"$mockHost",
+    "microservice.services.cachable.short-lived-cache.port" -> s"$mockPort",
+    "microservice.services.cachable.short-lived-cache.domain" -> "save4later",
+    "mongodb.uri" -> s"$mongoUri",
+    "feature.companyRegistration" -> "true"
+  )
+
+  override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
+  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()

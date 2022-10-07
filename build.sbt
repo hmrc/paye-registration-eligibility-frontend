@@ -18,21 +18,17 @@ lazy val microservice = Project(appName, file("."))
         ".*filters.*",
         ".*handlers.*",
         ".*components.*",
-        ".*models.*",
-        ".*repositories.*",
         ".*identifiers.*",
         ".*BuildInfo.*",
         ".*javascript.*",
         ".*FrontendAuditConnector.*",
         ".*Routes.*",
         ".*GuiceInjector",
-        ".*DataCacheConnector",
         ".*ControllerConfiguration",
         ".*LanguageSwitchController",
-        ".*controllers.tests",
-        ".*views.html.*" // hides view components and templates from scoverage
+        ".*controllers.tests.*"
       ).mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 80,
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     Test / parallelExecution := false

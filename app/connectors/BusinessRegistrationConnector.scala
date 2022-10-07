@@ -17,7 +17,7 @@
 package connectors
 
 import config.AppConfig
-import play.api.Logging
+import utils.Logging
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HttpClient, _}
 
@@ -35,18 +35,18 @@ class BusinessRegistrationConnector @Inject()(val appConfig: AppConfig,
     wSHttp.GET[HttpResponse](s"$businessRegUrl/business-registration/business-tax-registration") map { profile =>
       if (profile.status == 200) {
         (profile.json.validate[JsObject].get \ "registrationID").validate[String].fold({ invalid =>
-          logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
+          logger.error(s"[retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
           None
         }, s => Some(s))
       } else {
-        logger.info(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] status not 200, actually ${profile.status} user directed to OTRS")
+        logger.info(s"[retrieveCurrentProfile] status not 200, actually ${profile.status} user directed to OTRS")
         Option.empty[String]
       }
     } recover {
       case ex: NotFoundException =>
         Option.empty[String]
       case ex =>
-        logger.error(s"[BusinessRegistrationConnector] [retrieveCurrentProfile] exception returned ${ex.getMessage} user directed to OTRS")
+        logger.error(s"[retrieveCurrentProfile] exception returned ${ex.getMessage} user directed to OTRS")
         Option.empty[String]
     }
   }
