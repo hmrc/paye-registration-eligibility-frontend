@@ -17,12 +17,13 @@
 @import config.AppConfig
 @import views.html.components.h1
 @import views.html.templates.layout
+@import views.ViewUtils._
 
 @this(layout: layout, h1: h1)
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(Some(messages("unauthorised.title"))) {
+@layout(Some(titleNoForm(messages("unauthorised.title")))) {
 
     @h1(messages("unauthorised.heading"))
 
