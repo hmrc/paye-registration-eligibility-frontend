@@ -19,16 +19,18 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import views.html.components.{error_summary, submit_button, yesNoRadio}
 @import views.html.templates.layout
+@import views.ViewUtils._
 
 @this(formWithCSRF: FormWithCSRF,
         errorSummary: error_summary,
         yesNoRadio: yesNoRadio,
         submitButton: submit_button,
-        layout: layout)
+        layout: layout
+)
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(Some(messages("offshoreEmployer.title"))) {
+@layout(Some(title(form, messages("offshoreEmployer.title")))) {
 
     @formWithCSRF(action = OffshoreEmployerController.onSubmit, 'autoComplete -> "off") {
 
