@@ -51,7 +51,8 @@ class AppConfig @Inject()(val config: ServicesConfig,
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
 
-  def accessibilityStatementRoute(pageUri: String) = s"$payeRegFEUrl$payeRegFEUri/accessibility-statement?pageUri=$pageUri"
+  lazy val accessibilityStatementPath = loadConfig("microservice.services.accessibility-statement.host")
+  lazy val accessibilityStatementUrl = s"$accessibilityStatementPath/accessibility-statement/paye-registration"
 
   lazy val taxYearStartDate: String = config.getString("tax-year-start-date")
   lazy val currentPayeWeeklyThreshold: Int = config.getInt("paye.weekly-threshold")
