@@ -61,7 +61,7 @@
     phaseBanner = Some(standardBetaBanner(url = "")),
     backLinkUrl = if (showBackLink) Some("#") else None,
     displayHmrcBanner = false,
-    accessibilityStatementUrl = Some(appConfig.accessibilityStatementRoute(request.uri)),
+    accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl),
     nonce = CSPNonce.get,
     additionalScriptsBlock = Some(scripts)
 )(content)
