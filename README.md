@@ -1,7 +1,5 @@
 # paye-registration-eligibility-frontend
 
-[ ![Download](https://api.bintray.com/packages/hmrc/releases/paye-registration-eligibility-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/paye-registration-eligibility-frontend/_latestVersion)
-
 ## Running the Application
 
 In order to run the microservice, you must have SBT installed. You should then be able to start the application using:
