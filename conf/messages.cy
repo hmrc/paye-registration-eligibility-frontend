@@ -2,16 +2,16 @@ checkYourAnswers.title                                                          
 checkYourAnswers.heading                                                        = Gwirio’ch Atebion
 checkYourAnswers.guidance                                                       = Arweiniad ar gyfer gwirio’ch atebion
 
-app.phaseBanner1                                                                = Mae hwn yn wasanaeth newydd – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
-app.phaseBanner2                                                                =
-app.phaseBanner3                                                                =
+app.phaseBanner1                                                                = Gwasanaeth newydd yw hwn – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
+app.phaseBanner2                                                                = adborth (yn agor tab newydd)
+app.phaseBanner3                                                                = yn ein helpu i’w wella.
 
 service.name                                                                    = Cofrestru fel cyflogwr ar gyfer TWE
 app.title                                                                       = Cofrestru fel cyflogwr ar gyfer TWE
 
 getpagehelp.linkText                                                            = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
 
-app.phaseBannerFeedback                                                         = Mae hwn yn wasanaeth newydd – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
+app.phaseBannerFeedback                                                         = Gwasanaeth newydd yw hwn – bydd eich <a href="{0}">adborth</a> yn ein helpu i’w wella.
 
 date.day                                                                        = Diwrnod
 date.month                                                                      = Mis
