@@ -18,43 +18,31 @@ package connectors
 
 
 import config.AppConfig
-import utils.Logging
-import play.api.libs.json._
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import connectors.httpParsers.CompanyRegistrationHttpParsers
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.PREFEFeatureSwitches
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CompanyRegistrationConnector @Inject()(val featureSwitch: PREFEFeatureSwitches,
                                              val http: HttpClient,
-                                             val appConfig: AppConfig) extends Logging {
+                                             val appConfig: AppConfig) extends CompanyRegistrationHttpParsers {
 
   lazy val companyRegistrationUrl: String = appConfig.config.baseUrl("company-registration")
   lazy val companyRegistrationUri: String = appConfig.config.getConfString("company-registration.uri", throw new Exception("company-registration.uri doesn't exist"))
   lazy val stubUrl: String = appConfig.config.baseUrl("incorporation-frontend-stubs")
   lazy val stubUri: String = appConfig.config.getConfString("incorporation-frontend-stubs.uri", throw new Exception("incorporation-frontend-stubs.uri doesn't exist"))
 
-  def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier): Future[(Option[String], Option[String])] = {
+  def getCompanyRegistrationStatusAndPaymentRef(regId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Option[String], Option[String])] = {
 
     val url = if (useCompanyRegistration) s"$companyRegistrationUrl$companyRegistrationUri/corporation-tax-registration" else s"$stubUrl$stubUri"
-    http.GET[JsObject](s"$url/$regId/corporation-tax-registration") map { response =>
-      val statusAndPaymentRef = for {
-        status <- (response \ "status").validate[String]
-        paymentRef <- (response \ "confirmationReferences" \ "payment-reference").validateOpt[String]
-      } yield (status, paymentRef)
 
-      statusAndPaymentRef.fold({ invalid =>
-        logger.error(s"[getCompanyRegistrationStatusAndPaymentRef] json returned from CR does not contain status, user will redirect to OTRS")
-        (None, None)
-      }, s => (Some(s._1), s._2))
-    } recover {
+    http.GET[(Option[String], Option[String])](s"$url/$regId/corporation-tax-registration")(companyRegistrationStatusAndPaymentRefHttpParser, hc, ec) recover {
       case ex =>
         logger.error(s"[getCompanyRegistrationStatusAndPaymentRef] ${ex.getMessage}")
-        (None, None)
+        None -> None
     }
   }
 

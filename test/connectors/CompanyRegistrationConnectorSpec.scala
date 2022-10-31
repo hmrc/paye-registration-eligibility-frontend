@@ -18,22 +18,24 @@ package connectors
 
 
 import base.SpecBase
+import ch.qos.logback.classic.Level
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.libs.json.{JsObject, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import utils.LogCapturingHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CompanyRegistrationConnectorSpec extends SpecBase {
+class CompanyRegistrationConnectorSpec extends SpecBase with LogCapturingHelper {
 
   val testUrl = "testUrl"
   val testUri = "testUri"
 
   class Setup(stubbed: Boolean) {
-    val testConnector = new CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, injectedAppConfig) {
+    object TestCompanyRegistrationConnector extends CompanyRegistrationConnector(mockFeatureSwitch, mockHttpClient, injectedAppConfig) {
       override lazy val companyRegistrationUri: String = testUri
       override lazy val companyRegistrationUrl: String = testUrl
       override lazy val stubUri: String = testUri
@@ -74,31 +76,25 @@ class CompanyRegistrationConnectorSpec extends SpecBase {
       """.stripMargin).as[JsObject]
 
   "getCompanyRegistrationDetails" should {
-    "return the status contained in the CT doc" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any(), any(), any())(any(), any[HeaderCarrier](), any()))
-        .thenReturn(Future(profileJson))
 
-      val result: (Option[String], Option[String]) = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
-      result mustBe ((Some("submitted"), Option.empty[String]))
-    }
-    "return a none is JSON returned with no status element in" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any(), any(), any())(any(), any[HeaderCarrier](), any()))
-        .thenReturn(Future(profileJsonNoStatus))
+    "return the response from the HttpReads when successful" in new Setup(false) {
+      when(mockHttpClient.GET[(Option[String], Option[String])](any(), any(), any())(any(), any[HeaderCarrier](), any()))
+        .thenReturn(Future.successful(Some(status) -> None))
 
-      val result: (Option[String], Option[String]) = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
-      result mustBe ((Option.empty[String], Option.empty[String]))
+      val result: (Option[String], Option[String]) = await(TestCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
+      result mustBe Some(status) -> None
     }
 
-    "throw nothing if exception was thrown" in new Setup(false) {
-      when(mockHttpClient.GET[JsObject](any(), any(), any())(any(), any[HeaderCarrier](), any()))
+    "return None if exception was thrown but log an error" in new Setup(false) {
+      when(mockHttpClient.GET[(Option[String], Option[String])](any(), any(), any())(any(), any[HeaderCarrier](), any()))
         .thenReturn(Future.failed(new BadRequestException("tstException")))
 
-      val result: (Option[String], Option[String]) = await(testConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
-      result mustBe ((Option.empty[String], Option.empty[String]))
+      withCaptureOfLoggingFrom(TestCompanyRegistrationConnector.logger) { logs =>
+        val result: (Option[String], Option[String]) = await(TestCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef("testRegId"))
+        result mustBe None -> None
 
+        logs.containsMsg(Level.ERROR, "[TestCompanyRegistrationConnector][getCompanyRegistrationStatusAndPaymentRef] tstException")
+      }
     }
-
-
   }
-
 }

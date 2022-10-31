@@ -30,23 +30,24 @@ import scala.concurrent.Future
 
 class BusinessRegistrationHttpParsersSpec extends SpecBase with Eventually with LogCapturingHelper {
 
-  "calling .retrieveCurrentProfileHttpReads" should {
-    val BusRegJson = Json.parse(
-      s"""
-         |{
-         | "registrationID" : "regId",
-         | "language" : "ENG",
-         | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
-         |}
+  val BusRegJson = Json.parse(
+    s"""
+       |{
+       | "registrationID" : "regId",
+       | "language" : "ENG",
+       | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
+       |}
       """.stripMargin)
 
-    val BusRegJsonNoRegId = Json.parse(
-      s"""
-         |{
-         | "language" : "ENG",
-         | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
-         |}
+  val BusRegJsonNoRegId = Json.parse(
+    s"""
+       |{
+       | "language" : "ENG",
+       | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
+       |}
       """.stripMargin)
+
+  "calling .retrieveCurrentProfileHttpReads" should {
 
     "return Some(regid) when OK is returned with valid JSON" in {
 

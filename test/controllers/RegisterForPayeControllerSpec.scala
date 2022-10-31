@@ -109,7 +109,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
         .thenReturn(Future.successful(()))
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Some("regid")))
-      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Some("payment"))))
 
       val result = Controller.continueToPayeOrOTRS(fakeRequest())
@@ -122,7 +122,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
         .thenReturn(Future.successful(()))
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Some("regid")))
-      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful((Option.empty[String], Option.empty[String])))
 
       val result = Controller.continueToPayeOrOTRS(fakeRequest())
@@ -135,7 +135,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
         .thenReturn(Future.successful(()))
       when(mockBusinessRegistrationConnector.retrieveCurrentProfile(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Some("regid")))
-      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockCompanyRegistrationConnector.getCompanyRegistrationStatusAndPaymentRef(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful((Some("held"), Option.empty[String])))
 
       val result = Controller.continueToPayeOrOTRS(fakeRequest())
