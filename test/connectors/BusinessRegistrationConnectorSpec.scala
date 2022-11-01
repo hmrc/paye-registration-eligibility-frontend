@@ -17,21 +17,21 @@
 package connectors
 
 import base.SpecBase
-import org.mockito.ArgumentMatchers
+import ch.qos.logback.classic.Level
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.Eventually
-import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HttpClient, _}
+import utils.LogCapturingHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BusinessRegistrationConnectorSpec extends SpecBase with Eventually {
+class BusinessRegistrationConnectorSpec extends SpecBase with Eventually with LogCapturingHelper {
 
   class Setup {
-    reset(mockHttpClient)
-    val businessRegistrationConnector = new BusinessRegistrationConnector(injectedAppConfig, mockHttpClient) {
+    object TestBusinessRegistrationConnector extends BusinessRegistrationConnector(injectedAppConfig, mockHttpClient) {
       override lazy val businessRegUrl: String = "foo"
       override val wSHttp: HttpClient = mockHttpClient
     }
@@ -39,57 +39,30 @@ class BusinessRegistrationConnectorSpec extends SpecBase with Eventually {
     implicit val hc = HeaderCarrier()
   }
 
-  "retrieveCurrentProfile" should {
-    val BusRegJson = Json.parse(
-      s"""
-         |{
-         | "registrationID" : "regId",
-         | "language" : "ENG",
-         | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
-         |}
-      """.stripMargin)
+  "calling .retrieveCurrentProfile" should {
 
-    val BusRegJsonNoRegId = Json.parse(
-      s"""
-         |{
-         | "language" : "ENG",
-         | "formCreationTimestamp" : "2019-02-07T13:48:05Z"
-         |}
-      """.stripMargin)
+    "return Some(regid) is returned from the HttpReads" in new Setup {
+      when(mockHttpClient.GET[Option[String]](any(), any(), any())(any(), any[HeaderCarrier](), any()))
+        .thenReturn(Future.successful(Some("regId")))
 
-    "return some(regid) when 200 returned with json body containing a registration id" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(200, json = BusRegJson, Map())))
-
-      await(businessRegistrationConnector.retrieveCurrentProfile) mustBe Some("regId")
+      await(TestBusinessRegistrationConnector.retrieveCurrentProfile) mustBe Some("regId")
     }
 
-    "return None when 202 returned with no json body and log it" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(202, "")))
+    "return None is returned from the HttpReads" in new Setup {
+      when(mockHttpClient.GET[Option[String]](any(), any(), any())(any(), any[HeaderCarrier](), any()))
+        .thenReturn(Future.successful(None))
 
-      await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
+      await(TestBusinessRegistrationConnector.retrieveCurrentProfile) mustBe None
     }
 
-    "return None if 500 status is returned (Problem calling BR)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future.failed(new HttpException("foo", responseCode = 500)))
+    "return None if future unexpectedly fails with exception and log an error" in new Setup {
+      when(mockHttpClient.GET[HttpResponse](any(), any(), any())(any(), any[HeaderCarrier](), any()))
+        .thenReturn(Future.failed(new Exception("bang")))
 
-      await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
-    }
-
-    "return None if 404 status is returned (None SCRS user)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future.failed(new NotFoundException("foo")))
-
-      await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
-    }
-
-    "return None if no regid is in json (Exception)" in new Setup {
-      when(mockHttpClient.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
-        .thenReturn(Future(HttpResponse(200, json = BusRegJsonNoRegId, Map())))
-
-      await(businessRegistrationConnector.retrieveCurrentProfile) mustBe None
+      withCaptureOfLoggingFrom(TestBusinessRegistrationConnector.logger) { logs =>
+        await(TestBusinessRegistrationConnector.retrieveCurrentProfile) mustBe None
+        logs.containsMsg(Level.ERROR, s"[TestBusinessRegistrationConnector][retrieveCurrentProfile] exception returned 'bang' user directed to OTRS")
+      }
     }
   }
 
