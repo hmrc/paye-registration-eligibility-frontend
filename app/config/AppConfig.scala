@@ -58,4 +58,10 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val currentPayeWeeklyThreshold: Int = config.getInt("paye.weekly-threshold")
   lazy val oldPayeWeeklyThreshold: Int = config.getInt("paye.old-weekly-threshold")
 
+  val contactFormServiceIdentifier = "SCRS"
+  lazy val contactHost: String = loadConfig("contact-frontend.host")
+  def feedbackUrl: String =
+    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
+
+
 }
