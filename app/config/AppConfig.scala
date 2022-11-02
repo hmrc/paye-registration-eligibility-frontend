@@ -43,7 +43,6 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val compRegFEUri: String = loadConfig("microservice.services.company-registration-frontend.uri")
   lazy val payeRegFEStartLink: String = loadConfig("microservice.services.paye-registration-frontend.start-paye")
   lazy val compRegFEStartLink: String = loadConfig("microservice.services.company-registration-frontend.start-ct")
-  lazy val scrsFeedbackLink = "https://www.tax.service.gov.uk/contact/beta-feedback?service=SCRS"
 
   def languageTranslationEnabled: Boolean = featureSwitch.isWelshEnabled.value.toBoolean
 
