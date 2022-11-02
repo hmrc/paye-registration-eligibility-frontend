@@ -17,37 +17,25 @@
 package connectors
 
 import config.AppConfig
-import utils.Logging
-import play.api.libs.json.JsObject
+import connectors.httpParsers.BusinessRegistrationHttpParsers
 import uk.gov.hmrc.http.{HttpClient, _}
+import utils.Logging
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BusinessRegistrationConnector @Inject()(val appConfig: AppConfig,
-                                              val wSHttp: HttpClient) extends Logging {
+                                              val wSHttp: HttpClient) extends Logging with BusinessRegistrationHttpParsers {
+
   lazy val businessRegUrl: String = appConfig.config.baseUrl("business-registration")
 
-  def retrieveCurrentProfile(implicit hc: HeaderCarrier, rds: HttpReads[HttpResponse]): Future[Option[String]] = {
+  def retrieveCurrentProfile(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
 
-    wSHttp.GET[HttpResponse](s"$businessRegUrl/business-registration/business-tax-registration") map { profile =>
-      if (profile.status == 200) {
-        (profile.json.validate[JsObject].get \ "registrationID").validate[String].fold({ invalid =>
-          logger.error(s"[retrieveCurrentProfile] json returned from BR does not contain registrationID, user will redirect to OTRS")
-          None
-        }, s => Some(s))
-      } else {
-        logger.info(s"[retrieveCurrentProfile] status not 200, actually ${profile.status} user directed to OTRS")
-        Option.empty[String]
-      }
-    } recover {
-      case ex: NotFoundException =>
-        Option.empty[String]
+    wSHttp.GET[Option[String]](s"$businessRegUrl/business-registration/business-tax-registration")(retrieveCurrentProfileHttpReads, hc, ec) recover {
       case ex =>
-        logger.error(s"[retrieveCurrentProfile] exception returned ${ex.getMessage} user directed to OTRS")
-        Option.empty[String]
+        logger.error(s"[retrieveCurrentProfile] exception returned '${ex.getMessage}' user directed to OTRS")
+        None
     }
   }
 }

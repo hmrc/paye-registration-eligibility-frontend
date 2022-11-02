@@ -35,7 +35,6 @@ class IndexController @Inject()(
   private val english = "english"
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    //TODO Remove when Welsh FS is removed
     if ((languageUtils.getCurrentLang == welsh) && !appConfig.languageTranslationEnabled) {
       Redirect(controllers.routes.LanguageSwitchController.setLanguage(english))
     } else {
