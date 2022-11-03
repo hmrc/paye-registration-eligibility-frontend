@@ -58,7 +58,7 @@
     additionalHeadBlock = Some(head),
     signOutUrl = None,
     serviceUrl = Some(controllers.routes.IndexController.onPageLoad.url),
-    phaseBanner = Some(standardBetaBanner(url = "")),
+    phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedbackUrl)),
     backLinkUrl = if (showBackLink) Some("#") else None,
     displayHmrcBanner = false,
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl),

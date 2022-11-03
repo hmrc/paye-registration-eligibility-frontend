@@ -43,7 +43,6 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val compRegFEUri: String = loadConfig("microservice.services.company-registration-frontend.uri")
   lazy val payeRegFEStartLink: String = loadConfig("microservice.services.paye-registration-frontend.start-paye")
   lazy val compRegFEStartLink: String = loadConfig("microservice.services.company-registration-frontend.start-ct")
-  lazy val scrsFeedbackLink = "https://www.tax.service.gov.uk/contact/beta-feedback?service=SCRS"
 
   def languageTranslationEnabled: Boolean = featureSwitch.isWelshEnabled.value.toBoolean
 
@@ -57,5 +56,11 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val taxYearStartDate: String = config.getString("tax-year-start-date")
   lazy val currentPayeWeeklyThreshold: Int = config.getInt("paye.weekly-threshold")
   lazy val oldPayeWeeklyThreshold: Int = config.getInt("paye.old-weekly-threshold")
+
+  val contactFormServiceIdentifier = "SCRS"
+  lazy val contactHost: String = loadConfig("contact-frontend.host")
+  lazy val feedbackFrontendUrl = loadConfig("microservice.services.feedback-frontend.host")
+  lazy val betaFeedbackUrl = s"$feedbackFrontendUrl/feedback/$contactFormServiceIdentifier"
+
 
 }
