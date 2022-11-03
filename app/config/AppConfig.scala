@@ -59,8 +59,8 @@ class AppConfig @Inject()(val config: ServicesConfig,
 
   val contactFormServiceIdentifier = "SCRS"
   lazy val contactHost: String = loadConfig("contact-frontend.host")
-  def feedbackUrl: String =
-    s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
+  lazy val feedbackFrontendUrl = loadConfig("microservice.services.feedback-frontend.host")
+  lazy val betaFeedbackUrl = s"$feedbackFrontendUrl/feedback/$contactFormServiceIdentifier"
 
 
 }
