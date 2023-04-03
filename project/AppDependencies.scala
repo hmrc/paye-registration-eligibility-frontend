@@ -9,12 +9,12 @@ object AppDependencies {
   private val scalaTestVersion = "3.2.12"
   private val scalaTestPlusPlayVersion = "5.1.0"
   private val httpCachingClientVersion = s"10.0.0$playVersion"
-  private val playConditionalFormMappingVersion = s"1.11.0$playVersion"
-  private val bootstrapVersion = "7.7.0"
-  private val wireMockVersion = "2.33.2"
-  private val hmrcFrontendVersion = s"3.28.0$playVersion"
-  private val hmrcMongoVersion = "0.73.0"
-  private val flexmarkAllVersion = "0.62.2"
+  private val playConditionalFormMappingVersion = s"1.13.0$playVersion"
+  private val bootstrapVersion = "7.15.0"
+  private val wireMockVersion = "2.35.0"
+  private val hmrcFrontendVersion = s"7.3.0$playVersion"
+  private val hmrcMongoVersion = "0.74.0"
+  private val flexmarkAllVersion = "0.64.0"
 
   val appDependencies = Seq(
     ws,
@@ -29,7 +29,7 @@ object AppDependencies {
     "uk.gov.hmrc"               %% s"bootstrap-test$playVersion"    % bootstrapVersion          % "test, it",
     "org.scalatest"             %%  "scalatest"                     % scalaTestVersion          % "test, it",
     "org.scalatestplus.play"    %%  "scalatestplus-play"            % scalaTestPlusPlayVersion  % "test, it",
-    "org.jsoup"                 %   "jsoup"                         % "1.15.3"                  % "test, it",
+    "org.jsoup"                 %   "jsoup"                         % "1.15.4"                  % "test, it",
     "com.typesafe.play"         %%  "play-test"                     % PlayVersion.current       % "test, it",
     "org.scalatestplus"         %%  "scalacheck-1-16"               % s"$scalaTestVersion.0"    % "test, it",
     "com.vladsch.flexmark"      %   "flexmark-all"                  % flexmarkAllVersion        % "test, it",

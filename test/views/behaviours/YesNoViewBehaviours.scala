@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
       "rendered with an error" must {
         lazy val doc = asDocument(createView(form.withError(error)))
         "show an error summary" in {
-          assertRenderedById(doc, "error-summary-title")
+          assertRenderedById(doc, "value-error")
         }
 
         "show an error in the value field's label" in {
