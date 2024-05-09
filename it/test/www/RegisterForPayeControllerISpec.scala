@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package www
+package test.www
 
-import helpers._
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.ws.WSResponse
+import test.helpers.{IntegrationSpecBase, SessionHelper, WiremockHelper}
 import utils.{BooleanFeatureSwitch, PREFEFeatureSwitches}
 
 import scala.concurrent.Future

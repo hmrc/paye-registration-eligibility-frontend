@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package helpers
+package test.helpers
 
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.result.DeleteResult

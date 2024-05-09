@@ -1,9 +1,11 @@
 import play.sbt.routes.RoutesKeys
 import scoverage.ScoverageKeys
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, integrationTestSettings, scalaSettings}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import uk.gov.hmrc.DefaultBuildSettings
+import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 
 val appName: String = "paye-registration-eligibility-frontend"
+ThisBuild / majorVersion := 1
+ThisBuild / scalaVersion := "2.13.13"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) *)
@@ -33,7 +35,6 @@ lazy val microservice = Project(appName, file("."))
     Test / parallelExecution := false
   )
   .settings(scalaSettings *)
-  .settings(publishingSettings *)
   .settings(defaultSettings() *)
   .settings(majorVersion := 0)
   .settings(
@@ -41,10 +42,14 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true
   )
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings) *)
-  .settings(integrationTestSettings())
 
-scalaVersion := "2.13.13"
+lazy val it = project.in(file("it"))
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings(true))
+  .settings(
+    libraryDependencies ++= AppDependencies(),
+    addTestReportOption(Test, "int-test-reports")
+  )
 
 Test / javaOptions += "-Dlogger.resource=logback-test.xml"

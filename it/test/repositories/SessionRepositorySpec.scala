@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package repositories
+package test.repositories
 
-import helpers.IntegrationSpecBase
 import models.DatedCacheMap
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.model.Filters
 import play.api.libs.json.Json
+import repositories.SessionRepository
+import test.helpers.IntegrationSpecBase
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 import java.time.{LocalDateTime, ZoneOffset}

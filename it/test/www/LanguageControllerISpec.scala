@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package www
+package test.www
 
-import helpers.{IntegrationSpecBase, SessionHelper, WiremockHelper}
 import play.api.http.HeaderNames
 import play.api.libs.ws.DefaultWSCookie
+import test.helpers.{IntegrationSpecBase, SessionHelper, WiremockHelper}
 
 class LanguageControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 

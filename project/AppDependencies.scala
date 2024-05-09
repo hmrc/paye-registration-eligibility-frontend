@@ -26,16 +26,16 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"               %% s"bootstrap-test$playVersion"    % bootstrapVersion          % "test, it",
-    "org.scalatest"             %%  "scalatest"                     % scalaTestVersion          % "test, it",
-    "org.scalatestplus.play"    %%  "scalatestplus-play"            % scalaTestPlusPlayVersion  % "test, it",
-    "org.jsoup"                 %   "jsoup"                         % "1.17.2"                  % "test, it",
-    "org.playframework"         %%  "play-test"                     % PlayVersion.current       % "test, it",
-    "org.scalatestplus"         %%  "scalacheck-1-17"               % s"$scalaTestVersion.0"    % "test, it",
-    "com.vladsch.flexmark"      %   "flexmark-all"                  % flexmarkAllVersion        % "test, it",
-    "org.scalatestplus"         %%  "mockito-4-5"                   % "3.2.12.0"                % "test",
-    "org.wiremock"              % "wiremock-standalone"             % "3.5.4"                   % "it",
-    "uk.gov.hmrc.mongo"         %% s"hmrc-mongo-test$playVersion"   % hmrcMongoVersion          % "it"
+    "uk.gov.hmrc"               %% s"bootstrap-test$playVersion"    % bootstrapVersion          % Test,
+    "org.scalatest"             %%  "scalatest"                     % scalaTestVersion          % Test,
+    "org.scalatestplus.play"    %%  "scalatestplus-play"            % scalaTestPlusPlayVersion  % Test,
+    "org.jsoup"                 %   "jsoup"                         % "1.17.2"                  % Test,
+    "org.playframework"         %%  "play-test"                     % PlayVersion.current       % Test,
+    "org.scalatestplus"         %%  "scalacheck-1-17"               % s"$scalaTestVersion.0"    % Test,
+    "com.vladsch.flexmark"      %   "flexmark-all"                  % flexmarkAllVersion        % Test,
+    "org.scalatestplus"         %%  "mockito-4-5"                   % "3.2.12.0"                % Test,
+    "org.wiremock"              % "wiremock-standalone"             % "3.5.4"                   % Test,
+    "uk.gov.hmrc.mongo"         %% s"hmrc-mongo-test$playVersion"   % hmrcMongoVersion          % Test
   )
 
   def apply(): Seq[ModuleID] = appDependencies ++ test

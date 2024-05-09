@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package helpers
+package test.helpers
 
 import org.apache.pekko.util.Timeout
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
