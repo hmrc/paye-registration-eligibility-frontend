@@ -18,18 +18,19 @@ package www
 
 import helpers._
 import play.api.http.{HeaderNames, Status}
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.crypto.DefaultCookieSigner
+import play.api.libs.ws.WSResponse
 import utils.{BooleanFeatureSwitch, PREFEFeatureSwitches}
+
+import scala.concurrent.Future
 
 class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
-  val featureSwitches = app.injector.instanceOf[PREFEFeatureSwitches]
+  val featureSwitches: PREFEFeatureSwitches = app.injector.instanceOf[PREFEFeatureSwitches]
   val regId = "6"
   val txID = "tx1234567"
   val companyName = "Test Company"
 
-  def enableCompanyRegistrationFeature() = buildClient("/test-only/feature-flag/companyRegistration/true").get()
+  def enableCompanyRegistrationFeature(): Future[WSResponse] = buildClient("/test-only/feature-flag/companyRegistration/true").get()
 
   "submit" should {
     s"redirect to log in page with continue url of ${controllers.routes.RegisterForPayeController.onSubmit.url}" in {
@@ -48,7 +49,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       response.header("Location") mustBe Some("http://localhost:9553/bas-gateway/sign-in?accountType=organisation&continue_url=http%3A%2F%2Flocalhost%3A9877%2Feligibility-for-paye%2Fauthorised-for-paye&origin=paye-registration-eligibility-frontend")
 
     }
-    s"redirect to ${controllers.routes.RegisterForPayeController.continueToPayeOrOTRS.url}" in {
+    s"redirect to ${controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url}" in {
 
       stubAuthorisation()
       stubAudits()
@@ -61,12 +62,12 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
       val response = await(fResponse)
 
       response.status mustBe 303
-      response.header("Location") mustBe Some(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS.url)
+      response.header("Location") mustBe Some(controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url)
 
     }
   }
 
-  s"${controllers.routes.RegisterForPayeController.continueToPayeOrOTRS.url} " should {
+  s"${controllers.routes.RegisterForPayeController.continueToPayeOrOTRS().url} " should {
 
     "redirect to otrs when user has logged in but doesn't have a footprint" in {
       stubAuthorisation()
@@ -80,7 +81,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
       val fResponse = buildClient("/authorised-for-paye").
         withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
-        get
+        get()
 
       val response = await(fResponse)
 
@@ -90,7 +91,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "redirect to PRFE when user has logged in and has BR record and a CT record with a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", setValue = true))
       stubAuthorisation()
       stubAudits()
 
@@ -117,7 +118,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
       val fResponse = buildClient("/authorised-for-paye").
         withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
-        get
+        get()
 
       val response = await(fResponse)
 
@@ -127,7 +128,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", setValue = true))
       stubAuthorisation()
       stubAudits()
 
@@ -162,7 +163,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
     }
 
     "STUB MODE - redirect to OTRS when user has logged in and has BR record and a CT record without a payment reference" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", false))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", setValue = false))
       stubAuthorisation()
       stubAudits()
 
@@ -188,7 +189,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
       val fResponse = buildClient("/authorised-for-paye").
         withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
-        get
+        get()
 
       val response = await(fResponse)
 
@@ -198,7 +199,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
 
     "redirect to OTRS when user has logged in and has BR record but NO CT record" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", setValue = true))
       stubAuthorisation()
       stubAudits()
 
@@ -229,7 +230,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
     }
     "redirect to OTRS when user has logged in but BR returns a 202" in {
-      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", true))
+      featureSwitches.manager.enableORDisable(BooleanFeatureSwitch("companyRegistration", setValue = true))
       stubAuthorisation()
       stubAudits()
 
@@ -244,7 +245,7 @@ class RegisterForPayeControllerISpec extends IntegrationSpecBase with SessionHel
 
       val fResponse = buildClient("/authorised-for-paye").
         withHttpHeaders(HeaderNames.COOKIE -> getSessionCookie(), "Csrf-Token" -> "nocheck").
-        get
+        get()
 
       val response = await(fResponse)
 

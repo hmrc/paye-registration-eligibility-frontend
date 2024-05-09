@@ -1,40 +1,40 @@
 import play.core.PlayVersion
-import play.sbt.PlayImport._
-import sbt._
+import play.sbt.PlayImport.*
+import sbt.*
 
 object AppDependencies {
 
-  private val playVersion = "-play-28"
+  private val playVersion = "-play-30"
 
-  private val scalaTestVersion = "3.2.12"
+  private val scalaTestVersion = "3.2.18"
   private val scalaTestPlusPlayVersion = "5.1.0"
-  private val httpCachingClientVersion = s"10.0.0$playVersion"
-  private val playConditionalFormMappingVersion = s"1.13.0$playVersion"
-  private val bootstrapVersion = "7.15.0"
+  private val httpCachingClientVersion = "11.2.0"
+  private val playConditionalFormMappingVersion = "2.0.0"
+  private val bootstrapVersion = "8.5.0"
   private val wireMockVersion = "2.35.0"
-  private val hmrcFrontendVersion = s"7.3.0$playVersion"
-  private val hmrcMongoVersion = "0.74.0"
-  private val flexmarkAllVersion = "0.64.0"
+  private val hmrcFrontendVersion = "9.10.0"
+  private val hmrcMongoVersion = "1.9.0"
+  private val flexmarkAllVersion = "0.64.8"
 
-  val appDependencies = Seq(
+  val appDependencies: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc.mongo" %% s"hmrc-mongo$playVersion"           % hmrcMongoVersion,
-    "uk.gov.hmrc"       %%  "play-frontend-hmrc"               % hmrcFrontendVersion,
-    "uk.gov.hmrc"       %%  "http-caching-client"              % httpCachingClientVersion,
-    "uk.gov.hmrc"       %%  "play-conditional-form-mapping"    % playConditionalFormMappingVersion,
-    "uk.gov.hmrc"       %% s"bootstrap-frontend$playVersion"   % bootstrapVersion
+    "uk.gov.hmrc.mongo"   %% s"hmrc-mongo$playVersion"                        % hmrcMongoVersion,
+    "uk.gov.hmrc"         %% s"play-frontend-hmrc$playVersion"                % hmrcFrontendVersion,
+    "uk.gov.hmrc"         %% s"http-caching-client$playVersion"               % httpCachingClientVersion,
+    "uk.gov.hmrc"         %% s"play-conditional-form-mapping$playVersion"     % playConditionalFormMappingVersion,
+    "uk.gov.hmrc"         %% s"bootstrap-frontend$playVersion"                % bootstrapVersion
   )
 
-  val test = Seq(
+  val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"               %% s"bootstrap-test$playVersion"    % bootstrapVersion          % "test, it",
     "org.scalatest"             %%  "scalatest"                     % scalaTestVersion          % "test, it",
     "org.scalatestplus.play"    %%  "scalatestplus-play"            % scalaTestPlusPlayVersion  % "test, it",
-    "org.jsoup"                 %   "jsoup"                         % "1.15.4"                  % "test, it",
-    "com.typesafe.play"         %%  "play-test"                     % PlayVersion.current       % "test, it",
-    "org.scalatestplus"         %%  "scalacheck-1-16"               % s"$scalaTestVersion.0"    % "test, it",
+    "org.jsoup"                 %   "jsoup"                         % "1.17.2"                  % "test, it",
+    "org.playframework"         %%  "play-test"                     % PlayVersion.current       % "test, it",
+    "org.scalatestplus"         %%  "scalacheck-1-17"               % s"$scalaTestVersion.0"    % "test, it",
     "com.vladsch.flexmark"      %   "flexmark-all"                  % flexmarkAllVersion        % "test, it",
-    "org.scalatestplus"         %%  "mockito-4-5"                   % s"$scalaTestVersion.0"    % "test",
-    "com.github.tomakehurst"    %   "wiremock-jre8-standalone"      % wireMockVersion           % "it",
+    "org.scalatestplus"         %%  "mockito-4-5"                   % "3.2.12.0"                % "test",
+    "org.wiremock"              % "wiremock-standalone"             % "3.5.4"                   % "it",
     "uk.gov.hmrc.mongo"         %% s"hmrc-mongo-test$playVersion"   % hmrcMongoVersion          % "it"
   )
 

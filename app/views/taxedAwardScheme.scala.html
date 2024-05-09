@@ -35,7 +35,7 @@
 
 @layout(Some(title(form, messages("taxedAwardScheme.title")))) {
 
-    @formWithCsrf(action = TaxedAwardSchemeController.onSubmit, 'autoComplete -> "off") {
+    @formWithCsrf(action = TaxedAwardSchemeController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

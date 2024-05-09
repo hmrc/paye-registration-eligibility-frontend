@@ -6,7 +6,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 val appName: String = "paye-registration-eligibility-frontend"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin): _*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) *)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
   .settings(
     ScoverageKeys.coverageExcludedFiles :=
@@ -32,9 +32,9 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageHighlighting := true,
     Test / parallelExecution := false
   )
-  .settings(scalaSettings: _*)
-  .settings(publishingSettings: _*)
-  .settings(defaultSettings(): _*)
+  .settings(scalaSettings *)
+  .settings(publishingSettings *)
+  .settings(defaultSettings() *)
   .settings(majorVersion := 0)
   .settings(
     scalacOptions ++= Seq("-feature", "-Xlint:-unused"),
@@ -42,11 +42,9 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged := true
   )
   .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings) *)
   .settings(integrationTestSettings())
 
-scalaVersion := "2.13.10"
-
-libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+scalaVersion := "2.13.13"
 
 Test / javaOptions += "-Dlogger.resource=logback-test.xml"

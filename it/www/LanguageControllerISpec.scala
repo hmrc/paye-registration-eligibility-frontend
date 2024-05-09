@@ -18,15 +18,13 @@ package www
 
 import helpers.{IntegrationSpecBase, SessionHelper, WiremockHelper}
 import play.api.http.HeaderNames
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.crypto.DefaultCookieSigner
 import play.api.libs.ws.DefaultWSCookie
 
 class LanguageControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
   "setLanguage" should {
-    val welshCookie = Some(DefaultWSCookie("PLAY_LANG", "cy", None, Some("/"), None, false, false))
-    val englishCookie = Some(DefaultWSCookie("PLAY_LANG", "en", None, Some("/"), None, false, false))
+    val welshCookie = Some(DefaultWSCookie("PLAY_LANG", "cy", None, Some("/"), None, secure = false, httpOnly = false))
+    val englishCookie = Some(DefaultWSCookie("PLAY_LANG", "en", None, Some("/"), None, secure = false, httpOnly = false))
 
     "return a 303 when language is switched" in {
       val fResponse = buildClient("/defaultLanguage/english")

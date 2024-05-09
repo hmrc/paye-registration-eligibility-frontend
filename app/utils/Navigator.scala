@@ -23,7 +23,7 @@ import play.api.mvc.Call
 
 object Navigator {
 
-  private[utils] val pageIdToLoad: (Identifier => Call) = {
+  private[utils] val pageIdToLoad: Identifier => Call = {
     case AtLeastOneDirectorHasNinoId => controllers.routes.AtLeastOneDirectorHasNinoController.onPageLoad
     case OffshoreEmployerId => controllers.routes.OffshoreEmployerController.onPageLoad
     case TaxedAwardSchemeId => controllers.routes.TaxedAwardSchemeController.onPageLoad
@@ -41,9 +41,9 @@ object Navigator {
   }
 
   private val routeMap: Map[Identifier, UserAnswers => Call] = Map(
-    nextOn(true, AtLeastOneDirectorHasNinoId, OffshoreEmployerId),
-    nextOn(false, OffshoreEmployerId, TaxedAwardSchemeId),
-    nextOn(false, TaxedAwardSchemeId, RegisterForPayeId)
+    nextOn(condition = true, AtLeastOneDirectorHasNinoId, OffshoreEmployerId),
+    nextOn(condition = false, OffshoreEmployerId, TaxedAwardSchemeId),
+    nextOn(condition = false, TaxedAwardSchemeId, RegisterForPayeId)
   )
 
   def nextPage(id: Identifier): UserAnswers => Call =
