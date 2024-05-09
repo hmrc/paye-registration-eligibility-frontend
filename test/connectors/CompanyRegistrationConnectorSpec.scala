@@ -49,7 +49,7 @@ class CompanyRegistrationConnectorSpec extends SpecBase with LogCapturingHelper 
   val status = "submitted"
   val transactionId = "tx-id"
   val ackRefStatus = "04"
-  val ackRefStatusOpt = Some(ackRefStatus)
+  val ackRefStatusOpt: Option[String] = Some(ackRefStatus)
 
   val profileJson: JsObject =
     Json.parse(

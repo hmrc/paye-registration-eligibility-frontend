@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package helpers
+package test.helpers
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.crypto.DefaultCookieSigner
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
@@ -41,8 +42,8 @@ trait IntegrationSpecBase extends PlaySpec
 
   override implicit def defaultAwaitTimeout: Timeout = 5.seconds
 
-  val mockHost = WiremockHelper.wiremockHost
-  val mockPort = WiremockHelper.wiremockPort
+  val mockHost: String = WiremockHelper.wiremockHost
+  val mockPort: Int = WiremockHelper.wiremockPort
 
   def additionalConfiguration: Map[String, String] = Map(
     "play.filters.csrf.header.bypassHeaders.X-Requested-With" -> "*",
@@ -70,7 +71,7 @@ trait IntegrationSpecBase extends PlaySpec
   )
 
   override val cookieSigner: DefaultCookieSigner = app.injector.instanceOf[DefaultCookieSigner]
-  override implicit lazy val app = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
+  override implicit lazy val app: Application = new GuiceApplicationBuilder().configure(additionalConfiguration).build()
 
   override def beforeEach(): Unit = {
     super.beforeEach()

@@ -21,22 +21,25 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils._
 
+import scala.concurrent.Future
+
 class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfterEach with MockitoSugar {
 
-  val testFeatureSwitch = ValueSetFeatureSwitch("system-date", "2018-10-12")
-  val testDisabledSwitch = ValueSetFeatureSwitch("system-date", "time-clear")
+  val testFeatureSwitch: ValueSetFeatureSwitch = ValueSetFeatureSwitch("system-date", "2018-10-12")
+  val testDisabledSwitch: ValueSetFeatureSwitch = ValueSetFeatureSwitch("system-date", "time-clear")
 
-  val testWelshFeatureSwitch = ValueSetFeatureSwitch("isWelsh", "true")
-  val testWelshDisabledSwitch = ValueSetFeatureSwitch("isWelsh", "false")
+  val testWelshFeatureSwitch: ValueSetFeatureSwitch = ValueSetFeatureSwitch("isWelsh", "true")
+  val testWelshDisabledSwitch: ValueSetFeatureSwitch = ValueSetFeatureSwitch("isWelsh", "false")
 
-  val mockFeatureSwitches = mock[PREFEFeatureSwitches]
-  val mockFeatureManager = mock[FeatureManager]
+  val mockFeatureSwitches: PREFEFeatureSwitches = mock[PREFEFeatureSwitches]
+  val mockFeatureManager: FeatureManager = mock[FeatureManager]
 
-  override def beforeEach() = {
+  override def beforeEach(): Unit = {
     reset(
       mockFeatureManager, mockFeatureSwitches
     )
@@ -56,7 +59,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
           .thenReturn(testFeatureSwitch)
 
 
-        val result = controller.switcher("system-date", "2018-10-12")(fakeRequest())
+        val result: Future[Result] = controller.switcher("system-date", "2018-10-12")(fakeRequest())
         status(result) mustBe OK
       }
     }
@@ -69,7 +72,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
         when(mockFeatureManager.clearSystemDate(any()))
           .thenReturn(testDisabledSwitch)
 
-        val result = controller.switcher("system-date", "time-clear")(FakeRequest())
+        val result: Future[Result] = controller.switcher("system-date", "time-clear")(FakeRequest())
         status(result) mustBe OK
       }
     }
@@ -80,7 +83,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
 
         when(mockFeatureManager.enableORDisable(any())).thenReturn(testWelshFeatureSwitch)
 
-        val result = controller.switcher("isWelsh", "true")(FakeRequest())
+        val result: Future[Result] = controller.switcher("isWelsh", "true")(FakeRequest())
         status(result) mustBe OK
       }
 
@@ -89,7 +92,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
 
         when(mockFeatureManager.enableORDisable(any())).thenReturn(testWelshDisabledSwitch)
 
-        val result = controller.switcher("isWelsh", "false")(FakeRequest())
+        val result: Future[Result] = controller.switcher("isWelsh", "false")(FakeRequest())
         status(result) mustBe OK
       }
     }
@@ -99,7 +102,7 @@ class FeatureSwitchControllerSpec extends ControllerSpecBase with BeforeAndAfter
         when(mockFeatureSwitches(any()))
           .thenReturn(None)
 
-        val result = controller.switcher("invalidName", "invalidState")(FakeRequest())
+        val result: Future[Result] = controller.switcher("invalidName", "invalidState")(FakeRequest())
         status(result) mustBe BAD_REQUEST
       }
     }
