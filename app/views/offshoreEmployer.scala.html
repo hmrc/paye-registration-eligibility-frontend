@@ -32,7 +32,7 @@
 
 @layout(Some(title(form, messages("offshoreEmployer.title")))) {
 
-    @formWithCSRF(action = OffshoreEmployerController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formWithCSRF(action = OffshoreEmployerController.onSubmit, 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 

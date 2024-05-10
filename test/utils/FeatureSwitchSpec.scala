@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 
 class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
 
-  override def beforeEach(): Unit = {
+  override def beforeEach() {
     System.clearProperty("feature.test")
     System.clearProperty("feature.cohoFirstHandOff")
     System.clearProperty("feature.businessActivitiesHandOff")
@@ -31,7 +31,7 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
 
   val featureSwitch = new FeatureSwitchManager
   val prefeFeatureSwitch = new PREFEFeatureSwitch(featureSwitch)
-  val valueFeatureSwitch: ValueSetFeatureSwitch = ValueSetFeatureSwitch("test", "2018-10-12")
+  val valueFeatureSwitch = ValueSetFeatureSwitch("test", "2018-10-12")
 
   "getProperty" should {
     "return a value feature switch with time-clear if the system property is undefined" in {

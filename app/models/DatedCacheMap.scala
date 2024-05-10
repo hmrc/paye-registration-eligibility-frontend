@@ -16,25 +16,19 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.{Format, JsValue, Json}
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{Instant, LocalDateTime, ZoneOffset}
+import java.time.{LocalDateTime, ZoneOffset}
 
 case class DatedCacheMap(id: String,
                          data: Map[String, JsValue],
                          lastUpdated: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC))
 
 object DatedCacheMap {
-  private val localDateTimeReads: Reads[LocalDateTime] =
-    Reads.at[String](__ \ "$date" \ "$numberLong")
-      .map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
-
-  private val localDateTimeWrites: Writes[LocalDateTime] =
-    Writes.at[String](__ \ "$date" \ "$numberLong").contramap(_.toInstant(ZoneOffset.UTC).toEpochMilli.toString)
-
-  implicit val dateFormat: Format[LocalDateTime] = Format(localDateTimeReads, localDateTimeWrites)
-  implicit val formats: OFormat[DatedCacheMap] = Json.format[DatedCacheMap]
+  implicit val dateFormat: Format[LocalDateTime] = MongoJavatimeFormats.localDateTimeFormat
+  implicit val formats = Json.format[DatedCacheMap]
 
   def apply(cacheMap: CacheMap): DatedCacheMap = DatedCacheMap(cacheMap.id, cacheMap.data)
 }

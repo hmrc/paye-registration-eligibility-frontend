@@ -1,14 +1,12 @@
 import play.sbt.routes.RoutesKeys
 import scoverage.ScoverageKeys
-import uk.gov.hmrc.DefaultBuildSettings
-import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, integrationTestSettings, scalaSettings}
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName: String = "paye-registration-eligibility-frontend"
-ThisBuild / majorVersion := 1
-ThisBuild / scalaVersion := "2.13.13"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) *)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin): _*)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
   .settings(
     ScoverageKeys.coverageExcludedFiles :=
@@ -34,22 +32,21 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageHighlighting := true,
     Test / parallelExecution := false
   )
-  .settings(scalaSettings *)
-  .settings(defaultSettings() *)
+  .settings(scalaSettings: _*)
+  .settings(publishingSettings: _*)
+  .settings(defaultSettings(): _*)
   .settings(majorVersion := 0)
   .settings(
     scalacOptions ++= Seq("-feature", "-Xlint:-unused"),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true
   )
+  .configs(IntegrationTest)
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(integrationTestSettings())
 
-lazy val it = project.in(file("it"))
-  .enablePlugins(PlayScala)
-  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
-  .settings(DefaultBuildSettings.itSettings(true))
-  .settings(
-    libraryDependencies ++= AppDependencies(),
-    addTestReportOption(Test, "int-test-reports")
-  )
+scalaVersion := "2.13.10"
+
+libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 Test / javaOptions += "-Dlogger.resource=logback-test.xml"

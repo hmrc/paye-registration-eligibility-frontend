@@ -32,13 +32,13 @@ class FeatureSwitchManager extends FeatureManager
 case class ValueSetFeatureSwitch(name: String, setValue: String) extends FeatureSwitch {
   override def value: String = setValue
 
-  override def enabled: Boolean = setValue.matches(DateUtil.datePatternRegex)
+  override def enabled = setValue.matches(DateUtil.datePatternRegex)
 }
 
 case class BooleanFeatureSwitch(name: String, setValue: Boolean) extends FeatureSwitch {
   override def value: String = setValue.toString
 
-  override def enabled: Boolean = setValue
+  override def enabled = setValue
 }
 
 trait FeatureManager {
@@ -51,11 +51,11 @@ trait FeatureManager {
     val value = sys.props.get(systemPropertyName(name))
 
     value match {
-      case Some("true") => BooleanFeatureSwitch(name, setValue = true)
-      case Some("false") => BooleanFeatureSwitch(name, setValue = false)
+      case Some("true") => BooleanFeatureSwitch(name, true)
+      case Some("false") => BooleanFeatureSwitch(name, false)
       case Some(date) if date.matches(DateUtil.datePatternRegex) => ValueSetFeatureSwitch(name, date)
       case _ if defaultValue.isInstanceOf[String] => ValueSetFeatureSwitch(name, "time-clear")
-      case _ if defaultValue.isInstanceOf[Boolean] => BooleanFeatureSwitch(name, setValue = false)
+      case _ if defaultValue.isInstanceOf[Boolean] => BooleanFeatureSwitch(name, false)
     }
   }
 
@@ -64,7 +64,7 @@ trait FeatureManager {
     getProperty[T](name, default)
   }
 
-  def enableORDisable(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, fs.value, false)
+  def enableORDisable(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, fs.value.toString, false)
 
   def setSystemDate(fs: FeatureSwitch): FeatureSwitch = setProperty(fs.name, fs.value, "time-clear")
 
@@ -84,7 +84,7 @@ trait PREFEFeatureSwitches {
   protected val isWelsh: String
   val manager: FeatureManager
 
-  private def systemDate: FeatureSwitch = manager.getProperty[String](setSystemDate, "time-clear")
+  def systemDate: FeatureSwitch = manager.getProperty[String](setSystemDate, "time-clear")
 
   def companyReg: FeatureSwitch = manager.getProperty[Boolean](companyRegistration, false)
 

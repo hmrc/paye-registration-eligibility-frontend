@@ -1,2 +1,5 @@
 $govuk-assets-path: "/eligibility-for-paye/assets/lib/govuk-frontend/govuk/assets/";
 $hmrc-assets-path: "/eligibility-for-paye/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";

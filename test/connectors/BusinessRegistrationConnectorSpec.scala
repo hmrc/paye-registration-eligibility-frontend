@@ -36,7 +36,7 @@ class BusinessRegistrationConnectorSpec extends SpecBase with Eventually with Lo
       override val wSHttp: HttpClient = mockHttpClient
     }
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc = HeaderCarrier()
   }
 
   "calling .retrieveCurrentProfile" should {
