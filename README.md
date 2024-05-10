@@ -6,6 +6,8 @@ In order to run the microservice, you must have SBT installed. You should then b
 
 ```sbt "run 9877 -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"```
 
+Then go to: http://localhost:9877/eligibility-for-paye/one-director-national-insurance
+
 To run the tests for the application, you can run: ```sbt test it/test```
 
 or ```sbt coverage test it/test coverageReport```
