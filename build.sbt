@@ -8,7 +8,8 @@ ThisBuild / majorVersion := 1
 ThisBuild / scalaVersion := "2.13.16"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin) *)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin) *)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
   .settings(
     ScoverageKeys.coverageExcludedFiles :=
