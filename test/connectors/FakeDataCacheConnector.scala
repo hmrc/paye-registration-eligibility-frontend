@@ -22,10 +22,9 @@ import repositories.SessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.CascadeUpsert
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataCacheConnector(sessionRepository: SessionRepository, cascadeUpsert: CascadeUpsert) extends DataCacheConnector(sessionRepository, cascadeUpsert) {
+class FakeDataCacheConnector(sessionRepository: SessionRepository, cascadeUpsert: CascadeUpsert)(implicit override val ec: ExecutionContext) extends DataCacheConnector(sessionRepository, cascadeUpsert) {
 
   override def save[A](cacheId: String, key: String, value: A)(implicit fmt: Format[A]): Future[CacheMap] = Future(CacheMap(cacheId, Map()))
 

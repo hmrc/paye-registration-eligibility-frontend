@@ -24,13 +24,12 @@ import play.api.mvc.{ActionTransformer, MessagesControllerComponents}
 import utils.UserAnswers
 
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DataRetrievalAction @Inject()(val dataCacheConnector: DataCacheConnector,
                                     controllerComponents: MessagesControllerComponents
-                                   ) extends ActionTransformer[CacheIdentifierRequest, OptionalDataRequest] {
+                                   )(implicit val ec: ExecutionContext) extends ActionTransformer[CacheIdentifierRequest, OptionalDataRequest] {
 
   override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 

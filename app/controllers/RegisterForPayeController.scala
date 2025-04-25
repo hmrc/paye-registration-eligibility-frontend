@@ -27,8 +27,7 @@ import utils.{AuthUrlBuilder, TimeMachine}
 import views.html.registerForPaye
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
@@ -38,7 +37,7 @@ class RegisterForPayeController @Inject()(val authConnector: AuthConnector,
                                           controllerComponents: MessagesControllerComponents,
                                           timeMachine: TimeMachine,
                                           view: registerForPaye
-                                         )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
+                                         )(implicit appConfig: AppConfig, implicit val ec:ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport with AuthorisedFunctions {
 
   lazy val payeStartUrl: String = s"${appConfig.payeRegFEUrl}${appConfig.payeRegFEUri}${appConfig.payeRegFEStartLink}"
   lazy val otrsUrl: String = appConfig.otrsUrl

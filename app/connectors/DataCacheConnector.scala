@@ -22,11 +22,10 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.CascadeUpsert
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataCacheConnector @Inject()(val sessionRepository: SessionRepository, val cascadeUpsert: CascadeUpsert) {
+class DataCacheConnector @Inject()(val sessionRepository: SessionRepository, val cascadeUpsert: CascadeUpsert)(implicit val ec: ExecutionContext) {
 
   def save[A](cacheId: String, key: String, value: A)(implicit fmt: Format[A]): Future[CacheMap] = {
     sessionRepository.get(cacheId).flatMap { optionalCacheMap =>
