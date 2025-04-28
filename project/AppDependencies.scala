@@ -10,10 +10,10 @@ object AppDependencies {
   private val scalaTestPlusPlayVersion = "5.1.0"
   private val httpCachingClientVersion = "11.2.0"
   private val playConditionalFormMappingVersion = "2.0.0"
-  private val bootstrapVersion = "8.5.0"
+  private val bootstrapVersion = "8.6.0"
   private val wireMockVersion = "2.35.0"
-  private val hmrcFrontendVersion = "9.10.0"
-  private val hmrcMongoVersion = "1.9.0"
+  private val hmrcFrontendVersion = "9.11.0"
+  private val hmrcMongoVersion = "2.6.0"
   private val flexmarkAllVersion = "0.64.8"
 
   val appDependencies: Seq[ModuleID] = Seq(

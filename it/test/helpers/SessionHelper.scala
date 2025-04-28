@@ -25,8 +25,12 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
+
 trait SessionHelper extends MongoSupport with BeforeAndAfterEach with DefaultReads {
   self: IntegrationSpecBase =>
+  implicit def ec: ExecutionContext = global
 
   lazy val repo = new SessionRepository(app.injector.instanceOf[ServicesConfig], mongoComponent)
 

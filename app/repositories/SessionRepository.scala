@@ -27,11 +27,10 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SessionRepository @Inject()(config: ServicesConfig, mongo: MongoComponent) extends PlayMongoRepository[DatedCacheMap](
+class SessionRepository @Inject()(config: ServicesConfig, mongo: MongoComponent)(implicit val ec: ExecutionContext) extends PlayMongoRepository[DatedCacheMap](
   mongoComponent = mongo,
   collectionName = config.getString("mongodb.collectionName"),
   domainFormat = DatedCacheMap.formats,

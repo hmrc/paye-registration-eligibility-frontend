@@ -22,8 +22,12 @@ import org.mockito.Mockito._
 import play.api.test.Helpers._
 import utils.TimeMachine
 import views.html.registerForPaye
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
 
 class RegisterForPayeViewSpec extends ViewSpecBase {
+
+  implicit def ec: ExecutionContext = global
 
   val messageKeyPrefix = "registerForPaye"
   val PAYEThresholdWeeklyAmount = "100"
@@ -51,7 +55,7 @@ class RegisterForPayeViewSpec extends ViewSpecBase {
       messagesControllerComponents,
       TestTimeMachine,
       view
-    )(injectedAppConfig) {
+    )(injectedAppConfig, ec) {
       override lazy val payeStartUrl = "payeStartURL"
     }
   }

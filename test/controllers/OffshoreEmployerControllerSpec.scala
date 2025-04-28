@@ -28,11 +28,16 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.offshoreEmployer
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future
 
 class OffshoreEmployerControllerSpec extends ControllerSpecBase {
 
   def onwardRoute = routes.IndexController.onPageLoad
+
+  implicit def ec: ExecutionContext = global
+
 
   val formProvider = new OffshoreEmployerFormProvider()
   val form = formProvider()
@@ -51,7 +56,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
     formProvider,
     messagesControllerComponents,
     view
-  )(injectedAppConfig)
+  )(injectedAppConfig, ec)
 
   def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
@@ -76,7 +81,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
       val result = Controller.onPageLoad(fakeRequest())
 
@@ -95,7 +100,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -119,7 +124,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
       when(mockDataCacheConnector.save(any(), any(), any())(any()))
         .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
@@ -149,7 +154,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
       val result = Controller.onPageLoad(fakeRequest())
 
@@ -166,7 +171,7 @@ class OffshoreEmployerControllerSpec extends ControllerSpecBase {
         formProvider,
         messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
       val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
       val result = Controller.onSubmit(postRequest)

@@ -29,8 +29,7 @@ import utils.{Navigator, UserAnswers}
 import views.html.taxedAwardScheme
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnector,
@@ -40,7 +39,7 @@ class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnecto
                                            formProvider: TaxedAwardSchemeFormProvider,
                                            controllerComponents: MessagesControllerComponents,
                                            view: taxedAwardScheme
-                                          )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+                                          )(implicit appConfig: AppConfig, implicit val ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 

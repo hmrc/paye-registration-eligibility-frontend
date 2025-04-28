@@ -23,14 +23,13 @@ import repositories.SessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.{CascadeUpsert, UserAnswers}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(cacheMapToReturn: Option[CacheMap],
                               controllerComponents: MessagesControllerComponents,
                               sessionRepository: SessionRepository,
                               cascadeUpsert: CascadeUpsert
-                             ) extends DataRetrievalAction(new FakeDataCacheConnector(sessionRepository, cascadeUpsert), controllerComponents) {
+                             ) (implicit override val ec: ExecutionContext) extends DataRetrievalAction(new FakeDataCacheConnector(sessionRepository, cascadeUpsert), controllerComponents) {
   override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = cacheMapToReturn match {
     case None => Future(OptionalDataRequest(request.request, request.cacheId, None))
     case Some(cacheMap) => Future(OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(cacheMap))))

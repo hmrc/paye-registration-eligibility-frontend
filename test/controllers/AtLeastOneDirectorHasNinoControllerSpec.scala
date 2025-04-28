@@ -28,11 +28,16 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.atLeastOneDirectorHasNino
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future
 
 class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
 
   def onwardRoute = routes.IndexController.onPageLoad
+
+  implicit def ec: ExecutionContext = global
+
 
   val view = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
@@ -47,7 +52,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
     getEmptyCacheMap,
     formProvider, messagesControllerComponents,
     view
-  )(injectedAppConfig)
+  )(injectedAppConfig, ec)
 
   def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
@@ -69,7 +74,7 @@ class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
         getRelevantData,
         formProvider, messagesControllerComponents,
         view
-      )(injectedAppConfig)
+      )(injectedAppConfig, ec)
 
 
       val result = Controller.onPageLoad()(fakeRequest())

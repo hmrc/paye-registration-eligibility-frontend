@@ -29,8 +29,7 @@ import utils.{Navigator, UserAnswers}
 import views.html.atLeastOneDirectorHasNino
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AtLeastOneDirectorHasNinoController @Inject()(dataCacheConnector: DataCacheConnector,
@@ -39,7 +38,7 @@ class AtLeastOneDirectorHasNinoController @Inject()(dataCacheConnector: DataCach
                                                     formProvider: AtLeastOneDirectorHasNinoFormProvider,
                                                     controllerComponents: MessagesControllerComponents,
                                                     view: atLeastOneDirectorHasNino
-                                                   )(implicit appConfig: AppConfig) extends FrontendController(controllerComponents) with I18nSupport {
+                                                   )(implicit appConfig: AppConfig, implicit val ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
 
   val form: Form[Boolean] = formProvider()
 

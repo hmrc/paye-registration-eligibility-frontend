@@ -23,11 +23,13 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 import views.html.registerForPaye
-
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future
 
 class RegisterForPayeControllerSpec extends ControllerSpecBase {
 
+  implicit def ec: ExecutionContext = global
   val view: registerForPaye = app.injector.instanceOf[registerForPaye]
 
   object TestTimeMachine extends TimeMachine(injectedAppConfig)
@@ -46,7 +48,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       messagesControllerComponents,
       TestTimeMachine,
       view
-    )(injectedAppConfig) {
+    )(injectedAppConfig, ec) {
       override lazy val payeStartUrl = "payeURL"
       override lazy val otrsUrl = "otrsURL"
     }
@@ -59,7 +61,7 @@ class RegisterForPayeControllerSpec extends ControllerSpecBase {
       messagesControllerComponents,
       TestTimeMachine,
       view
-    )(injectedAppConfig)
+    )(injectedAppConfig, ec)
 
   }
 
