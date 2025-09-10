@@ -48,7 +48,6 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                             (implicit val ec: ExecutionContext) extends FrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Future[Html] = {
-    implicit val req: Request[_] = rh.asInstanceOf[Request[_]]
     Future.successful(view(pageTitle, heading, message))
   }
 }

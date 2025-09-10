@@ -26,7 +26,7 @@
         govukBackLink: GovukBackLink
 )
 
-@(pageTitle: Option[String] = None, showBackLink: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(pageTitle: Option[String] = None, showBackLink: Boolean = true)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @head = {
     <!--[if lte IE 8]><link href=' @controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
