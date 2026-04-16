@@ -70,18 +70,18 @@ taxedAwardScheme.l2                                 = any goods
 taxedAwardScheme.l3                                 = prizes for employer-run competitions
 taxedAwardScheme.l4                                 = holidays that the company’s paid for (but don’t include statutory holiday pay)
 
-dropout.title                                       = The company can’t register an employer online
-dropout.heading                                     = The company can’t register an employer online
-dropout.p1                                          = You should register by phone or post.
-dropout.p2                                          = <a href="{0}">Contact HMRC</a> - they’ll arrange for someone to call you back to help you register.
+dropout.title                                       = The company cannot register an employer online
+dropout.heading                                     = The company cannot register an employer online
+dropout.p1                                          = You need to register by phone or post.
+dropout.p2                                          = <a href="{0}">Contact HMRC(opens in new tab)</a> to arrange a callback for help with your registration.
 dropout.p3                                          = You’ll need to provide the following details about the company.
 dropout.l1                                          = company name, registered address and phone number
-dropout.l2                                          = trading name if this is different
-dropout.l3                                          = business activities - for example, electrical engineering
+dropout.l2                                          = trading name, if this is different
+dropout.l3                                          = business activities (for example, electrical engineering)
 dropout.l4                                          = Unique Taxpayer Reference (UTR)
 dropout.l5                                          = company registration number
 dropout.l6                                          = the names and National Insurance numbers of every company director
-dropout.p4                                          = <a href="{0}">Return to GOV.UK</a>
+dropout.returnToGovUk                               = Return to GOV.UK
 
 registerForPaye.title                               = Register for PAYE online
 registerForPaye.heading                             = Register for PAYE online

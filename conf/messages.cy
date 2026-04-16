@@ -70,10 +70,10 @@ taxedAwardScheme.l2                                                             
 taxedAwardScheme.l3                                                             = gwobrau ar gyfer cystadlaethau sy’n cael eu cynnal gan gyflogwyr
 taxedAwardScheme.l4                                                             = gwyliau y talodd y cwmni amdanynt (ond nad ydynt yn cynnwys tâl gwyliau statudol)
 
-dropout.title                                                                   = Does dim modd i’r cwmni gofrestru cyflogwr ar-lein
-dropout.heading                                                                 = Does dim modd i’r cwmni gofrestru cyflogwr ar-lein
+dropout.title                                                                   = Does dim modd i’r cwmni gofrestru fel cyflogwr ar-lein
+dropout.heading                                                                 = Does dim modd i’r cwmni gofrestru fel cyflogwr ar-lein
 dropout.p1                                                                      = Dylech gofrestru dros y ffôn neu drwy’r post
-dropout.p2                                                                      = Cysylltwch â CThEM - bydd yn trefnu i rywun eich ffonio’n ôl i’ch helpu i gofrestru.
+dropout.p2                                                                      = Cysylltwch â CThEF (yn agor tab newydd) i drefnu galwad yn ôl am help gyda chofrestru.
 dropout.p3                                                                      = Bydd yn rhaid i chi roi’r wybodaeth ganlynol am y cwmni.
 dropout.l1                                                                      = enw’r cwmni, y cyfeiriad cofrestredig a’r rhif ffôn
 dropout.l2                                                                      = yr enw masnachu, os yw’n wahanol
@@ -81,7 +81,7 @@ dropout.l3                                                                      
 dropout.l4                                                                      = Cyfeirnod Unigryw y Trethdalwr (UTR)
 dropout.l5                                                                      = rhif cofrestru'r cwmni
 dropout.l6                                                                      = enwau a rhifau Yswiriant Gwladol pob cyfarwyddwr y cwmni
-dropout.p4                                                                      = Yn ôl i GOV.UK
+dropout.returnToGovUk                                                           = Yn ôl i GOV.UK
 
 registerForPaye.title                                                           = Cofrestru ar gyfer TWE ar-lein
 registerForPaye.heading                                                         = Cofrestru ar gyfer TWE ar-lein
