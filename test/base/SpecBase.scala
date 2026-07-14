@@ -25,11 +25,10 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
-import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.language.LanguageUtils
-import utils.{AuthUrlBuilder, CascadeUpsert, PREFEFeatureSwitches}
+import utils.{AuthUrlBuilder, PREFEFeatureSwitches}
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
@@ -53,9 +52,4 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
   def messagesControllerComponents: MessagesControllerComponents = injector.instanceOf[MessagesControllerComponents]
 
   def languageUtils: LanguageUtils = injector.instanceOf[LanguageUtils]
-
-  lazy val cascadeUpsert: CascadeUpsert = injector.instanceOf[CascadeUpsert]
-
-  lazy val sessionRepository: SessionRepository = injector.instanceOf[SessionRepository]
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package controllers
+package identifiers
 
-import base.SpecBase
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.mongo.cache.DataKey
 
-trait ControllerSpecBase extends SpecBase {
-
+object CacheKeys {
+  val taxedAwardScheme: DataKey[Boolean] = DataKey[Boolean](TaxedAwardSchemeId.toString)
+  val offshoreEmployer: DataKey[Boolean] = DataKey[Boolean](OffshoreEmployerId.toString)
+  val atLeastOneDirectorHasNino: DataKey[Boolean] = DataKey[Boolean](AtLeastOneDirectorHasNinoId.toString)
 }

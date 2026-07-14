@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 
 package utils
 
-import identifiers._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import identifiers.{AtLeastOneDirectorHasNinoId, Identifier, OffshoreEmployerId, TaxedAwardSchemeId}
 
-class UserAnswers(val cacheMap: CacheMap) extends Enumerable.Implicits {
-  def getAnswer(id: Identifier): Option[Boolean] = cacheMap.getEntry[Boolean](id.toString)
-
-  def taxedAwardScheme: Option[Boolean] = cacheMap.getEntry[Boolean](TaxedAwardSchemeId.toString)
-
-  def offshoreEmployer: Option[Boolean] = cacheMap.getEntry[Boolean](OffshoreEmployerId.toString)
-
-  def atLeastOneDirectorHasNino: Option[Boolean] = cacheMap.getEntry[Boolean](AtLeastOneDirectorHasNinoId.toString)
-
+case class UserAnswers(taxedAwardScheme: Option[Boolean] = None, offshoreEmployer: Option[Boolean] = None,
+                       atLeastOneDirectorHasNino: Option[Boolean] = None) {
+  def getAnswer(id: Identifier): Option[Boolean] =
+    id match {
+      case TaxedAwardSchemeId           => taxedAwardScheme
+      case OffshoreEmployerId           => offshoreEmployer
+      case AtLeastOneDirectorHasNinoId  => atLeastOneDirectorHasNino
+      case _                            => None
+    }
 }
+
+

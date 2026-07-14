@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import controllers.routes
-import models.requests.CacheIdentifierRequest
+import models.requests.IdentifierRequest
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,18 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SessionAction @Inject()(controllerComponents: MessagesControllerComponents)
-  extends ActionBuilder[CacheIdentifierRequest, AnyContent] with ActionFunction[Request, CacheIdentifierRequest] {
+  extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] {
 
-  override def invokeBlock[A](request: Request[A], block: CacheIdentifierRequest[A] => Future[Result]): Future[Result] = {
+  override protected val executionContext: ExecutionContext = controllerComponents.executionContext
+  override val parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
+
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     hc.sessionId match {
-      case Some(session) => block(CacheIdentifierRequest(request, session.value))
+      case Some(session) => block(IdentifierRequest(request, session.value))
       case None => Future.successful(Redirect(routes.SessionExpiredController.onPageLoad))
     }
   }
-
-  override protected val executionContext: ExecutionContext = controllerComponents.executionContext
-
-  override val parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
 }

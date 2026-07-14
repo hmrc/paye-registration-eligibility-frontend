@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package repositories
 
-import base.SpecBase
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongo.cache.CacheIdType
 
-trait ControllerSpecBase extends SpecBase {
+case object SessionCacheId extends CacheIdType[HeaderCarrier] {
 
+  override def run: HeaderCarrier => String =
+    _.sessionId
+      .map(_.value)
+      .getOrElse(throw NoSessionException)
+
+  case object NoSessionException extends Exception("Could not find sessionId")
 }
