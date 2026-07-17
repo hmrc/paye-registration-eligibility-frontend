@@ -12,7 +12,7 @@ object AppDependencies {
   private val playConditionalFormMappingVersion = "3.3.0"
   private val bootstrapVersion = "10.1.0"
   private val wireMockVersion = "2.35.0"
-  private val hmrcFrontendVersion = "12.10.0"
+  private val hmrcFrontendVersion = "12.32.0"
   private val hmrcMongoVersion = "2.7.0"
   private val flexmarkAllVersion = "0.64.8"
 
