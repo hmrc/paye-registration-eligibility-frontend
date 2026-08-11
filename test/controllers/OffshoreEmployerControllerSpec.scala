@@ -16,168 +16,182 @@
 
 package controllers
 
-import connectors.{DataCacheConnector, FakeDataCacheConnector}
+import base.SpecBase
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
-import identifiers.OffshoreEmployerId
-import org.mockito.ArgumentMatchers.any
+import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
-import play.api.libs.json.JsBoolean
+import play.api.mvc.Results.Redirect
+import play.api.mvc._
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import service.SessionDataCacheService
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.UserAnswers
 import views.html.offshoreEmployer
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class OffshoreEmployerControllerSpec extends ControllerSpecBase {
+class OffshoreEmployerControllerSpec extends SpecBase
+  with MockitoSugar {
 
-  def onwardRoute = routes.IndexController.onPageLoad
+  implicit val ec: ExecutionContext = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  implicit def ec: ExecutionContext = global
-
+  val view: offshoreEmployer =
+    app.injector.instanceOf[offshoreEmployer]
 
   val formProvider = new OffshoreEmployerFormProvider()
-  val form = formProvider()
+  val form: Form[Boolean] = formProvider()
 
-  val view: offshoreEmployer = app.injector.instanceOf[offshoreEmployer]
+  val mockService: SessionDataCacheService =
+    mock[SessionDataCacheService]
 
-  val mockDataCacheConnector = mock[DataCacheConnector]
+  val mockResult1: Result =
+    Redirect("/eligibility-for-paye/pay-non-cash-incentive-awards")
 
-  val fakeDataCacheConnector = new FakeDataCacheConnector(sessionRepository, cascadeUpsert)
+  val mockResult2: Result =
+    Redirect(routes.SessionExpiredController.onPageLoad)
 
-  object Controller extends OffshoreEmployerController(
-    fakeDataCacheConnector,
-    new FakeAuthAction(messagesControllerComponents),
-    getEmptyCacheMap,
-    new DataRequiredAction(messagesControllerComponents),
-    formProvider,
-    messagesControllerComponents,
-    view
-  )(injectedAppConfig, ec)
+  def controllerWithData(data: Option[Boolean]): OffshoreEmployerController = {
 
-  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
+    val userAnswers =
+      UserAnswers(
+        taxedAwardScheme = None,
+        offshoreEmployer = data,
+        atLeastOneDirectorHasNino = None,
+      )
 
-  "OffshoreEmployer Controller" must {
+    new OffshoreEmployerController(
+      mockService,
+      new FakeIdentifierAction,
+      new FakeDataRetrievalAction(Some(userAnswers)),
+      new FakeDataRequiredAction(userAnswers),
+      formProvider,
+      messagesControllerComponents,
+      view
+    )(injectedAppConfig, ec)
+  }
 
-    "return OK and the correct view for a GET" in {
-      val result = Controller.onPageLoad(fakeRequest())
+  def viewAsString(form: Form[_]): String =
+    view(form)(fakeRequest(), messages, injectedAppConfig).toString
+
+  class FakeIdentifierAction
+    extends SessionAction(messagesControllerComponents) {
+
+    override val parser: BodyParser[AnyContent] =
+      stubBodyParser(AnyContentAsEmpty)
+
+    override def invokeBlock[A](
+                                 request: Request[A],
+                                 block: IdentifierRequest[A] => Future[Result]
+                               ): Future[Result] =
+      block(IdentifierRequest(request, "internal-id"))
+  }
+
+  class FakeDataRetrievalAction(userAnswers: Option[UserAnswers])
+    extends DataRetrievalAction(mockService) {
+
+    override protected def transform[A](
+                                         request: IdentifierRequest[A]
+                                       ): Future[OptionalDataRequest[A]] =
+      Future.successful(
+        OptionalDataRequest(
+          request.request,
+          request.internalId,
+          userAnswers
+        )
+      )
+  }
+
+  class FakeDataRequiredAction(userAnswers: UserAnswers) extends DataRequiredAction() {
+    override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
+      Future.successful(Right(
+        DataRequest(request.request, request.internalId, userAnswers)
+      ))
+  }
+
+  "OffshoreEmployerController" must {
+
+    "return OK and empty view for a GET when no data" in {
+
+      val result =
+        controllerWithData(None).onPageLoad()(fakeRequest())
 
       status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString()
+      contentAsString(result) mustBe viewAsString(form)
     }
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
-      val validData = Map(OffshoreEmployerId.toString -> JsBoolean(true))
-      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
+    "populate view correctly on GET when previously answered true" in {
 
-      object Controller extends OffshoreEmployerController(
-        fakeDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
-        getRelevantData,
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider,
-        messagesControllerComponents,
-        view
-      )(injectedAppConfig, ec)
+      val result =
+        controllerWithData(Some(true)).onPageLoad()(fakeRequest())
 
-      val result = Controller.onPageLoad(fakeRequest())
-
+      status(result) mustBe OK
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
 
-    "redirect to the Dropout page if yes is selected" in {
-      val validData = Map(OffshoreEmployerId.toString -> JsBoolean(true))
-      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
+    "populate view correctly on GET when previously answered false" in {
 
-      object Controller extends OffshoreEmployerController(
-        mockDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
-        new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider,
-        messagesControllerComponents,
-        view
-      )(injectedAppConfig, ec)
+      val result =
+        controllerWithData(Some(false)).onPageLoad()(fakeRequest())
 
-      when(mockDataCacheConnector.save(any(), any(), any())(any()))
-        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
-
-      val result = Controller.onSubmit(postRequest)
-
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad.url)
+      status(result) mustBe OK
+      contentAsString(result) mustBe viewAsString(form.fill(false))
     }
 
+    "redirect to next page when valid data is submitted" in {
 
-    "redirect to the Taxed Award Scheme page if no is selected" in {
-      val validData = Map(OffshoreEmployerId.toString -> JsBoolean(false))
-      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "false"))
+      when(
+        mockService.setOffshoreEmployerAndRedirectToNextPage(eqTo(true))(
+          any[UserAnswers => Call]
+        )(any[HeaderCarrier])
+      ).thenReturn(Future.successful(mockResult1))
 
-      object Controller extends OffshoreEmployerController(
-        mockDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
-        new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider,
-        messagesControllerComponents,
-        view
-      )(injectedAppConfig, ec)
+      val request =
+        fakeRequest("POST")
+          .withFormUrlEncodedBody("value" -> "true")
 
-      when(mockDataCacheConnector.save(any(), any(), any())(any()))
-        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
-
-      val result = Controller.onSubmit(postRequest)
+      val result =
+        controllerWithData(None).onSubmit()(request)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.TaxedAwardSchemeController.onPageLoad.url)
+      redirectLocation(result) mustBe
+        Some(routes.TaxedAwardSchemeController.onPageLoad.url)
     }
 
-    "return a Bad Request and errors when invalid data is submitted" in {
-      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "invalid value"))
-      val boundForm = form.bind(Map("value" -> "invalid value"))
+    "return Bad Request when invalid data is submitted" in {
 
-      val result = Controller.onSubmit(postRequest)
+      val request =
+        fakeRequest("POST")
+          .withFormUrlEncodedBody("value" -> "invalid")
+
+      val result =
+        controllerWithData(None).onSubmit()(request)
 
       status(result) mustBe BAD_REQUEST
-      contentAsString(result) mustBe viewAsString(boundForm)
     }
 
-    "redirect to IndexController for a GET if no existing data is found" in {
-      object Controller extends OffshoreEmployerController(
-        fakeDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
-        new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider,
-        messagesControllerComponents,
-        view
-      )(injectedAppConfig, ec)
+    "redirect to Session Expired when service returns session expired redirect" in {
 
-      val result = Controller.onPageLoad(fakeRequest())
+      when(
+        mockService.setOffshoreEmployerAndRedirectToNextPage(eqTo(true))(
+          any[UserAnswers => Call]
+        )(any[HeaderCarrier])
+      ).thenReturn(Future.successful(mockResult2))
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad.url)
-    }
+      val request =
+        fakeRequest("POST")
+          .withFormUrlEncodedBody("value" -> "true")
 
-    "redirect to IndexController for a POST if no existing data is found" in {
-      object Controller extends OffshoreEmployerController(
-        fakeDataCacheConnector,
-        new FakeAuthAction(messagesControllerComponents),
-        new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
-        new DataRequiredAction(messagesControllerComponents),
-        formProvider,
-        messagesControllerComponents,
-        view
-      )(injectedAppConfig, ec)
-
-      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
-      val result = Controller.onSubmit(postRequest)
+      val result =
+        controllerWithData(None).onSubmit()(request)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad.url)
+      redirectLocation(result) mustBe
+        Some(routes.SessionExpiredController.onPageLoad.url)
     }
   }
 }

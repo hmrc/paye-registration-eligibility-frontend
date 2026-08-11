@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -24,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 class SessionActionSpec extends SpecBase {
 
   class Harness(action: SessionAction) extends FrontendController(messagesControllerComponents) {
-    def onPageLoad = action { request => Ok }
+    def onPageLoad(): Action[AnyContent] = action { _ => Ok }
   }
 
   "Session Action" when {
@@ -32,9 +33,9 @@ class SessionActionSpec extends SpecBase {
       "redirect to the session expired page" in {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
-        val result = controller.onPageLoad(fakeRequest())
+        val result = controller.onPageLoad()(fakeRequest())
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must startWith(controllers.routes.IndexController.onPageLoad.url)
+        redirectLocation(result).get must startWith(controllers.routes.SessionExpiredController.onPageLoad.url)
       }
     }
     "there's an active session" must {
@@ -42,8 +43,8 @@ class SessionActionSpec extends SpecBase {
         val sessionAction = new SessionAction(messagesControllerComponents)
         val controller = new Harness(sessionAction)
         val request = fakeRequest().withSession(SessionKeys.sessionId -> "foo")
-        val result = controller.onPageLoad(request)
-        status(result) mustBe 200
+        val result = controller.onPageLoad()(request)
+        status(result) mustBe OK
       }
     }
   }

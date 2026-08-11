@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package repositories
 
-import models.requests.CacheIdentifierRequest
-import play.api.mvc._
+import play.api.libs.json.{Reads, Writes}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.mongo.cache.DataKey
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeAuthAction(controllerComponents: MessagesControllerComponents) extends SessionAction(controllerComponents) {
+trait CacheRepository {
 
-  override def invokeBlock[A](request: Request[A], block: (CacheIdentifierRequest[A]) => Future[Result]): Future[Result] =
-    block(CacheIdentifierRequest(request, "id"))
+  def putSession[T: Writes](
+                             dataKey: DataKey[T],
+                             data: T
+                           )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[T]
 
-  override val executionContext: ExecutionContext = controllerComponents.executionContext
+  def getFromSession[T: Reads](dataKey: DataKey[T])(implicit hc: HeaderCarrier): Future[Option[T]]
 
-  override val parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
+  def deleteFromSession(implicit hc: HeaderCarrier): Future[Unit]
+
 }
-

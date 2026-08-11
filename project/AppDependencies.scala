@@ -8,19 +8,17 @@ object AppDependencies {
 
   private val scalaTestVersion = "3.2.18"
   private val scalaTestPlusPlayVersion = "5.1.0"
-  private val httpCachingClientVersion = "12.2.0"
-  private val playConditionalFormMappingVersion = "3.3.0"
-  private val bootstrapVersion = "10.1.0"
+  private val playConditionalFormMappingVersion = "3.5.0"
+  private val bootstrapVersion = "10.7.1"
   private val wireMockVersion = "2.35.0"
-  private val hmrcFrontendVersion = "12.32.0"
-  private val hmrcMongoVersion = "2.7.0"
+  private val hmrcFrontendVersion = "12.32.1"
+  private val hmrcMongoVersion = "2.12.0"
   private val flexmarkAllVersion = "0.64.8"
 
   val appDependencies: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc.mongo"   %% s"hmrc-mongo$playVersion"                        % hmrcMongoVersion,
     "uk.gov.hmrc"         %% s"play-frontend-hmrc$playVersion"                % hmrcFrontendVersion,
-    "uk.gov.hmrc"         %% s"http-caching-client$playVersion"               % httpCachingClientVersion,
     "uk.gov.hmrc"         %% s"play-conditional-form-mapping$playVersion"     % playConditionalFormMappingVersion,
     "uk.gov.hmrc"         %% s"bootstrap-frontend$playVersion"                % bootstrapVersion
   )

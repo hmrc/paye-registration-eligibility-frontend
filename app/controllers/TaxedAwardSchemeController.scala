@@ -17,13 +17,13 @@
 package controllers
 
 import config.AppConfig
-import connectors.DataCacheConnector
 import controllers.actions._
 import forms.TaxedAwardSchemeFormProvider
 import identifiers.TaxedAwardSchemeId
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import service.SessionDataCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.{Navigator, UserAnswers}
 import views.html.taxedAwardScheme
@@ -32,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnector,
+class TaxedAwardSchemeController @Inject()(sessionDataCacheService: SessionDataCacheService,
                                            identify: SessionAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
@@ -43,12 +43,10 @@ class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnecto
 
   val form: Form[Boolean] = formProvider()
 
+
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.taxedAwardScheme match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+      val preparedForm = request.userAnswers.taxedAwardScheme.fold(form)(form.fill)
       Ok(view(preparedForm))
   }
 
@@ -57,10 +55,10 @@ class TaxedAwardSchemeController @Inject()(dataCacheConnector: DataCacheConnecto
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          dataCacheConnector.save[Boolean](request.internalId, TaxedAwardSchemeId.toString, value).map { cacheMap =>
-            Redirect(Navigator.nextPage(TaxedAwardSchemeId)(new UserAnswers(cacheMap)))
-          }
+        value => {
+          val redirectToNextPage = Navigator.nextPage(TaxedAwardSchemeId)
+          sessionDataCacheService.setTaxedAwardSchemeAndRedirectToNextPage(value)(redirectToNextPage)
+        }
       )
   }
 }
