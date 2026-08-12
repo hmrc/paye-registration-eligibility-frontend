@@ -17,22 +17,22 @@
 package controllers
 
 import config.AppConfig
+import connectors.DataCacheConnector
 import controllers.actions._
 import forms.OffshoreEmployerFormProvider
 import identifiers.OffshoreEmployerId
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import service.SessionDataCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Navigator
+import utils.{Navigator, UserAnswers}
 import views.html.offshoreEmployer
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OffshoreEmployerController @Inject()(sessionDataCacheService: SessionDataCacheService,
+class OffshoreEmployerController @Inject()(dataCacheConnector: DataCacheConnector,
                                            identify: SessionAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
@@ -45,7 +45,10 @@ class OffshoreEmployerController @Inject()(sessionDataCacheService: SessionDataC
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.offshoreEmployer.fold(form)(form.fill)
+      val preparedForm = request.userAnswers.offshoreEmployer match {
+        case None => form
+        case Some(value) => form.fill(value)
+      }
       Ok(view(preparedForm))
   }
 
@@ -54,10 +57,11 @@ class OffshoreEmployerController @Inject()(sessionDataCacheService: SessionDataC
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors))),
-        value => {
-          val redirectToNextPage = Navigator.nextPage(OffshoreEmployerId)
-          sessionDataCacheService.setOffshoreEmployerAndRedirectToNextPage(value)(redirectToNextPage)
-        }
+        value =>
+          dataCacheConnector.save[Boolean](request.internalId, OffshoreEmployerId.toString, value).map {
+            cacheMap =>
+              Redirect(Navigator.nextPage(OffshoreEmployerId)(new UserAnswers(cacheMap)))
+          }
       )
   }
 }

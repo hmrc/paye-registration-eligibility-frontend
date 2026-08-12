@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,174 +16,106 @@
 
 package controllers
 
-import controllers.actions.{DataRetrievalAction, SessionAction}
+import connectors.DataCacheConnector
+import controllers.actions._
 import forms.AtLeastOneDirectorHasNinoFormProvider
-import models.requests.{IdentifierRequest, OptionalDataRequest}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import identifiers.AtLeastOneDirectorHasNinoId
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
-import play.api.mvc.Results.Redirect
-import play.api.mvc._
+import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
-import service.SessionDataCacheService
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.UserAnswers
+import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.atLeastOneDirectorHasNino
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
+import scala.concurrent.Future
 
-class AtLeastOneDirectorHasNinoControllerSpec
-  extends ControllerSpecBase
-    with MockitoSugar {
+class AtLeastOneDirectorHasNinoControllerSpec extends ControllerSpecBase {
 
-  implicit val ec: ExecutionContext = ExecutionContext.global
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  def onwardRoute = routes.IndexController.onPageLoad
 
-  val view: atLeastOneDirectorHasNino =
-    app.injector.instanceOf[atLeastOneDirectorHasNino]
+  implicit def ec: ExecutionContext = global
+
+
+  val view = app.injector.instanceOf[atLeastOneDirectorHasNino]
 
   val formProvider = new AtLeastOneDirectorHasNinoFormProvider()
-  val form: Form[Boolean] = formProvider()
+  val form = formProvider()
 
-  val mockService: SessionDataCacheService =
-    mock[SessionDataCacheService]
+  val mockDataCacheConnector = mock[DataCacheConnector]
 
-  val mockResult1: Result =
-    Redirect("/eligibility-for-paye/offshore-employer")
+  object Controller extends AtLeastOneDirectorHasNinoController(
+    mockDataCacheConnector,
+    new FakeAuthAction(messagesControllerComponents),
+    getEmptyCacheMap,
+    formProvider, messagesControllerComponents,
+    view
+  )(injectedAppConfig, ec)
 
-  val mockResult2: Result =
-    Redirect(routes.SessionExpiredController.onPageLoad)
-
-  def controllerWithData(data: Option[Boolean]): AtLeastOneDirectorHasNinoController = {
-
-    val userAnswers =
-      UserAnswers(
-        taxedAwardScheme = None,
-        offshoreEmployer = None,
-        atLeastOneDirectorHasNino = data,
-      )
-
-    new AtLeastOneDirectorHasNinoController(
-      mockService,
-      new FakeIdentifierAction,
-      new FakeDataRetrievalAction(Some(userAnswers)),
-      formProvider,
-      messagesControllerComponents,
-      view
-    )(injectedAppConfig, ec)
-  }
-
-  def viewAsString(form: Form[_]): String =
-    view(form)(fakeRequest(), messages, injectedAppConfig).toString
-
-  class FakeIdentifierAction
-    extends SessionAction(messagesControllerComponents) {
-
-    override val parser: BodyParser[AnyContent] =
-      stubBodyParser(AnyContentAsEmpty)
-
-    override def invokeBlock[A](
-                                 request: Request[A],
-                                 block: IdentifierRequest[A] => Future[Result]
-                               ): Future[Result] =
-      block(IdentifierRequest(request, "internal-id"))
-  }
-
-  class FakeDataRetrievalAction(userAnswers: Option[UserAnswers])
-    extends DataRetrievalAction(mockService) {
-
-    override protected def transform[A](
-                                         request: IdentifierRequest[A]
-                                       ): Future[OptionalDataRequest[A]] =
-      Future.successful(
-        OptionalDataRequest(
-          request.request,
-          request.internalId,
-          userAnswers
-        )
-      )
-  }
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
   "AtLeastOneDirectorHasNino Controller" must {
 
-    "return OK and empty view for a GET when no data" in {
-
-      val result =
-        controllerWithData(None).onPageLoad()(fakeRequest())
-
+    "return OK and the correct view for a GET" in {
+      val result = Controller.onPageLoad(fakeRequest())
       status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(form)
+      contentAsString(result) mustBe viewAsString()
     }
 
-    "populate view correctly on GET when previously answered true" in {
+    "populate the view correctly on a GET when the question has previously been answered" in {
+      val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
+      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
-      val result =
-        controllerWithData(Some(true)).onPageLoad()(fakeRequest())
+      object Controller extends AtLeastOneDirectorHasNinoController(
+        mockDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        getRelevantData,
+        formProvider, messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
 
-      status(result) mustBe OK
+
+      val result = Controller.onPageLoad()(fakeRequest())
+
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
 
-    "populate view correctly on GET when previously answered false" in {
+    "redirect to the Offshore Employers page if yes is selected" in {
+      val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(true))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
 
-      val result =
-        controllerWithData(Some(false)).onPageLoad()(fakeRequest())
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
+        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(form.fill(false))
-    }
-
-    "redirect to next page when valid data is submitted" in {
-
-      when(
-        mockService.setAtLeastOneDirectorHasNinoAndRedirectToNextPage(eqTo(true))(
-          any[UserAnswers => Call]
-        )(any[HeaderCarrier])
-      ).thenReturn(Future.successful(mockResult1))
-
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "true")
-
-      val result =
-        controllerWithData(None).onSubmit()(request)
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.OffshoreEmployerController.onPageLoad.url)
+      redirectLocation(result) mustBe Some(controllers.routes.OffshoreEmployerController.onPageLoad.url)
     }
 
-    "return Bad Request when invalid data is submitted" in {
+    "redirect to the Dropout page if no is selected" in {
+      val validData = Map(AtLeastOneDirectorHasNinoId.toString -> JsBoolean(false))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "false"))
 
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "invalid")
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
+        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-      val result =
-        controllerWithData(None).onSubmit()(request)
+      val result = Controller.onSubmit(postRequest)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad.url)
+    }
+
+    "return a Bad Request and errors when invalid data is submitted" in {
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "invalid value"))
+      val boundForm = form.bind(Map("value" -> "invalid value"))
+
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe BAD_REQUEST
-    }
-
-    "redirect to Session Expired when service returns session expired redirect" in {
-
-      when(
-        mockService.setAtLeastOneDirectorHasNinoAndRedirectToNextPage(eqTo(true))(
-          any[UserAnswers => Call]
-        )(any[HeaderCarrier])
-      ).thenReturn(Future.successful(mockResult2))
-
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "true")
-
-      val result =
-        controllerWithData(None).onSubmit()(request)
-
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.SessionExpiredController.onPageLoad.url)
+      contentAsString(result) mustBe viewAsString(boundForm)
     }
   }
 }

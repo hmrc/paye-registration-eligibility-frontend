@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,22 @@
 package controllers
 
 import config.AppConfig
+import connectors.DataCacheConnector
 import controllers.actions._
 import forms.AtLeastOneDirectorHasNinoFormProvider
 import identifiers.AtLeastOneDirectorHasNinoId
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import service.SessionDataCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Navigator
+import utils.{Navigator, UserAnswers}
 import views.html.atLeastOneDirectorHasNino
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AtLeastOneDirectorHasNinoController @Inject()(sessionDataCacheService: SessionDataCacheService,
+class AtLeastOneDirectorHasNinoController @Inject()(dataCacheConnector: DataCacheConnector,
                                                     identify: SessionAction,
                                                     getData: DataRetrievalAction,
                                                     formProvider: AtLeastOneDirectorHasNinoFormProvider,
@@ -44,10 +44,10 @@ class AtLeastOneDirectorHasNinoController @Inject()(sessionDataCacheService: Ses
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      val preparedForm =
-        request.userAnswers
-          .flatMap(_.atLeastOneDirectorHasNino)
-          .fold(form)(form.fill)
+      val preparedForm = request.userAnswers match {
+        case Some(userAnswers) => userAnswers.atLeastOneDirectorHasNino.fold(form)(form.fill)
+        case None => form
+      }
       Ok(view(preparedForm))
   }
 
@@ -56,10 +56,10 @@ class AtLeastOneDirectorHasNinoController @Inject()(sessionDataCacheService: Ses
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors))),
-        value => {
-          val redirectToNextPage = Navigator.nextPage(AtLeastOneDirectorHasNinoId)
-          sessionDataCacheService.setAtLeastOneDirectorHasNinoAndRedirectToNextPage(value)(redirectToNextPage)
-        }
+        value =>
+          dataCacheConnector.save[Boolean](request.internalId, AtLeastOneDirectorHasNinoId.toString, value).map { cacheMap =>
+            Redirect(Navigator.nextPage(AtLeastOneDirectorHasNinoId)(new UserAnswers(cacheMap)))
+          }
       )
   }
 }

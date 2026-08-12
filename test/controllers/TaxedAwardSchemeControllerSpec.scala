@@ -16,182 +16,167 @@
 
 package controllers
 
-import base.SpecBase
+import connectors.{DataCacheConnector, FakeDataCacheConnector}
 import controllers.actions._
 import forms.TaxedAwardSchemeFormProvider
-import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import identifiers.TaxedAwardSchemeId
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
-import play.api.mvc.Results.Redirect
-import play.api.mvc._
+import play.api.libs.json.JsBoolean
 import play.api.test.Helpers._
-import service.SessionDataCacheService
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.UserAnswers
+import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.taxedAwardScheme
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
+import scala.concurrent.Future
 
-class TaxedAwardSchemeControllerSpec extends SpecBase
-  with MockitoSugar {
+class TaxedAwardSchemeControllerSpec extends ControllerSpecBase {
 
-  implicit val ec: ExecutionContext = ExecutionContext.global
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  def onwardRoute = routes.IndexController.onPageLoad
 
-  val view: taxedAwardScheme =
-    app.injector.instanceOf[taxedAwardScheme]
+  implicit def ec: ExecutionContext = global
+
 
   val formProvider = new TaxedAwardSchemeFormProvider()
-  val form: Form[Boolean] = formProvider()
+  val form = formProvider()
 
-  val mockService: SessionDataCacheService =
-    mock[SessionDataCacheService]
+  val view: taxedAwardScheme = app.injector.instanceOf[taxedAwardScheme]
 
-  val mockResult1: Result =
-    Redirect("/eligibility-for-paye/register-online")
+  val mockDataCacheConnector = mock[DataCacheConnector]
 
-  val mockResult2: Result =
-    Redirect(routes.SessionExpiredController.onPageLoad)
+  val fakeDataCacheConnector = new FakeDataCacheConnector(sessionRepository, cascadeUpsert)
 
-  def controllerWithData(data: Option[Boolean]): TaxedAwardSchemeController = {
+  object Controller extends TaxedAwardSchemeController(
+    fakeDataCacheConnector,
+    new FakeAuthAction(messagesControllerComponents),
+    getEmptyCacheMap,
+    new DataRequiredAction(messagesControllerComponents),
+    formProvider,
+    messagesControllerComponents,
+    view
+  )(injectedAppConfig, ec)
 
-    val userAnswers =
-      UserAnswers(
-        taxedAwardScheme = data,
-        offshoreEmployer = None,
-        atLeastOneDirectorHasNino = None,
-      )
+  def viewAsString(form: Form[_] = form) = view(form)(fakeRequest(), messages, injectedAppConfig).toString
 
-    new TaxedAwardSchemeController(
-      mockService,
-      new FakeIdentifierAction,
-      new FakeDataRetrievalAction(Some(userAnswers)),
-      new FakeDataRequiredAction(userAnswers),
-      formProvider,
-      messagesControllerComponents,
-      view
-    )(injectedAppConfig, ec)
-  }
+  "TaxedAwardScheme Controller" must {
 
-  def viewAsString(form: Form[_]): String =
-    view(form)(fakeRequest(), messages, injectedAppConfig).toString
-
-  class FakeIdentifierAction
-    extends SessionAction(messagesControllerComponents) {
-
-    override val parser: BodyParser[AnyContent] =
-      stubBodyParser(AnyContentAsEmpty)
-
-    override def invokeBlock[A](
-                                 request: Request[A],
-                                 block: IdentifierRequest[A] => Future[Result]
-                               ): Future[Result] =
-      block(IdentifierRequest(request, "internal-id"))
-  }
-
-  class FakeDataRetrievalAction(userAnswers: Option[UserAnswers])
-    extends DataRetrievalAction(mockService) {
-
-    override protected def transform[A](
-                                         request: IdentifierRequest[A]
-                                       ): Future[OptionalDataRequest[A]] =
-      Future.successful(
-        OptionalDataRequest(
-          request.request,
-          request.internalId,
-          userAnswers
-        )
-      )
-  }
-
-  class FakeDataRequiredAction(userAnswers: UserAnswers) extends DataRequiredAction() {
-    override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
-      Future.successful(Right(
-        DataRequest(request.request, request.internalId, userAnswers)
-      ))
-  }
-
-  "TaxedAwardSchemeController" must {
-
-    "return OK and empty view for a GET when no data" in {
-
-      val result =
-        controllerWithData(None).onPageLoad()(fakeRequest())
+    "return OK and the correct view for a GET" in {
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(form)
+      contentAsString(result) mustBe viewAsString()
     }
 
-    "populate view correctly on GET when previously answered true" in {
+    "populate the view correctly on a GET when the question has previously been answered" in {
+      val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(true))
+      val getRelevantData = new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
-      val result =
-        controllerWithData(Some(true)).onPageLoad()(fakeRequest())
+      object Controller extends TaxedAwardSchemeController(
+        fakeDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        getRelevantData,
+        new DataRequiredAction(messagesControllerComponents),
+        formProvider,
+        messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
 
-      status(result) mustBe OK
+      val result = Controller.onPageLoad(fakeRequest())
+
       contentAsString(result) mustBe viewAsString(form.fill(true))
     }
 
-    "populate view correctly on GET when previously answered false" in {
+    "redirect to the dropout page if yes is selected" in {
+      val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(true))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
 
-      val result =
-        controllerWithData(Some(false)).onPageLoad()(fakeRequest())
+      object Controller extends TaxedAwardSchemeController(
+        mockDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
+        new DataRequiredAction(messagesControllerComponents),
+        formProvider,
+        messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(form.fill(false))
-    }
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
+        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
 
-    "redirect to next page when valid data is submitted" in {
-
-      when(
-        mockService.setTaxedAwardSchemeAndRedirectToNextPage(eqTo(true))(
-          any[UserAnswers => Call]
-        )(any[HeaderCarrier])
-      ).thenReturn(Future.successful(mockResult1))
-
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "true")
-
-      val result =
-        controllerWithData(None).onSubmit()(request)
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.RegisterForPayeController.onPageLoad.url)
+      redirectLocation(result) mustBe Some(controllers.routes.IneligibleController.onPageLoad.url)
     }
 
-    "return Bad Request when invalid data is submitted" in {
+    "redirect to the you must register page if no is selected" in {
+      val validData = Map(TaxedAwardSchemeId.toString -> JsBoolean(false))
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "false"))
 
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "invalid")
+      object Controller extends TaxedAwardSchemeController(
+        mockDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        new FakeDataRetrievalAction(Some(CacheMap(cacheMapId, validData)), messagesControllerComponents, sessionRepository, cascadeUpsert),
+        new DataRequiredAction(messagesControllerComponents),
+        formProvider,
+        messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
 
-      val result =
-        controllerWithData(None).onSubmit()(request)
+      when(mockDataCacheConnector.save(any(), any(), any())(any()))
+        .thenReturn(Future.successful(CacheMap(cacheMapId, validData)))
+
+      val result = Controller.onSubmit(postRequest)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.routes.RegisterForPayeController.onPageLoad.url)
+    }
+
+    "return a Bad Request and errors when invalid data is submitted" in {
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "invalid value"))
+      val boundForm = form.bind(Map("value" -> "invalid value"))
+
+      val result = Controller.onSubmit(postRequest)
 
       status(result) mustBe BAD_REQUEST
+      contentAsString(result) mustBe viewAsString(boundForm)
     }
 
-    "redirect to Session Expired when service returns session expired redirect" in {
+    "redirect to IndexController for a GET if no existing data is found" in {
+      object Controller extends TaxedAwardSchemeController(
+        fakeDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
+        new DataRequiredAction(messagesControllerComponents),
+        formProvider,
+        messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
 
-      when(
-        mockService.setTaxedAwardSchemeAndRedirectToNextPage(eqTo(true))(
-          any[UserAnswers => Call]
-        )(any[HeaderCarrier])
-      ).thenReturn(Future.successful(mockResult2))
-
-      val request =
-        fakeRequest("POST")
-          .withFormUrlEncodedBody("value" -> "true")
-
-      val result =
-        controllerWithData(None).onSubmit()(request)
+      val result = Controller.onPageLoad(fakeRequest())
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.SessionExpiredController.onPageLoad.url)
+      redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad.url)
+    }
+
+    "redirect to IndexController for a POST if no existing data is found" in {
+      object Controller extends TaxedAwardSchemeController(
+        fakeDataCacheConnector,
+        new FakeAuthAction(messagesControllerComponents),
+        new FakeDataRetrievalAction(None, messagesControllerComponents, sessionRepository, cascadeUpsert),
+        new DataRequiredAction(messagesControllerComponents),
+        formProvider,
+        messagesControllerComponents,
+        view
+      )(injectedAppConfig, ec)
+
+      val postRequest = fakeRequest("POST").withFormUrlEncodedBody(("value", "true"))
+      val result = Controller.onSubmit(postRequest)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad.url)
     }
   }
 }

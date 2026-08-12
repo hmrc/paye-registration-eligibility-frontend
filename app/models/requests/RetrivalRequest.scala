@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,4 @@ package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
 
-case class IdentifierRequest[A](
-                                 request: Request[A],
-                                 internalId: String
-                               ) extends WrappedRequest[A](request)
+case class CacheIdentifierRequest[A](request: Request[A], cacheId: String) extends WrappedRequest[A](request)

@@ -23,7 +23,6 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import utils.PREFEFeatureSwitches
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.{Duration, DurationInt}
 
 @Singleton
 class AppConfig @Inject()(val config: ServicesConfig,
@@ -63,6 +62,5 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val feedbackFrontendUrl = loadConfig("microservice.services.feedback-frontend.host")
   lazy val betaFeedbackUrl = s"$feedbackFrontendUrl/feedback/$contactFormServiceIdentifier"
 
-  lazy val mongoDbSessionCacheExpireAfterMinutes: Duration = config.getInt("mongodb.sessionCache.timeToLiveInMinutes").minutes
-  lazy val appNameAsSessionCacheDbCollection: String = config.getString("appName") + "-session-cache"
+
 }

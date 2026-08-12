@@ -23,8 +23,8 @@ import test.helpers.{IntegrationSpecBase, SessionHelper, WiremockHelper}
 class LanguageControllerISpec extends IntegrationSpecBase with SessionHelper with WiremockHelper {
 
   "setLanguage" should {
-    val welshCookie = Some(DefaultWSCookie("PLAY_LANG", "cy", None, Some("/"), None, secure = false, httpOnly = false))
-    val englishCookie = Some(DefaultWSCookie("PLAY_LANG", "en", None, Some("/"), None, secure = false, httpOnly = false))
+    val welshCookie = Some(DefaultWSCookie("PLAY_LANG", "cy", None, Some("/"), None, secure = true, httpOnly = false))
+    val englishCookie = Some(DefaultWSCookie("PLAY_LANG", "en", None, Some("/"), None, secure = true, httpOnly = false))
 
     "return a 303 when language is switched" in {
       val fResponse = buildClient("/defaultLanguage/english")

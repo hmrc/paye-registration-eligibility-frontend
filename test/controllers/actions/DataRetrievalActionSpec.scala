@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,63 +17,48 @@
 package controllers.actions
 
 import base.SpecBase
-import models.requests.{IdentifierRequest, OptionalDataRequest}
-import org.mockito.ArgumentMatchers.any
+import connectors.DataCacheConnector
+import models.requests.{CacheIdentifierRequest, OptionalDataRequest}
 import org.mockito.Mockito._
-import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.test.FakeRequest
-import service.SessionDataCacheService
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.UserAnswers
+import uk.gov.hmrc.http.cache.client.CacheMap
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class DataRetrievalActionSpec
-  extends SpecBase
-    with MockitoSugar
-    with ScalaFutures {
+class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
-  implicit val ec: ExecutionContext = ExecutionContext.global
-  implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  private val sessionDataCacheService = mock[SessionDataCacheService]
-
-  def mockGetAnswers(result: Option[UserAnswers]): OngoingStubbing[Future[Option[UserAnswers]]] =
-    when(sessionDataCacheService.getUserAnswers(any[HeaderCarrier]))
-      .thenReturn(Future.successful(result))
-
-  class Harness(mockSessionService: SessionDataCacheService) extends
-    DataRetrievalAction(mockSessionService) {
-    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
+  class Harness(dataCacheConnector: DataCacheConnector) extends DataRetrievalAction(dataCacheConnector, messagesControllerComponents) {
+    def callTransform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
 
-  "DataRetrievalAction" should {
+  "Data Retrieval Action" when {
+    "there is no data in the cache" must {
+      "set userAnswers to 'None' in the request" in {
+        val dataCacheConnector = mock[DataCacheConnector]
+        when(dataCacheConnector.fetch("id")) thenReturn Future(None)
+        val action = new Harness(dataCacheConnector)
 
-    "add Some(userAnswers) when cache has data" in {
+        val futureResult = action.callTransform(new CacheIdentifierRequest(fakeRequest(), "id"))
 
-      val userAnswers = UserAnswers(Some(true), None, None)
-      val action = new Harness(sessionDataCacheService)
-      mockGetAnswers(Some(userAnswers))
-
-      val identifierRequest =
-        IdentifierRequest(FakeRequest(), "test-id")
-
-      whenReady(action.callTransform(identifierRequest)) { result =>
-        result.userAnswers mustBe Some(userAnswers)
+        whenReady(futureResult) { result =>
+          result.userAnswers.isEmpty mustBe true
+        }
       }
     }
 
-    "add None when cache is empty" in {
-      mockGetAnswers(None)
-      val action = new Harness(sessionDataCacheService)
+    "there is data in the cache" must {
+      "build a userAnswers object and add it to the request" in {
+        val dataCacheConnector = mock[DataCacheConnector]
+        when(dataCacheConnector.fetch("id")) thenReturn Future(Some(new CacheMap("id", Map())))
+        val action = new Harness(dataCacheConnector)
 
-      val identifierRequest =
-        IdentifierRequest(FakeRequest(), "test-id")
+        val futureResult = action.callTransform(new CacheIdentifierRequest(fakeRequest(), "id"))
 
-      whenReady(action.callTransform(identifierRequest)) { result =>
-        result.userAnswers mustBe None
+        whenReady(futureResult) { result =>
+          result.userAnswers.isDefined mustBe true
+        }
       }
     }
   }

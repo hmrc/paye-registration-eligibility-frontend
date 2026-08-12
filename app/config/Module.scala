@@ -17,7 +17,7 @@
 package config
 
 import com.google.inject.AbstractModule
-import repositories.SessionCacheRepository
+import repositories.SessionRepository
 import utils._
 
 class Module extends AbstractModule {
@@ -29,12 +29,13 @@ class Module extends AbstractModule {
   }
 
   def bindOthers() = {
+    bind(classOf[CascadeUpsert]).asEagerSingleton()
     bind(classOf[FeatureManager]).to(classOf[FeatureSwitchManager]).asEagerSingleton()
     bind(classOf[PREFEFeatureSwitches]).to(classOf[PREFEFeatureSwitch]).asEagerSingleton()
   }
 
   def bindRepositories() = {
-    bind(classOf[SessionCacheRepository]).asEagerSingleton()
+    bind(classOf[SessionRepository]).asEagerSingleton()
   }
 
   def bindUtils() = {

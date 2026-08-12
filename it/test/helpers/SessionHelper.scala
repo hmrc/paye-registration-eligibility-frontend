@@ -16,35 +16,44 @@
 
 package test.helpers
 
-import config.AppConfig
+import org.mongodb.scala.bson.BsonDocument
+import org.mongodb.scala.result.DeleteResult
 import org.scalatest.BeforeAndAfterEach
-import play.api.libs.json.DefaultReads
-import repositories.SessionCacheRepository
-import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
-import uk.gov.hmrc.mongo.cache.DataKey
+import play.api.libs.json.{DefaultReads, Format, Json}
+import repositories.SessionRepository
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.mongo.test.MongoSupport
-import uk.gov.hmrc.mongo.{CurrentTimestampSupport, TimestampSupport}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.global
 
 trait SessionHelper extends MongoSupport with BeforeAndAfterEach with DefaultReads {
   self: IntegrationSpecBase =>
-  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  lazy val repo = new SessionCacheRepository(ts)(ec, appConfig, mongoComponent)
-  implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-  implicit val hc: HeaderCarrier =
-    HeaderCarrier(sessionId = Some(SessionId("test-session-id")))
-  val ts: TimestampSupport = new CurrentTimestampSupport
+  implicit def ec: ExecutionContext = global
 
-  def sessionCookie: String = "sessionId=test-session-id"
+  lazy val repo = new SessionRepository(app.injector.instanceOf[ServicesConfig], mongoComponent)
+
+  def clearDocs(): DeleteResult = await(repo.collection.deleteMany(BsonDocument()).toFuture())
+  def count(): Long = await(repo.collection.countDocuments().toFuture())
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    await(repo.deleteFromSession(hc))
+    clearDocs()
+    count mustBe 0
     resetWiremock()
   }
 
-  def cacheSessionData(key: String, data: Boolean): Unit = {
-    await(repo.putSession[Boolean](DataKey[Boolean](key), data))
+  def verifySessionCacheData[T](id: String, key: String, data: Option[T])(implicit format: Format[T]): Unit = {
+    val dataFromDb = await(repo.get(id)).flatMap(_.getEntry[T](key))
+    if (data != dataFromDb) throw new Exception(s"Data in database doesn't match expected data:\n expected data $data was not equal to actual data $dataFromDb")
+  }
+
+  def cacheSessionData[T](id: String, key: String, data: T)(implicit format: Format[T]): Unit = {
+    val cacheMap = await(repo.get(id))
+    val updatedCacheMap =
+      cacheMap.fold(CacheMap(id, Map(key -> Json.toJson(data))))(map => map.copy(data = map.data + (key -> Json.toJson(data))))
+
+    await(repo.upsert(updatedCacheMap))
   }
 }

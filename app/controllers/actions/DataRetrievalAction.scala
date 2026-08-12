@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,28 @@
 
 package controllers.actions
 
-import models.requests.{IdentifierRequest, OptionalDataRequest}
-import play.api.mvc._
-import service.SessionDataCacheService
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import javax.inject.Inject
+import com.google.inject.Inject
+import connectors.DataCacheConnector
+import models.requests.{CacheIdentifierRequest, OptionalDataRequest}
+import play.api.mvc.{ActionTransformer, MessagesControllerComponents}
+import utils.UserAnswers
+
+import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalAction @Inject()(
-                                     sessionDataCacheService: SessionDataCacheService
-                                   )(implicit val executionContext: ExecutionContext)
-  extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
+@Singleton
+class DataRetrievalAction @Inject()(val dataCacheConnector: DataCacheConnector,
+                                    controllerComponents: MessagesControllerComponents
+                                   )(implicit val ec: ExecutionContext) extends ActionTransformer[CacheIdentifierRequest, OptionalDataRequest] {
 
-  override protected def transform[A](
-                                       request: IdentifierRequest[A]
-                                     ): Future[OptionalDataRequest[A]] = {
+  override protected def transform[A](request: CacheIdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromRequestAndSession(request.request, request.request.session)
-
-    sessionDataCacheService.getUserAnswers.map {
-      case Some(data) =>
-        OptionalDataRequest(request.request, request.internalId, Some(data))
-
-      case None =>
-        OptionalDataRequest(request.request, request.internalId, None)
+    dataCacheConnector.fetch(request.cacheId).map {
+      case None => OptionalDataRequest(request.request, request.cacheId, None)
+      case Some(data) => OptionalDataRequest(request.request, request.cacheId, Some(new UserAnswers(data)))
     }
   }
+
+  override protected val executionContext: ExecutionContext = controllerComponents.executionContext
 }

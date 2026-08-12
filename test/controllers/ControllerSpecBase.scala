@@ -17,8 +17,16 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
+import uk.gov.hmrc.http.cache.client.CacheMap
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait ControllerSpecBase extends SpecBase {
+
+  val cacheMapId = "id"
+
+  def emptyCacheMap = CacheMap(cacheMapId, Map())
+
+  def getEmptyCacheMap = new FakeDataRetrievalAction(Some(emptyCacheMap), messagesControllerComponents, sessionRepository, cascadeUpsert)
 
 }
