@@ -47,6 +47,8 @@ class AppConfig @Inject()(val config: ServicesConfig,
 
   def languageTranslationEnabled: Boolean = featureSwitch.isWelshEnabled.value.toBoolean
 
+  def userResearchBannerEnabled: Boolean = featureSwitch.isUserResearchBannerEnabled.value.toBoolean
+
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
@@ -62,6 +64,8 @@ class AppConfig @Inject()(val config: ServicesConfig,
   lazy val contactHost: String = loadConfig("contact-frontend.host")
   lazy val feedbackFrontendUrl = loadConfig("microservice.services.feedback-frontend.host")
   lazy val betaFeedbackUrl = s"$feedbackFrontendUrl/feedback/$contactFormServiceIdentifier"
+
+  lazy val urBannerUrl: String = loadConfig("urBanner.url")
 
   lazy val mongoDbSessionCacheExpireAfterMinutes: Duration = config.getInt("mongodb.sessionCache.timeToLiveInMinutes").minutes
   lazy val appNameAsSessionCacheDbCollection: String = config.getString("appName") + "-session-cache"
