@@ -21,6 +21,8 @@
 @import views.html.templates.layout
 @import views.ViewUtils._
 
+@import config.UrBannerUtil
+
 @this(formWithCSRF: FormWithCSRF,
         submitButton: submit_button,
         h1: h1,
@@ -32,7 +34,7 @@
 
 @(showNewTaxYearContent: Boolean, notLoggedIn: Boolean, weeklyPAYEThreshold: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(Some(titleNoForm(messages("registerForPaye.title")))) {
+@layout(Some(titleNoForm(messages("registerForPaye.title"))), urBanner = Some(UrBannerUtil.getUrBanner())) {
 
     @h1(messages("registerForPaye.heading"))
 

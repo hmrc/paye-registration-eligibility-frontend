@@ -26,7 +26,18 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
     System.clearProperty("feature.cohoFirstHandOff")
     System.clearProperty("feature.businessActivitiesHandOff")
     System.clearProperty("feature.system-date")
+    System.clearProperty("feature.companyRegistration")
+    System.clearProperty("feature.isWelsh")
+    System.clearProperty("feature.userResearchBanner")
     super.beforeEach()
+  }
+
+  override def afterEach(): Unit = {
+    System.clearProperty("feature.companyRegistration")
+    System.clearProperty("feature.isWelsh")
+    System.clearProperty("feature.userResearchBanner")
+    System.clearProperty("feature.system-date")
+    super.afterEach()
   }
 
   val featureSwitch = new FeatureSwitchManager
@@ -81,6 +92,86 @@ class FeatureSwitchSpec extends PlaySpec with BeforeAndAfterEach {
       System.setProperty("feature.test", "2018-10-12")
 
       featureSwitch.clearSystemDate(valueFeatureSwitch) mustBe ValueSetFeatureSwitch("test", "time-clear")
+    }
+  }
+
+  "ValueSetFeatureSwitch" should {
+    "return the set value as its value" in {
+      ValueSetFeatureSwitch("test", "2018-10-12").value mustBe "2018-10-12"
+    }
+
+    "be enabled when the set value is a valid date" in {
+      ValueSetFeatureSwitch("test", "2018-10-12").enabled mustBe true
+    }
+
+    "be disabled when the set value is 'time-clear'" in {
+      ValueSetFeatureSwitch("test", "time-clear").enabled mustBe false
+    }
+
+    "be disabled when the set value is not a valid date" in {
+      ValueSetFeatureSwitch("test", "2018-13-45").enabled mustBe false
+    }
+  }
+
+  "PREFEFeatureSwitch" when {
+
+    Seq(
+      ("companyRegistration", () => prefeFeatureSwitch.companyReg),
+      ("isWelsh", () => prefeFeatureSwitch.isWelshEnabled),
+      ("userResearchBanner", () => prefeFeatureSwitch.isUserResearchBannerEnabled)
+    ).foreach { case (name, switch) =>
+
+      s"reading the $name switch" should {
+        "be disabled by default" in {
+          switch() mustBe BooleanFeatureSwitch(name, setValue = false)
+        }
+
+        "be enabled when the system property is 'true'" in {
+          System.setProperty(s"feature.$name", "true")
+
+          switch() mustBe BooleanFeatureSwitch(name, setValue = true)
+        }
+
+        "be returned by apply" in {
+          System.setProperty(s"feature.$name", "true")
+
+          prefeFeatureSwitch(name) mustBe Some(BooleanFeatureSwitch(name, setValue = true))
+        }
+      }
+    }
+
+    "apply is given system-date" should {
+      "return time-clear when no system date is set" in {
+        prefeFeatureSwitch("system-date") mustBe Some(ValueSetFeatureSwitch("system-date", "time-clear"))
+      }
+
+      "return the date when a system date is set" in {
+        System.setProperty("feature.system-date", "2018-10-12")
+
+        prefeFeatureSwitch("system-date") mustBe Some(ValueSetFeatureSwitch("system-date", "2018-10-12"))
+      }
+    }
+
+    "apply is given an unknown switch name" should {
+      "return None" in {
+        prefeFeatureSwitch("unknownSwitch") mustBe None
+      }
+    }
+  }
+
+  "BooleanFeatureSwitch" should {
+    "return 'true' as its value and be enabled when set to true" in {
+      val switch = BooleanFeatureSwitch("test", setValue = true)
+
+      switch.value mustBe "true"
+      switch.enabled mustBe true
+    }
+
+    "return 'false' as its value and be disabled when set to false" in {
+      val switch = BooleanFeatureSwitch("test", setValue = false)
+
+      switch.value mustBe "false"
+      switch.enabled mustBe false
     }
   }
 }

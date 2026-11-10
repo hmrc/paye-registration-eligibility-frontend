@@ -21,14 +21,17 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcUserResearchBanner
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
         standardBetaBanner: StandardBetaBanner,
-        govukBackLink: GovukBackLink
+        govukBackLink: GovukBackLink,
+        hmrcUserResearchBanner: HmrcUserResearchBanner
 )
 
-@(pageTitle: Option[String] = None, showBackLink: Boolean = true)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
+@(pageTitle: Option[String] = None, showBackLink: Boolean = true, urBanner: Option[UserResearchBanner] = None)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @head = {
     <!--[if lte IE 8]><link href=' @controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
@@ -60,7 +63,7 @@
             signOutUrl = None,
             accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl),
         ),
-        banners = Banners(displayHmrcBanner = false, phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedbackUrl))),
+        banners = Banners(displayHmrcBanner = false, phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedbackUrl)), additionalBannersBlock = urBanner.filter(_ => appConfig.userResearchBannerEnabled).map(hmrcUserResearchBanner(_))),
         serviceName = Some(messages("service.name")),
         pageTitle = pageTitle,
         backLink = if (showBackLink) Some(BackLink("#")) else None,
