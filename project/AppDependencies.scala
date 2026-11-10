@@ -12,7 +12,7 @@ object AppDependencies {
   private val bootstrapVersion = "10.7.1"
   private val wireMockVersion = "2.35.0"
   private val hmrcFrontendVersion = "12.32.1"
-  private val hmrcMongoVersion = "2.12.0"
+  private val hmrcMongoVersion = "2.14.0"
   private val flexmarkAllVersion = "0.64.8"
 
   val appDependencies: Seq[ModuleID] = Seq(
